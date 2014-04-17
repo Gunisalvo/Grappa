@@ -8,7 +8,7 @@ public class PacoteGrappa {
 
 	@XmlEnum
 	public enum Conexao{
-		HTTP,GPIO,USB
+		HTTP,GPIO,USB,REGISTRADOR
 		;
 	}
 	

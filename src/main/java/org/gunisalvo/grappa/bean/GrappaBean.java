@@ -1,19 +1,25 @@
 package org.gunisalvo.grappa.bean;
 
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.servlet.ServletContext;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-
 import org.gunisalvo.grappa.Grappa;
+import org.gunisalvo.grappa.modelo.PacoteGrappa;
 
 @ApplicationScoped
 public class GrappaBean implements Grappa, Serializable{
@@ -24,22 +30,34 @@ public class GrappaBean implements Grappa, Serializable{
 
 	private static final String ARQUIVO_CONFIGURACAO = "grappa.properties";
 
-	private Properties configuracao;
+	private Properties configuracoes;
 	
-	public void onCreate(@Observes ServletContext context) {
+	private Map<String,Object> mapaRegistradores;
+	
+	private String caminhoArquivoLog;
+	
+	public void registrarContexto(@Observes ServletContext context) {
+		this.caminhoArquivoLog = context.getRealPath("") + File.separator + "log" + File.separator + "grappa.log";
+		iniciar();
 	}
 	
-	@PostConstruct
 	private void iniciar(){
-		this.configuracao = new Properties();
-		
+		this.mapaRegistradores = new HashMap<String, Object>();
+		this.configuracoes = new Properties();
+		System.out.println(this.caminhoArquivoLog);
 		try {
-			this.configuracao.load(this.getClass().getClassLoader().getResourceAsStream(ARQUIVO_CONFIGURACAO));
+			this.configuracoes.load(this.getClass().getClassLoader().getResourceAsStream(ARQUIVO_CONFIGURACAO));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		PropertyConfigurator.configure(configuracao);
-		LOGGER.warn("GRAPPA iniciado com sucesso");
+		this.configuracoes.put( "log4j.appender.GRAPPA.File", this.caminhoArquivoLog );
+		PropertyConfigurator.configure( this.configuracoes );
+		LOGGER.warn("");
+		LOGGER.warn("=========================================================================");
+		LOGGER.warn("GRAPPA >> DEPLOY EFETUADO: " + new SimpleDateFormat("HH:mm:ss dd/MM/yyyy").format(Calendar.getInstance().getTime()));
+		LOGGER.warn( "log criado em: "+ this.caminhoArquivoLog );
+		LOGGER.warn("=========================================================================");
+		LOGGER.warn("");
 	}
 	
 	@Override
@@ -63,11 +81,57 @@ public class GrappaBean implements Grappa, Serializable{
 
 	@Override
 	public String getConfiguracao(Propriedade id) {
-		return this.configuracao.getProperty(id.toString());
+		return this.configuracoes.getProperty(id.toString());
+	}
+	
+	@Override
+	public Map<String, Object> getMapaRegistradores() {
+		return mapaRegistradores;
+	}
+	
+	@Override
+	public void limparMapaRegistradores() {
+		this.mapaRegistradores.clear();
+		LOGGER.warn("-------------------------");
+		LOGGER.warn("ESTADO CONTROLADOR LIMPO.");
+		LOGGER.warn("-------------------------");
+	}
+	
+	@Override
+	public String getLog() {
+		
+		try {
+			BufferedReader leitor = new BufferedReader(new FileReader(this.caminhoArquivoLog));
+	        StringBuilder resultado = new StringBuilder();
+	        String linha = leitor.readLine();
+
+	        while (linha != null) {
+	        	resultado.append(linha);
+	        	resultado.append("\n");
+	        	
+	            linha = leitor.readLine();
+	        }
+	        
+	        leitor.close();
+	        return resultado.toString();
+	        
+		}catch( Exception ex ){
+			throw new RuntimeException(ex);
+	    }
 	}
 
-	
-
-
-	
+	@Override
+	public PacoteGrappa processarPacote(PacoteGrappa requisicao) {
+		switch(requisicao.getTipo()){
+		case LEITURA:
+			Object valor = this.mapaRegistradores.get(requisicao.getEndereco().toString());
+			requisicao.setCorpo( valor == null ?  "" : valor.toString() );
+			return requisicao;
+		case ESCRITA:
+			this.mapaRegistradores.put(requisicao.getEndereco().toString(), requisicao.getCorpo());
+			return requisicao;
+		default:
+			throw new RuntimeException();
+		}
+	}
 }

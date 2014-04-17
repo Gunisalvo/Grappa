@@ -7,11 +7,18 @@ import org.gunisalvo.grappa.modelo.PacoteGrappa;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.Conexao;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.Tipo;
 
+import com.pi4j.io.gpio.GpioController;
+import com.pi4j.io.gpio.GpioFactory;
+
 @RequestScoped
 public class InterfaceGpioBean implements InterfaceGpio{
 
+	
 	@Override
 	public PacoteGrappa processarPacote(PacoteGrappa requisicao) {
+		
+		GpioController barramentoGpio = GpioFactory.getInstance(); 
+		
 		switch(requisicao.getTipo()){
 		case LEITURA:
 			return lerGiop(requisicao.getEndereco());
