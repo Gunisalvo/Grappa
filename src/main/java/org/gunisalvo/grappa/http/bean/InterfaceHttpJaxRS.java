@@ -32,7 +32,7 @@ public class InterfaceHttpJaxRS implements InterfaceHttp{
 	@Override
 	public Response lerMapaRegistradores() {
 		StringBuilder resultado = new StringBuilder("Estado Controlador:");
-		for(Entry<String, Object> entrada : this.aplicacao.getMapaRegistradores().entrySet()){
+		for(Entry<Integer, Object> entrada : this.aplicacao.getMapaRegistradores().entrySet()){
 			resultado.append("\n");
 			resultado.append(" - " + entrada.getKey() + " : " + entrada.getValue().toString());
 		}

@@ -18,6 +18,12 @@ public class PacoteGrappa {
 		;
 	}
 	
+	@XmlEnum
+	public enum Resultado{
+		SUCESSO,FALHA,ERRO_ENDERECAMENTO,ERRO_PROCESSAMENTO
+		;
+	}
+	
 	private Integer endereco;
 	
 	private Conexao conexao;
@@ -26,14 +32,9 @@ public class PacoteGrappa {
 	
 	private String corpo;
 
-	public PacoteGrappa() {
-	}
+	private Resultado resultado;
 	
-	public PacoteGrappa(Integer endereco, Conexao conexao) {
-		this.endereco = endereco;
-		this.conexao = conexao;
-		this.tipo = Tipo.LEITURA;
-		this.corpo = null;
+	public PacoteGrappa() {
 	}
 	
 	public PacoteGrappa(Integer endereco, Conexao conexao, Tipo tipo, String corpo) {
@@ -41,6 +42,11 @@ public class PacoteGrappa {
 		this.conexao = conexao;
 		this.tipo = tipo;
 		this.corpo = corpo;
+	}
+	
+	public PacoteGrappa(Integer endereco, Conexao conexao, Tipo tipo, String corpo, Resultado resultado) {
+		this(endereco,conexao,tipo,corpo);
+		this.resultado = resultado;
 	}
 
 	public Integer getEndereco() {
@@ -73,6 +79,14 @@ public class PacoteGrappa {
 
 	public void setCorpo(String corpo) {
 		this.corpo = corpo;
+	}
+
+	public Resultado getResultado() {
+		return resultado;
+	}
+
+	public void setResultado(Resultado resultado) {
+		this.resultado = resultado;
 	}
 
 }

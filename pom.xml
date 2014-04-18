@@ -7,16 +7,12 @@
 	<packaging>war</packaging>
 	<name>Grappa</name>
 	<description>Sistema de Automação para hardware RaspberryPI.</description>
-
 	<dependencies>
-		<!-- CDI -->
         <dependency>
             <groupId>org.jboss.weld.servlet</groupId>
             <artifactId>weld-servlet</artifactId>
             <version>2.1.2.Final</version>
         </dependency>
- 
-        <!-- JAX-RS -->
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-jaxrs</artifactId>
@@ -36,8 +32,7 @@
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-cdi</artifactId>
             <version>2.3.5.Final</version>
-	    </dependency>
-	
+	    </dependency>	
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
@@ -55,7 +50,6 @@
 		    <scope>provided</scope>
 		</dependency>
 	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>
@@ -84,7 +78,6 @@
 					<resourceEncoding>UTF-8</resourceEncoding>
 				</configuration>
       		</plugin>
-
 		</plugins>
 	</build>
 </project>

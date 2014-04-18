@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.gunisalvo.grappa.Grappa;
 import org.gunisalvo.grappa.modelo.PacoteGrappa;
+import org.gunisalvo.grappa.modelo.PacoteGrappa.Resultado;
 
 @ApplicationScoped
 public class GrappaBean implements Grappa, Serializable{
@@ -32,7 +33,7 @@ public class GrappaBean implements Grappa, Serializable{
 
 	private Properties configuracoes;
 	
-	private Map<String,Object> mapaRegistradores;
+	private Map<Integer,Object> mapaRegistradores;
 	
 	private String caminhoArquivoLog;
 	
@@ -42,7 +43,7 @@ public class GrappaBean implements Grappa, Serializable{
 	}
 	
 	private void iniciar(){
-		this.mapaRegistradores = new HashMap<String, Object>();
+		this.mapaRegistradores = new HashMap<Integer, Object>();
 		this.configuracoes = new Properties();
 		System.out.println(this.caminhoArquivoLog);
 		try {
@@ -85,7 +86,7 @@ public class GrappaBean implements Grappa, Serializable{
 	}
 	
 	@Override
-	public Map<String, Object> getMapaRegistradores() {
+	public Map<Integer, Object> getMapaRegistradores() {
 		return mapaRegistradores;
 	}
 	
@@ -125,10 +126,19 @@ public class GrappaBean implements Grappa, Serializable{
 		switch(requisicao.getTipo()){
 		case LEITURA:
 			Object valor = this.mapaRegistradores.get(requisicao.getEndereco().toString());
-			requisicao.setCorpo( valor == null ?  "" : valor.toString() );
+			if(valor == null){
+				requisicao.setResultado(Resultado.ERRO_ENDERECAMENTO);
+			}else{
+				requisicao.setCorpo( valor.toString() );
+				requisicao.setResultado(Resultado.SUCESSO);
+			}
 			return requisicao;
 		case ESCRITA:
-			this.mapaRegistradores.put(requisicao.getEndereco().toString(), requisicao.getCorpo());
+			if(this.mapaRegistradores.containsKey(requisicao.getEndereco())){
+				requisicao.setCorpo("Valor Substituido");
+			}
+			this.mapaRegistradores.put(requisicao.getEndereco(), requisicao.getCorpo());
+			requisicao.setResultado(Resultado.SUCESSO);
 			return requisicao;
 		default:
 			throw new RuntimeException();

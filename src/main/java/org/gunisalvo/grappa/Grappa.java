@@ -22,7 +22,7 @@ public interface Grappa {
 
 	String getLog();
 
-	Map<String, Object> getMapaRegistradores();
+	Map<Integer, Object> getMapaRegistradores();
 
 	void limparMapaRegistradores();
 
