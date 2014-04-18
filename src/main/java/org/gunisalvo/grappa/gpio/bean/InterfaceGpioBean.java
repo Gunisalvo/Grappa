@@ -114,7 +114,9 @@ public class InterfaceGpioBean implements InterfaceGpio, Serializable{
 
 	private PacoteGrappa lerGiop(Integer endereco) {
 		if(enderecoValido(endereco)){ 
-			return new PacoteGrappa(endereco,Conexao.GPIO,Tipo.LEITURA,"true",Resultado.SUCESSO);
+			return new PacoteGrappa(	endereco, Conexao.GPIO, Tipo.LEITURA,
+										this.gpio.getState(this.mapaPinosDigitais.get(endereco)).toString(),
+										Resultado.SUCESSO);
 		}else{
 			return new PacoteGrappa(endereco,Conexao.GPIO,Tipo.LEITURA,null,Resultado.ERRO_ENDERECAMENTO);
 		}
