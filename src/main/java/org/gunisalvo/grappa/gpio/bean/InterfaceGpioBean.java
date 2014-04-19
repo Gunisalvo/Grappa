@@ -191,10 +191,11 @@ public class InterfaceGpioBean implements InterfaceGpio, Serializable{
 	
 	private void regsitrarComportamentoInput(final ServicoBarramentoEletrico servico){
 		GPIOListener anotacao = servico.getClass().getAnnotation(GPIOListener.class);
+		int pino = anotacao.pino();
 		this.pinosEntrada.get(anotacao.pino()).addListener(new GpioPinListenerDigital() {
             @Override
             public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent evento) {
-            	aplicacao.log("executando evento de mundaça de sinal " + anotacao.pino(), NivelLog.INFO);
+            	aplicacao.log("executando evento de mundaça de sinal " + pino, NivelLog.INFO);
             	servico.processarServico(barramento,traduzirEstado(evento));
             }
 
@@ -203,6 +204,6 @@ public class InterfaceGpioBean implements InterfaceGpio, Serializable{
 				return resultado;
 			}
         });
-		this.aplicacao.log(anotacao.pino() + " : " + servico.getClass().getName() + ", evento registrado", NivelLog.INFO);
+		this.aplicacao.log(pino + " : " + servico.getClass().getName() + ", evento registrado", NivelLog.INFO);
 	}
 }
