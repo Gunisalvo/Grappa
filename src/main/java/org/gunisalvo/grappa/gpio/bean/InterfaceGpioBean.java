@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
+import javax.enterprise.inject.Disposes;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 
