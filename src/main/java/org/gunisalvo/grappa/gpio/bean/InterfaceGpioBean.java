@@ -70,6 +70,14 @@ public class InterfaceGpioBean implements InterfaceGpio, Serializable{
 			this.aplicacao.log("impossível iniciar Barramento GPIO.", NivelLog.ERRO);
 		}
 	}
+	
+	public void finalizar(@Disposes ServletContext contexto){
+		try{
+			((GpioPinDigitalOutput)this.pinosSaida.get(0)).low();
+		}catch(Exception ex){
+			this.aplicacao.log("erro finalizando Barramento GPIO.", NivelLog.ERRO);
+		}
+	}
 
 	private void iniciarPinos() {
 		this.gpio = GpioFactory.getInstance();
