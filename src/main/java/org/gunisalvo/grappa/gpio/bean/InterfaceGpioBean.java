@@ -191,7 +191,7 @@ public class InterfaceGpioBean implements InterfaceGpio, Serializable{
 	
 	private void regsitrarComportamentoInput(final ServicoBarramentoEletrico servico){
 		GPIOListener anotacao = servico.getClass().getAnnotation(GPIOListener.class);
-		int pino = anotacao.pino();
+		final int pino = anotacao.pino();
 		this.pinosEntrada.get(anotacao.pino()).addListener(new GpioPinListenerDigital() {
             @Override
             public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent evento) {
