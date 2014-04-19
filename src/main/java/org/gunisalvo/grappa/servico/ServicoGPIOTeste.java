@@ -14,6 +14,7 @@ public class ServicoGPIOTeste implements ServicoBarramentoEletrico{
 	public void processarServico(Barramento barramento, Integer estadoPino){
 		String resultado = barramento.processarPacote(new PacoteGrappa(99,Conexao.REGISTRADOR,Tipo.LEITURA,null)).getCorpo();
 		Integer numero = resultado == null ? 1 : Integer.parseInt(resultado);
+		numero += 1;
 		barramento.processarPacote(new PacoteGrappa(99,Conexao.REGISTRADOR,Tipo.ESCRITA,numero.toString()));
 	}
 	
