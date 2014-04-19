@@ -193,6 +193,7 @@ public class InterfaceGpioBean implements InterfaceGpio, Serializable{
 		this.pinosEntrada.get(anotacao.pino()).addListener(new GpioPinListenerDigital() {
             @Override
             public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent evento) {
+            	aplicacao.log("executando evento de mundaça de sinal " + anotacao.pino(), NivelLog.INFO);
             	servico.processarServico(barramento,traduzirEstado(evento));
             }
 
