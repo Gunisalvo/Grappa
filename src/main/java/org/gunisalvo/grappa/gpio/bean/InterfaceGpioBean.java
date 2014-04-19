@@ -20,19 +20,18 @@ import org.gunisalvo.grappa.modelo.PacoteGrappa.Tipo;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
-import com.pi4j.io.gpio.GpioPinDigital;
+import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
+import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
+import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 
 @ApplicationScoped
 public class InterfaceGpioBean implements InterfaceGpio, Serializable{
 	
 	private static final long serialVersionUID = -5883028831352975121L;
-
-	private static final int POSICAO_INICIAL = 0;
-
-	private static final int POSICAO_FINAL = 4;
 
 	private static Pattern VERDADEIRO = Pattern.compile("true|high|verdadeiro|1");
 	
@@ -45,23 +44,27 @@ public class InterfaceGpioBean implements InterfaceGpio, Serializable{
 	
 	private GpioController gpio;
 	
-	private Map<Integer,GpioPinDigital> mapaPinosDigitais;
+	private Map<Integer,GpioPinDigitalOutput> pinosSaida;
+	
+	private Map<Integer,GpioPinDigitalInput> pinosEntrada;
 	
 	public void iniciar(@Observes ServletContext context){
 		try{
 			this.gpio = GpioFactory.getInstance();
-			this.mapaPinosDigitais = new HashMap<>();
-			this.mapaPinosDigitais.put(0, this.gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00, "Monitor", PinState.HIGH));
-			this.mapaPinosDigitais.put(1,this.gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "1", PinState.LOW));
-			this.mapaPinosDigitais.put(2,this.gpio.provisionDigitalOutputPin(RaspiPin.GPIO_02, "2", PinState.LOW));
-			this.mapaPinosDigitais.put(3,this.gpio.provisionDigitalOutputPin(RaspiPin.GPIO_03, "3", PinState.LOW));
-			this.mapaPinosDigitais.put(4,this.gpio.provisionDigitalOutputPin(RaspiPin.GPIO_04, "4", PinState.LOW));
-			this.mapaPinosDigitais.put(5,this.gpio.provisionDigitalInputPin(RaspiPin.GPIO_05, "5"));
-			this.mapaPinosDigitais.put(6,this.gpio.provisionDigitalInputPin(RaspiPin.GPIO_06, "6"));
-			this.mapaPinosDigitais.put(7,this.gpio.provisionDigitalInputPin(RaspiPin.GPIO_07, "7"));
+			this.pinosSaida = new HashMap<>();
+			this.pinosEntrada = new HashMap<>();
+			this.pinosSaida.put(0, this.gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00, "Monitor", PinState.HIGH));
+			this.pinosSaida.put(1,this.gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "1", PinState.LOW));
+			this.pinosSaida.put(2,this.gpio.provisionDigitalOutputPin(RaspiPin.GPIO_02, "2", PinState.LOW));
+			this.pinosSaida.put(3,this.gpio.provisionDigitalOutputPin(RaspiPin.GPIO_03, "3", PinState.LOW));
+			this.pinosSaida.put(4,this.gpio.provisionDigitalOutputPin(RaspiPin.GPIO_04, "4", PinState.LOW));
 			
-			this.aplicacao.log("GPIO 00 iniciado :" + this.gpio.getState(this.mapaPinosDigitais.get(0)), NivelLog.INFO);
-		
+			this.pinosEntrada.put(0,this.gpio.provisionDigitalInputPin(RaspiPin.GPIO_05, PinPullResistance.PULL_DOWN));
+			this.pinosEntrada.put(1,this.gpio.provisionDigitalInputPin(RaspiPin.GPIO_06, PinPullResistance.PULL_DOWN));
+			this.pinosEntrada.put(2,this.gpio.provisionDigitalInputPin(RaspiPin.GPIO_07, PinPullResistance.PULL_DOWN));
+			
+			this.aplicacao.log("GPIO 00 iniciado :" + this.gpio.getState(this.pinosSaida.get(0)), NivelLog.INFO);
+			regsitrarComportamentoInput();
 		}catch(Exception ex){
 			this.aplicacao.log("impossível iniciar Barramento GPIO.", NivelLog.ERRO);
 		}
@@ -86,13 +89,13 @@ public class InterfaceGpioBean implements InterfaceGpio, Serializable{
 			corpo = corpo == null ? "corpo vazio" : corpo.toLowerCase();
 			
 			if(VERDADEIRO.matcher(corpo.trim()).find()){
-				((GpioPinDigitalOutput)this.mapaPinosDigitais.get(endereco)).high();
+				((GpioPinDigitalOutput)this.pinosSaida.get(endereco)).high();
 				requisicao.setResultado(Resultado.SUCESSO);
 			}else if(FALSO.matcher(corpo.trim()).find()){
-				((GpioPinDigitalOutput)this.mapaPinosDigitais.get(endereco)).low();
+				((GpioPinDigitalOutput)this.pinosSaida.get(endereco)).low();
 				requisicao.setResultado(Resultado.SUCESSO);
 			}else if(TROCAR.matcher(corpo.trim()).find()){
-				((GpioPinDigitalOutput)this.mapaPinosDigitais.get(endereco)).toggle();
+				((GpioPinDigitalOutput)this.pinosSaida.get(endereco)).toggle();
 				requisicao.setResultado(Resultado.SUCESSO);
 			}else{
 				requisicao.setResultado(Resultado.ERRO_PROCESSAMENTO);
@@ -106,7 +109,7 @@ public class InterfaceGpioBean implements InterfaceGpio, Serializable{
 	private boolean enderecoValido(Integer endereco) {
 		int posicao = endereco == null ? -1 : endereco.intValue();
 		boolean resultado = false;
-		if( POSICAO_INICIAL <= posicao && posicao <= POSICAO_FINAL){
+		if( !this.pinosEntrada.isEmpty() && 0 <= posicao && posicao <= this.pinosSaida.size()){
 			resultado = true;
 		}
 		return resultado;
@@ -115,10 +118,23 @@ public class InterfaceGpioBean implements InterfaceGpio, Serializable{
 	private PacoteGrappa lerGiop(Integer endereco) {
 		if(enderecoValido(endereco)){ 
 			return new PacoteGrappa(	endereco, Conexao.GPIO, Tipo.LEITURA,
-										this.gpio.getState(this.mapaPinosDigitais.get(endereco)).toString(),
+										this.gpio.getState(this.pinosSaida.get(endereco)).toString(),
 										Resultado.SUCESSO);
 		}else{
 			return new PacoteGrappa(endereco,Conexao.GPIO,Tipo.LEITURA,null,Resultado.ERRO_ENDERECAMENTO);
 		}
 	}
+	
+	public void regsitrarComportamentoInput(){//@Observes EventoBarramentoEletrico evento){
+		this.pinosEntrada.get(2).addListener(new GpioPinListenerDigital() {
+            @Override
+            public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
+            	Object dado = aplicacao.getMapaRegistradores().get(99);
+            	Integer numero = dado == null ? 1 : (Integer) dado;
+            	aplicacao.getMapaRegistradores().put(99, numero + 1);
+            }
+        });
+		this.aplicacao.log(this.pinosEntrada.get(2).getName() + " : evento registrado", NivelLog.INFO);
+	}
+	
 }
