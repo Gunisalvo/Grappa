@@ -11,7 +11,6 @@ import java.util.regex.Pattern;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
-import javax.enterprise.inject.Disposes;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 
@@ -30,7 +29,6 @@ import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
-import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
@@ -72,9 +70,10 @@ public class InterfaceGpioBean implements InterfaceGpio, Serializable{
 		}
 	}
 	
-	public void finalizar(@Disposes ServletContext contexto){
+	@Override
+	public void finalize(){
 		try{
-			((GpioPinDigitalOutput)this.pinosSaida.get(0)).low();
+			this.pinosSaida.get(0).low();
 		}catch(Exception ex){
 			this.aplicacao.log("erro finalizando Barramento GPIO.", NivelLog.ERRO);
 		}
@@ -90,9 +89,9 @@ public class InterfaceGpioBean implements InterfaceGpio, Serializable{
 		this.pinosSaida.put(3,this.gpio.provisionDigitalOutputPin(RaspiPin.GPIO_03, "3", PinState.LOW));
 		this.pinosSaida.put(4,this.gpio.provisionDigitalOutputPin(RaspiPin.GPIO_04, "4", PinState.LOW));
 		
-		this.pinosEntrada.put(0,this.gpio.provisionDigitalInputPin(RaspiPin.GPIO_05, PinPullResistance.PULL_DOWN));
-		this.pinosEntrada.put(1,this.gpio.provisionDigitalInputPin(RaspiPin.GPIO_06, PinPullResistance.PULL_DOWN));
-		this.pinosEntrada.put(2,this.gpio.provisionDigitalInputPin(RaspiPin.GPIO_07, PinPullResistance.PULL_DOWN));
+		this.pinosEntrada.put(0,this.gpio.provisionDigitalInputPin(RaspiPin.GPIO_05));
+		this.pinosEntrada.put(1,this.gpio.provisionDigitalInputPin(RaspiPin.GPIO_06));
+		this.pinosEntrada.put(2,this.gpio.provisionDigitalInputPin(RaspiPin.GPIO_07));
 		
 		this.aplicacao.log("GPIO 00 iniciado :" + this.gpio.getState(this.pinosSaida.get(0)), NivelLog.INFO);
 	}
@@ -153,13 +152,13 @@ public class InterfaceGpioBean implements InterfaceGpio, Serializable{
 			corpo = corpo == null ? "corpo vazio" : corpo.toLowerCase();
 			
 			if(VERDADEIRO.matcher(corpo.trim()).find()){
-				((GpioPinDigitalOutput)this.pinosSaida.get(endereco)).high();
+				this.pinosSaida.get(endereco).high();
 				requisicao.setResultado(Resultado.SUCESSO);
 			}else if(FALSO.matcher(corpo.trim()).find()){
-				((GpioPinDigitalOutput)this.pinosSaida.get(endereco)).low();
+				this.pinosSaida.get(endereco).low();
 				requisicao.setResultado(Resultado.SUCESSO);
 			}else if(TROCAR.matcher(corpo.trim()).find()){
-				((GpioPinDigitalOutput)this.pinosSaida.get(endereco)).toggle();
+				this.pinosSaida.get(endereco).toggle();
 				requisicao.setResultado(Resultado.SUCESSO);
 			}else{
 				requisicao.setResultado(Resultado.ERRO_PROCESSAMENTO);
@@ -192,7 +191,9 @@ public class InterfaceGpioBean implements InterfaceGpio, Serializable{
 	private void regsitrarComportamentoInput(final ServicoBarramentoEletrico servico){
 		GPIOListener anotacao = servico.getClass().getAnnotation(GPIOListener.class);
 		final int pino = anotacao.pino();
+		
 		this.pinosEntrada.get(anotacao.pino()).addListener(new GpioPinListenerDigital() {
+			
             @Override
             public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent evento) {
             	aplicacao.log("executando evento de mundaça de sinal " + pino, NivelLog.INFO);
@@ -204,6 +205,7 @@ public class InterfaceGpioBean implements InterfaceGpio, Serializable{
 				return resultado;
 			}
         });
+		
 		this.aplicacao.log(pino + " : " + servico.getClass().getName() + ", evento registrado", NivelLog.INFO);
 	}
 }
