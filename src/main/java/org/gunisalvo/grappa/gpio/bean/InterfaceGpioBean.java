@@ -1,8 +1,12 @@
 package org.gunisalvo.grappa.gpio.bean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -10,9 +14,12 @@ import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 
+import org.gunisalvo.grappa.Barramento;
 import org.gunisalvo.grappa.Grappa;
 import org.gunisalvo.grappa.Grappa.NivelLog;
+import org.gunisalvo.grappa.gpio.GPIOListener;
 import org.gunisalvo.grappa.gpio.InterfaceGpio;
+import org.gunisalvo.grappa.gpio.ServicoBarramentoEletrico;
 import org.gunisalvo.grappa.modelo.PacoteGrappa;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.Conexao;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.Resultado;
@@ -39,35 +46,83 @@ public class InterfaceGpioBean implements InterfaceGpio, Serializable{
 	
 	private static Pattern TROCAR = Pattern.compile("toggle|trocar|2");
 	
+	private String RAIZ_PROJETO = "/WEB-INF/classes/";
+	
 	@Inject
 	private Grappa aplicacao;
+	
+	@Inject
+	private Barramento barramento;
 	
 	private GpioController gpio;
 	
 	private Map<Integer,GpioPinDigitalOutput> pinosSaida;
 	
 	private Map<Integer,GpioPinDigitalInput> pinosEntrada;
+
+	private List<Class<ServicoBarramentoEletrico>> servicos;
 	
-	public void iniciar(@Observes ServletContext context){
+	public void iniciar(@Observes ServletContext contexto){
 		try{
-			this.gpio = GpioFactory.getInstance();
-			this.pinosSaida = new HashMap<>();
-			this.pinosEntrada = new HashMap<>();
-			this.pinosSaida.put(0, this.gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00, "Monitor", PinState.HIGH));
-			this.pinosSaida.put(1,this.gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "1", PinState.LOW));
-			this.pinosSaida.put(2,this.gpio.provisionDigitalOutputPin(RaspiPin.GPIO_02, "2", PinState.LOW));
-			this.pinosSaida.put(3,this.gpio.provisionDigitalOutputPin(RaspiPin.GPIO_03, "3", PinState.LOW));
-			this.pinosSaida.put(4,this.gpio.provisionDigitalOutputPin(RaspiPin.GPIO_04, "4", PinState.LOW));
-			
-			this.pinosEntrada.put(0,this.gpio.provisionDigitalInputPin(RaspiPin.GPIO_05, PinPullResistance.PULL_DOWN));
-			this.pinosEntrada.put(1,this.gpio.provisionDigitalInputPin(RaspiPin.GPIO_06, PinPullResistance.PULL_DOWN));
-			this.pinosEntrada.put(2,this.gpio.provisionDigitalInputPin(RaspiPin.GPIO_07, PinPullResistance.PULL_DOWN));
-			
-			this.aplicacao.log("GPIO 00 iniciado :" + this.gpio.getState(this.pinosSaida.get(0)), NivelLog.INFO);
-			regsitrarComportamentoInput();
+			iniciarPinos();
+			iniciarServicos(contexto);
 		}catch(Exception ex){
 			this.aplicacao.log("impossível iniciar Barramento GPIO.", NivelLog.ERRO);
 		}
+	}
+
+	private void iniciarPinos() {
+		this.gpio = GpioFactory.getInstance();
+		this.pinosSaida = new HashMap<>();
+		this.pinosEntrada = new HashMap<>();
+		this.pinosSaida.put(0, this.gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00, "Monitor", PinState.HIGH));
+		this.pinosSaida.put(1,this.gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "1", PinState.LOW));
+		this.pinosSaida.put(2,this.gpio.provisionDigitalOutputPin(RaspiPin.GPIO_02, "2", PinState.LOW));
+		this.pinosSaida.put(3,this.gpio.provisionDigitalOutputPin(RaspiPin.GPIO_03, "3", PinState.LOW));
+		this.pinosSaida.put(4,this.gpio.provisionDigitalOutputPin(RaspiPin.GPIO_04, "4", PinState.LOW));
+		
+		this.pinosEntrada.put(0,this.gpio.provisionDigitalInputPin(RaspiPin.GPIO_05, PinPullResistance.PULL_DOWN));
+		this.pinosEntrada.put(1,this.gpio.provisionDigitalInputPin(RaspiPin.GPIO_06, PinPullResistance.PULL_DOWN));
+		this.pinosEntrada.put(2,this.gpio.provisionDigitalInputPin(RaspiPin.GPIO_07, PinPullResistance.PULL_DOWN));
+		
+		this.aplicacao.log("GPIO 00 iniciado :" + this.gpio.getState(this.pinosSaida.get(0)), NivelLog.INFO);
+	}
+	
+	private void iniciarServicos(ServletContext contexto){
+		this.servicos = new ArrayList<>();
+		buscaRecursivaServicos(RAIZ_PROJETO, contexto);
+		try{
+			for(Class<ServicoBarramentoEletrico> classe : this.servicos){
+				regsitrarComportamentoInput(classe.newInstance());
+			}
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void buscaRecursivaServicos(String caminho, ServletContext contexto){
+		
+		Set<String> recursos = contexto.getResourcePaths(caminho);
+        
+        if (recursos != null) {
+            for (Iterator<String> iterator = recursos.iterator(); iterator.hasNext();) {
+                String caminhoAtual = (String) iterator.next();
+     
+                if (caminhoAtual.endsWith(".class")) {
+                	try {
+						Class<ServicoBarramentoEletrico> classe = (Class<ServicoBarramentoEletrico>) Class.forName(caminhoAtual.replace( RAIZ_PROJETO, "").replace("/", ".").replace( ".class", "" ));
+						if(classe.isAnnotationPresent(GPIOListener.class)){
+							this.servicos.add(classe);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+                } else {
+                	buscaRecursivaServicos(caminhoAtual, contexto);
+                }
+            }
+        }
 	}
 	
 	@Override
@@ -125,16 +180,19 @@ public class InterfaceGpioBean implements InterfaceGpio, Serializable{
 		}
 	}
 	
-	public void regsitrarComportamentoInput(){//@Observes EventoBarramentoEletrico evento){
-		this.pinosEntrada.get(2).addListener(new GpioPinListenerDigital() {
+	private void regsitrarComportamentoInput(final ServicoBarramentoEletrico servico){
+		GPIOListener anotacao = servico.getClass().getAnnotation(GPIOListener.class);
+		this.pinosEntrada.get(anotacao.pino()).addListener(new GpioPinListenerDigital() {
             @Override
-            public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
-            	Object dado = aplicacao.getMapaRegistradores().get(99);
-            	Integer numero = dado == null ? 1 : (Integer) dado;
-            	aplicacao.getMapaRegistradores().put(99, numero + 1);
+            public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent evento) {
+            	servico.processarServico(barramento,traduzirEstado(evento));
             }
+
+			private Integer traduzirEstado(GpioPinDigitalStateChangeEvent evento) {
+				Integer resultado = evento.getState().getValue();
+				return resultado;
+			}
         });
-		this.aplicacao.log(this.pinosEntrada.get(2).getName() + " : evento registrado", NivelLog.INFO);
+		this.aplicacao.log(anotacao.pino() + " : " + servico.getClass().getName() + ", evento registrado", NivelLog.INFO);
 	}
-	
 }
