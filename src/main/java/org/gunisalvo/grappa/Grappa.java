@@ -19,7 +19,7 @@ public interface Grappa {
 		;
 	}
 	
-	final static Grappa INSTANCIA = new GrappaBean();
+	Grappa INSTANCIA = new GrappaBean();
 	
 	void log(String mensagem, NivelLog nivel);
 

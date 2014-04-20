@@ -11,7 +11,6 @@ import java.util.regex.Pattern;
 
 import javax.servlet.ServletContext;
 
-import org.gunisalvo.grappa.Barramento;
 import org.gunisalvo.grappa.Grappa;
 import org.gunisalvo.grappa.Grappa.NivelLog;
 import org.gunisalvo.grappa.gpio.GPIOListener;
@@ -181,7 +180,7 @@ public class InterfaceGpioBean implements InterfaceGpio, Serializable{
             @Override
             public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent evento) {
             	Grappa.INSTANCIA.log("executando evento de mundaça de sinal " + pino, NivelLog.INFO);
-            	servico.processarServico(Barramento.INSTANCIA,traduzirEstado(evento));
+            	servico.processarServico(traduzirEstado(evento));
             }
 
 			private Integer traduzirEstado(GpioPinDigitalStateChangeEvent evento) {
@@ -195,6 +194,8 @@ public class InterfaceGpioBean implements InterfaceGpio, Serializable{
 
 	@Override
 	public void registrarDesligamento(ServletContext contexto) {
-		//this.pinosSaida.get(0).low();
+		for(GpioPinDigitalOutput pino : this.pinosSaida.values()){
+			pino.low();
+		}
 	}
 }
