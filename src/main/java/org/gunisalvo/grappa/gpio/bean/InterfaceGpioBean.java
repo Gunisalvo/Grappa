@@ -9,9 +9,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
-import javax.inject.Inject;
 import javax.servlet.ServletContext;
 
 import org.gunisalvo.grappa.Barramento;
@@ -34,7 +31,6 @@ import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 
-@ApplicationScoped
 public class InterfaceGpioBean implements InterfaceGpio, Serializable{
 
 	private static final long serialVersionUID = -5883028831352975121L;
@@ -49,12 +45,6 @@ public class InterfaceGpioBean implements InterfaceGpio, Serializable{
 	
 	private static final String RAIZ_PACOTE_SERVICOS = RAIZ_CLASSES + "org/gunisalvo/grappa/servico";
 	
-	@Inject
-	private Grappa aplicacao;
-	
-	@Inject
-	private Barramento barramento;
-	
 	private GpioController gpio;
 	
 	private Map<Integer,GpioPinDigitalOutput> pinosSaida;
@@ -63,21 +53,13 @@ public class InterfaceGpioBean implements InterfaceGpio, Serializable{
 
 	private List<Class<ServicoBarramentoEletrico>> servicos;
 	
-	public void iniciar(@Observes ServletContext contexto){
+	@Override
+	public void registrarContexto(ServletContext contexto){
 		try{
 			iniciarPinos();
 			iniciarServicos(contexto);
 		}catch(Exception ex){
-			this.aplicacao.log("impossível iniciar Barramento GPIO.", NivelLog.ERRO);
-		}
-	}
-	
-	@Override
-	public void finalize(){
-		try{
-			this.pinosSaida.get(0).low();
-		}catch(Exception ex){
-			this.aplicacao.log("erro finalizando Barramento GPIO.", NivelLog.ERRO);
+			Grappa.INSTANCIA.log("impossível iniciar Barramento GPIO.", NivelLog.ERRO);
 		}
 	}
 
@@ -95,7 +77,7 @@ public class InterfaceGpioBean implements InterfaceGpio, Serializable{
 		this.pinosEntrada.put(1,this.gpio.provisionDigitalInputPin(RaspiPin.GPIO_06));
 		this.pinosEntrada.put(2,this.gpio.provisionDigitalInputPin(RaspiPin.GPIO_07));
 		
-		this.aplicacao.log("GPIO 00 iniciado :" + this.gpio.getState(this.pinosSaida.get(0)), NivelLog.INFO);
+		Grappa.INSTANCIA.log("GPIO 00 iniciado :" + this.gpio.getState(this.pinosSaida.get(0)), NivelLog.INFO);
 	}
 	
 	private void iniciarServicos(ServletContext contexto){
@@ -149,26 +131,26 @@ public class InterfaceGpioBean implements InterfaceGpio, Serializable{
 
 	private PacoteGrappa escreverEmGpio(PacoteGrappa requisicao) {
 		Integer endereco = requisicao.getEndereco();
+		PacoteGrappa resultado = null;
 		if(enderecoValido(endereco)){ 
 			String corpo = requisicao.getCorpo();
 			corpo = corpo == null ? "corpo vazio" : corpo.toLowerCase();
-			
 			if(VERDADEIRO.matcher(corpo.trim()).find()){
 				this.pinosSaida.get(endereco).high();
-				requisicao.setResultado(Resultado.SUCESSO);
+				resultado = requisicao.gerarPacoteResultado(Resultado.SUCESSO, "Valor pino " + endereco + " alterado para ++");
 			}else if(FALSO.matcher(corpo.trim()).find()){
 				this.pinosSaida.get(endereco).low();
-				requisicao.setResultado(Resultado.SUCESSO);
+				resultado = requisicao.gerarPacoteResultado(Resultado.SUCESSO, "Valor pino " + endereco + " alterado para --");
 			}else if(TROCAR.matcher(corpo.trim()).find()){
 				this.pinosSaida.get(endereco).toggle();
-				requisicao.setResultado(Resultado.SUCESSO);
+				resultado = requisicao.gerarPacoteResultado(Resultado.SUCESSO, "Valor pino " + endereco + " trocado");
 			}else{
-				requisicao.setResultado(Resultado.ERRO_PROCESSAMENTO);
+				resultado = requisicao.gerarPacoteResultado(Resultado.ERRO_PROCESSAMENTO, corpo + " valor inválido.");
 			}
 		}else{
-			requisicao.setResultado(Resultado.ERRO_ENDERECAMENTO);
+			resultado = requisicao.gerarPacoteResultado(Resultado.ERRO_ENDERECAMENTO, endereco + " endereço inválido.");
 		}
-		return requisicao;
+		return resultado;
 	}
 
 	private boolean enderecoValido(Integer endereco) {
@@ -186,7 +168,7 @@ public class InterfaceGpioBean implements InterfaceGpio, Serializable{
 										this.gpio.getState(this.pinosSaida.get(endereco)).toString(),
 										Resultado.SUCESSO);
 		}else{
-			return new PacoteGrappa(endereco,Conexao.GPIO,Tipo.LEITURA,null,Resultado.ERRO_ENDERECAMENTO);
+			return new PacoteGrappa(endereco,Conexao.GPIO,Tipo.LEITURA, endereco + " endereço inválido.", Resultado.ERRO_ENDERECAMENTO);
 		}
 	}
 	
@@ -198,8 +180,8 @@ public class InterfaceGpioBean implements InterfaceGpio, Serializable{
 			
             @Override
             public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent evento) {
-            	aplicacao.log("executando evento de mundaça de sinal " + pino, NivelLog.INFO);
-            	servico.processarServico(barramento,traduzirEstado(evento));
+            	Grappa.INSTANCIA.log("executando evento de mundaça de sinal " + pino, NivelLog.INFO);
+            	servico.processarServico(Barramento.INSTANCIA,traduzirEstado(evento));
             }
 
 			private Integer traduzirEstado(GpioPinDigitalStateChangeEvent evento) {
@@ -208,6 +190,11 @@ public class InterfaceGpioBean implements InterfaceGpio, Serializable{
 			}
         });
 		
-		this.aplicacao.log(pino + " : " + servico.getClass().getName() + ", evento registrado", NivelLog.INFO);
+		Grappa.INSTANCIA.log(pino + " : " + servico.getClass().getName() + ", evento registrado", NivelLog.INFO);
+	}
+
+	@Override
+	public void registrarDesligamento(ServletContext contexto) {
+		//this.pinosSaida.get(0).low();
 	}
 }

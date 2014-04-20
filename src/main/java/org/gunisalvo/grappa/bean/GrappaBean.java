@@ -11,8 +11,6 @@ import java.util.Calendar;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
 import javax.servlet.ServletContext;
 
 import org.apache.log4j.Logger;
@@ -21,7 +19,6 @@ import org.gunisalvo.grappa.Grappa;
 import org.gunisalvo.grappa.modelo.PacoteGrappa;
 import org.gunisalvo.grappa.registradores.Registradores;
 
-@ApplicationScoped
 public class GrappaBean implements Grappa, Serializable{
 
 	private static final long serialVersionUID = 1015342890511807215L;
@@ -34,7 +31,8 @@ public class GrappaBean implements Grappa, Serializable{
 	
 	private String caminhoArquivoLog;
 	
-	public void registrarContexto(@Observes ServletContext context) {
+	@Override
+	public void registrarContexto(ServletContext context) {
 		this.caminhoArquivoLog = context.getRealPath("") + File.separator + "log" + File.separator + "grappa.log";
 		iniciar();
 	}
@@ -120,5 +118,15 @@ public class GrappaBean implements Grappa, Serializable{
 	@Override
 	public PacoteGrappa processarPacote(PacoteGrappa requisicao) {
 		return Registradores.processarPacote(requisicao);
+	}
+
+	@Override
+	public void registrarDesligamento(ServletContext contexto) {
+		LOGGER.warn("");
+		LOGGER.warn("=========================================================================");
+		LOGGER.warn("GRAPPA >> DEPLOY DESATIVADO: " + new SimpleDateFormat("HH:mm:ss dd/MM/yyyy").format(Calendar.getInstance().getTime()));
+		LOGGER.warn( "log criado em: "+ this.caminhoArquivoLog );
+		LOGGER.warn("=========================================================================");
+		LOGGER.warn("");
 	}
 }

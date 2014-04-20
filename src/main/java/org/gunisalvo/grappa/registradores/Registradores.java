@@ -12,6 +12,7 @@ public class Registradores {
 	private static Map<Integer,Object> MAPA_REGISTRADORES;
 	
 	public static PacoteGrappa processarPacote(PacoteGrappa requisicao) {
+		PacoteGrappa resultado = null;
 		
 		if(MAPA_REGISTRADORES == null){
 			MAPA_REGISTRADORES = new HashMap<Integer, Object>();
@@ -21,20 +22,20 @@ public class Registradores {
 		case LEITURA:
 			Integer endereco = requisicao.getEndereco();
 			if(!isEnderecoUtilizado(endereco)){
-				requisicao.setResultado(Resultado.ERRO_ENDERECAMENTO);
+				resultado = requisicao.gerarPacoteResultado(Resultado.ERRO_ENDERECAMENTO, "endereço vazio.");
 			}else{
 				Object valor = MAPA_REGISTRADORES.get(endereco);
-				requisicao.setCorpo( valor.toString() );
-				requisicao.setResultado(Resultado.SUCESSO);
+				resultado = requisicao.gerarPacoteResultado(Resultado.SUCESSO, valor.toString());
 			}
-			return requisicao;
+			return resultado;
 		case ESCRITA:
 			if(MAPA_REGISTRADORES.containsKey(requisicao.getEndereco())){
-				requisicao.setCorpo("Valor Substituido");
+				resultado = requisicao.gerarPacoteResultado(Resultado.SUCESSO, "Valor Substituido de : \"" + MAPA_REGISTRADORES.get(requisicao.getEndereco()) + "\" por: \"" + requisicao.getCorpo() +"\"");
+			}else{
+				resultado = requisicao.gerarPacoteResultado(Resultado.SUCESSO, "Valor inserido : \"" + requisicao.getCorpo() +"\"");
 			}
 			MAPA_REGISTRADORES.put(requisicao.getEndereco(), requisicao.getCorpo());
-			requisicao.setResultado(Resultado.SUCESSO);
-			return requisicao;
+			return resultado;
 		default:
 			throw new RuntimeException();
 		}

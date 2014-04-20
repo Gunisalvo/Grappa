@@ -89,6 +89,10 @@ public class PacoteGrappa {
 		this.resultado = resultado;
 	}
 
+	public PacoteGrappa gerarPacoteResultado(Resultado resultado, String mensagem){
+		return new PacoteGrappa(this.endereco, this.conexao, this.tipo, mensagem, resultado);
+	}
+	
 	@Override
 	public String toString() {
 		return "PacoteGrappa [endereco=" + endereco + ", conexao=" + conexao
