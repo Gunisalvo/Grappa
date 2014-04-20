@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -20,7 +19,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.gunisalvo.grappa.Grappa;
 import org.gunisalvo.grappa.modelo.PacoteGrappa;
-import org.gunisalvo.grappa.modelo.PacoteGrappa.Resultado;
+import org.gunisalvo.grappa.registradores.Registradores;
 
 @ApplicationScoped
 public class GrappaBean implements Grappa, Serializable{
@@ -33,8 +32,6 @@ public class GrappaBean implements Grappa, Serializable{
 
 	private Properties configuracoes;
 	
-	private Map<Integer,Object> mapaRegistradores;
-	
 	private String caminhoArquivoLog;
 	
 	public void registrarContexto(@Observes ServletContext context) {
@@ -43,7 +40,6 @@ public class GrappaBean implements Grappa, Serializable{
 	}
 	
 	private void iniciar(){
-		this.mapaRegistradores = new HashMap<Integer, Object>();
 		this.configuracoes = new Properties();
 		System.out.println(this.caminhoArquivoLog);
 		try {
@@ -87,12 +83,12 @@ public class GrappaBean implements Grappa, Serializable{
 	
 	@Override
 	public Map<Integer, Object> getMapaRegistradores() {
-		return mapaRegistradores;
+		return Registradores.getMapa();
 	}
 	
 	@Override
 	public void limparMapaRegistradores() {
-		this.mapaRegistradores.clear();
+		Registradores.limpar();
 		LOGGER.warn("-------------------------");
 		LOGGER.warn("ESTADO CONTROLADOR LIMPO.");
 		LOGGER.warn("-------------------------");
@@ -123,25 +119,6 @@ public class GrappaBean implements Grappa, Serializable{
 
 	@Override
 	public PacoteGrappa processarPacote(PacoteGrappa requisicao) {
-		switch(requisicao.getTipo()){
-		case LEITURA:
-			Object valor = this.mapaRegistradores.get(requisicao.getEndereco().toString());
-			if(valor == null){
-				requisicao.setResultado(Resultado.ERRO_ENDERECAMENTO);
-			}else{
-				requisicao.setCorpo( valor.toString() );
-				requisicao.setResultado(Resultado.SUCESSO);
-			}
-			return requisicao;
-		case ESCRITA:
-			if(this.mapaRegistradores.containsKey(requisicao.getEndereco())){
-				requisicao.setCorpo("Valor Substituido");
-			}
-			this.mapaRegistradores.put(requisicao.getEndereco(), requisicao.getCorpo());
-			requisicao.setResultado(Resultado.SUCESSO);
-			return requisicao;
-		default:
-			throw new RuntimeException();
-		}
+		return Registradores.processarPacote(requisicao);
 	}
 }

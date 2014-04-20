@@ -89,4 +89,11 @@ public class PacoteGrappa {
 		this.resultado = resultado;
 	}
 
+	@Override
+	public String toString() {
+		return "PacoteGrappa [endereco=" + endereco + ", conexao=" + conexao
+				+ ", tipo=" + tipo + ", corpo=" + corpo + ", resultado="
+				+ resultado + "]";
+	}
+
 }

@@ -36,16 +36,18 @@ import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 
 @ApplicationScoped
 public class InterfaceGpioBean implements InterfaceGpio, Serializable{
-	
+
 	private static final long serialVersionUID = -5883028831352975121L;
 
-	private static Pattern VERDADEIRO = Pattern.compile("true|high|verdadeiro|1");
+	private static final Pattern VERDADEIRO = Pattern.compile("true|high|verdadeiro|1");
 	
-	private static Pattern FALSO = Pattern.compile("false|low|falso|0");
+	private static final Pattern FALSO = Pattern.compile("false|low|falso|0");
 	
-	private static Pattern TROCAR = Pattern.compile("toggle|trocar|2");
+	private static final Pattern TROCAR = Pattern.compile("toggle|trocar|2");
 	
-	private String RAIZ_PROJETO = "/WEB-INF/classes/";
+	private static final String RAIZ_CLASSES = "/WEB-INF/classes/";
+	
+	private static final String RAIZ_PACOTE_SERVICOS = RAIZ_CLASSES + "org/gunisalvo/grappa/servico";
 	
 	@Inject
 	private Grappa aplicacao;
@@ -98,7 +100,7 @@ public class InterfaceGpioBean implements InterfaceGpio, Serializable{
 	
 	private void iniciarServicos(ServletContext contexto){
 		this.servicos = new ArrayList<>();
-		buscaRecursivaServicos(RAIZ_PROJETO, contexto);
+		buscaRecursivaServicos(RAIZ_PACOTE_SERVICOS, contexto);
 		try{
 			for(Class<ServicoBarramentoEletrico> classe : this.servicos){
 				regsitrarComportamentoInput(classe.newInstance());
@@ -119,7 +121,7 @@ public class InterfaceGpioBean implements InterfaceGpio, Serializable{
      
                 if (caminhoAtual.endsWith(".class")) {
                 	try {
-						Class<ServicoBarramentoEletrico> classe = (Class<ServicoBarramentoEletrico>) Class.forName(caminhoAtual.replace( RAIZ_PROJETO, "").replace("/", ".").replace( ".class", "" ));
+						Class<ServicoBarramentoEletrico> classe = (Class<ServicoBarramentoEletrico>) Class.forName(caminhoAtual.replace( RAIZ_CLASSES, "").replace("/", ".").replace( ".class", "" ));
 						if(classe.isAnnotationPresent(GPIOListener.class)){
 							this.servicos.add(classe);
 						}
