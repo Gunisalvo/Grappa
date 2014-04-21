@@ -7,7 +7,7 @@ Modo de usar:
 
 2. Expandir Disco para ocupar todo o disco
 3. Escolher linguagem com formatação UTF-8 (pt-BR, en-US, etc...)
-4. Reduzir a memória gráfica para 16MB (valor mínimo, assim temos mais espaço alocado apar processamento)
+4. Reduzir a memória gráfica para 16MB (valor mínimo, assim temos mais espaço alocado para processamento)
 
 Se você precisar quiser acessar os comandos acima em um setup finalizado digite: raspi-config
 
