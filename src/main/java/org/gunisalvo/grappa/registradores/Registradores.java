@@ -30,7 +30,7 @@ public class Registradores {
 			return resultado;
 		case ESCRITA:
 			if(MAPA_REGISTRADORES.containsKey(requisicao.getEndereco())){
-				resultado = requisicao.gerarPacoteResultado(Resultado.SUCESSO, "Valor Substituido de : \"" + MAPA_REGISTRADORES.get(requisicao.getEndereco()) + "\" por: \"" + requisicao.getCorpo() +"\"");
+				resultado = requisicao.gerarPacoteResultado(Resultado.SUCESSO, "Valor Substituido de : \"" + MAPA_REGISTRADORES.get(requisicao.getEndereco()).getValor() + "\" por: \"" + requisicao.getCorpo() +"\"");
 			}else{
 				resultado = requisicao.gerarPacoteResultado(Resultado.SUCESSO, "Valor inserido : \"" + requisicao.getCorpo() +"\"");
 				CelulaRegistrador novaCelula = new CelulaRegistrador();
