@@ -3,6 +3,7 @@ package org.gunisalvo.grappa.registradores;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.gunisalvo.grappa.modelo.PacoteGrappa;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.Resultado;
@@ -30,7 +31,11 @@ public class Registradores {
 			return resultado;
 		case ESCRITA:
 			if(MAPA_REGISTRADORES.containsKey(requisicao.getEndereco())){
-				resultado = requisicao.gerarPacoteResultado(Resultado.SUCESSO, "Valor Substituido de : \"" + MAPA_REGISTRADORES.get(requisicao.getEndereco()).getValor() + "\" por: \"" + requisicao.getCorpo() +"\"");
+				if(!MAPA_REGISTRADORES.get(requisicao.getEndereco()).isCelulaVazia()){
+					resultado = requisicao.gerarPacoteResultado(Resultado.SUCESSO, "Valor Substituido de : \"" + MAPA_REGISTRADORES.get(requisicao.getEndereco()).getValor() + "\" por: \"" + requisicao.getCorpo() +"\"");
+				}else{
+					resultado = requisicao.gerarPacoteResultado(Resultado.SUCESSO, "Valor inserido em célular com Listener: \"" + requisicao.getCorpo() +"\"");
+				}
 			}else{
 				resultado = requisicao.gerarPacoteResultado(Resultado.SUCESSO, "Valor inserido : \"" + requisicao.getCorpo() +"\"");
 				CelulaRegistrador novaCelula = new CelulaRegistrador();
@@ -53,7 +58,9 @@ public class Registradores {
 
 	public static void limpar() {
 		if(MAPA_REGISTRADORES != null){
-			MAPA_REGISTRADORES.clear();
+			for(Entry<Integer,CelulaRegistrador> e : MAPA_REGISTRADORES.entrySet()){
+				e.getValue().setValor(null);
+			}
 		}
 	}
 	

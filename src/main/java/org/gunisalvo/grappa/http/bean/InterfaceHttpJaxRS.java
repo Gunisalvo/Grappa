@@ -24,8 +24,10 @@ public class InterfaceHttpJaxRS implements InterfaceHttp{
 	public Response lerMapaRegistradores() {
 		StringBuilder resultado = new StringBuilder("Estado Controlador:");
 		for(Entry<Integer, CelulaRegistrador> entrada : Grappa.INSTANCIA.getMapaRegistradores().entrySet()){
-			resultado.append("\n");
-			resultado.append(" - " + entrada.getKey() + " : " + entrada.getValue().getValor().toString());
+			if(!entrada.getValue().isCelulaVazia()){
+				resultado.append("\n");
+				resultado.append(" - " + entrada.getKey() + " : " + entrada.getValue().getValor().toString());
+			}
 		}
 		return Response.ok(resultado.toString(), MediaType.TEXT_PLAIN).build();
 	}

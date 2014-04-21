@@ -29,7 +29,8 @@ public class CelulaRegistrador {
 		this.listeners.add(servico);
 	}
 	
-	boolean isCelulaVazia(){
+	public boolean isCelulaVazia(){
 		return this.valor == null;
 	}
+
 }
