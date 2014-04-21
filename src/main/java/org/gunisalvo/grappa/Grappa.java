@@ -6,6 +6,7 @@ import javax.servlet.ServletContext;
 
 import org.gunisalvo.grappa.bean.GrappaBean;
 import org.gunisalvo.grappa.modelo.PacoteGrappa;
+import org.gunisalvo.grappa.registradores.CelulaRegistrador;
 
 
 public interface Grappa {
@@ -27,7 +28,7 @@ public interface Grappa {
 
 	String getLog();
 
-	Map<Integer, Object> getMapaRegistradores();
+	Map<Integer, CelulaRegistrador> getMapaRegistradores();
 
 	void limparMapaRegistradores();
 

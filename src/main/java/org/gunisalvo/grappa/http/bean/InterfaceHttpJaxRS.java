@@ -11,6 +11,7 @@ import org.gunisalvo.grappa.http.InterfaceHttp;
 import org.gunisalvo.grappa.modelo.PacoteGrappa;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.Conexao;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.Tipo;
+import org.gunisalvo.grappa.registradores.CelulaRegistrador;
 
 public class InterfaceHttpJaxRS implements InterfaceHttp{
 	
@@ -22,9 +23,9 @@ public class InterfaceHttpJaxRS implements InterfaceHttp{
 	@Override
 	public Response lerMapaRegistradores() {
 		StringBuilder resultado = new StringBuilder("Estado Controlador:");
-		for(Entry<Integer, Object> entrada : Grappa.INSTANCIA.getMapaRegistradores().entrySet()){
+		for(Entry<Integer, CelulaRegistrador> entrada : Grappa.INSTANCIA.getMapaRegistradores().entrySet()){
 			resultado.append("\n");
-			resultado.append(" - " + entrada.getKey() + " : " + entrada.getValue().toString());
+			resultado.append(" - " + entrada.getKey() + " : " + entrada.getValue().getValor().toString());
 		}
 		return Response.ok(resultado.toString(), MediaType.TEXT_PLAIN).build();
 	}
