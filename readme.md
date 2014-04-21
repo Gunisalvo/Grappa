@@ -16,23 +16,24 @@ Se você precisar quiser acessar os comandos acima em um setup finalizado digite
 5. sudo apt-get update
 6. sudo apt-get upgrade
 7. sudo apt-get install openjdk-7-jdk
-7.1 sudo nano /etc/enviroment
-7.2 inserir linha: JAVA_HOME="/usr/lib/jvm/java-7-openjdk-armhf"
-7.3 salvar
-7.4 source /etc/enviroment
-8. sudo apt-get install tomcat7
-8.1 sudo nano /etc/default/tomcat7
-8.2 trocar variável para TOMCAT7_USER=root
-8.2 trocar variável para TOMCAT7_GROUP=root
+8. sudo nano /etc/enviroment
+9. inserir linha: JAVA_HOME="/usr/lib/jvm/java-7-openjdk-armhf"
+10. salvar
+11. source /etc/enviroment
+12. sudo apt-get install tomcat7
+13. sudo nano /etc/default/tomcat7
+14. trocar variável para TOMCAT7_USER=root
+15. trocar variável para TOMCAT7_GROUP=root
+16. salvar e sair
 
 - Código Fonte:
 
-9. sudo apt-get install maven
-10. em /home/pi/ baixar codigo fonte:
+18. sudo apt-get install maven
+19. em /home/pi/ baixar codigo fonte:
 
 git clone https://github.com/Gunisalvo/Grappa.git
 
-11. cd Grappa/
-12. mvn clean package
-13. sudo cp /home/pi/Grappa/target/grappa.war /var/lib/tomcat7/webapps/grappa.war
-14. sudo service tomcat7 restart
+20. cd Grappa/
+21. mvn clean package
+22. sudo cp /home/pi/Grappa/target/grappa.war /var/lib/tomcat7/webapps/grappa.war
+23. sudo service tomcat7 restart
