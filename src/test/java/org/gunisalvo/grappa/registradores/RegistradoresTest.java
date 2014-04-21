@@ -27,7 +27,7 @@ public class RegistradoresTest {
 			assertEquals("Teste " + i, retorno.getCorpo());
 		}
 		Registradores.limpar();
-		assertEquals(0,Registradores.getMapa().keySet().size());
+		assertEquals(10,Registradores.getMapa().keySet().size());
 	}
 	
 	@Test
