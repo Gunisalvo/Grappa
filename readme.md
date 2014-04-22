@@ -50,3 +50,4 @@ Diagramas Elétricos:
 ----
 
 1. Mapeamento das portas GPIO: https://github.com/Gunisalvo/Grappa/blob/master/diagramas/mapa-gpio.png
+2. Circuito teste: https://github.com/Gunisalvo/Grappa/blob/master/diagramas/circuito-teste.png
