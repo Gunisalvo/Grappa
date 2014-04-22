@@ -45,3 +45,8 @@ Código Fonte:
 21. mvn clean package
 22. sudo cp /home/pi/Grappa/target/grappa.war /var/lib/tomcat7/webapps/grappa.war
 23. sudo service tomcat7 restart
+
+Diagramas Elétricos:
+----
+
+1. Mapeamento das portas GPIO: https://github.com/Gunisalvo/Grappa/blob/master/diagramas/mapa-gpio.png
