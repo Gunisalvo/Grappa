@@ -1,6 +1,7 @@
 Modo de usar:
 
 1. Montar um SD Card (preferencialmente classe 10) com o seguinte sistema operacional:
+
 -- 2014-01-07-wheezy-raspian.zip >> http://downloads.raspberrypi.org/raspbian_latest
 
 - Setup:
