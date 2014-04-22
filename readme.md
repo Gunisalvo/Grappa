@@ -1,7 +1,7 @@
 Modo de usar:
 
 1. Montar um SD Card (preferencialmente classe 10) com o seguinte sistema operacional:
-2014-01-07-wheezy-raspian.zip >> http://downloads.raspberrypi.org/raspbian_latest
+-- 2014-01-07-wheezy-raspian.zip >> http://downloads.raspberrypi.org/raspbian_latest
 
 - Setup:
 
@@ -9,7 +9,7 @@ Modo de usar:
 3. Escolher linguagem com formatação UTF-8 (pt-BR, en-US, etc...)
 4. Reduzir a memória gráfica para 16MB (valor mínimo, assim temos mais espaço alocado para processamento)
 
-Se você precisar quiser acessar os comandos acima em um setup finalizado digite: raspi-config
+-- Se você precisar quiser acessar os comandos acima em um setup finalizado digite: raspi-config
 
 - Preparando Ambiente:
 
@@ -31,7 +31,7 @@ Se você precisar quiser acessar os comandos acima em um setup finalizado digite
 18. sudo apt-get install maven
 19. em /home/pi/ baixar codigo fonte:
 
-git clone https://github.com/Gunisalvo/Grappa.git
+-- git clone https://github.com/Gunisalvo/Grappa.git
 
 20. cd Grappa/
 21. mvn clean package
