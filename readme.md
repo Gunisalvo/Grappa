@@ -11,7 +11,7 @@ Distribuição Linux:
 Setup:
 ------
 
-2. Expandir particão para ocupar todo o disco
+2. Expandir partição para ocupar todo o disco
 3. Escolher linguagem com formatação **UTF-8** (pt-BR, en-US, etc...)
 4. Reduzir a memória gráfica para **16MB** ( valor mínimo, assim temos mais espaço alocado para processamento)
 
@@ -20,7 +20,7 @@ Setup:
 Preparando Ambiente:
 --------------------
 
-Usei o editor de texto nano. Você pode substituir pelo de su preferência.
+Usei o editor de texto nano. Você pode substituir pelo de sua preferência.
 
 5. sudo apt-get update
 6. sudo apt-get upgrade
