@@ -1,3 +1,6 @@
+Instalação:
+===
+
 Distribuição Linux:
 ----
 
