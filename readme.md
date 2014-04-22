@@ -1,4 +1,4 @@
-Modo de usar:
+- Distribuição Linux:
 
 1. Montar um SD Card (preferencialmente classe 10) com o seguinte sistema operacional:
 
