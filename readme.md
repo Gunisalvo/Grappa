@@ -1,10 +1,12 @@
-- Distribuição Linux:
+Distribuição Linux:
+====
 
 1. Montar um SD Card (preferencialmente classe 10) com o seguinte sistema operacional:
 
 -- 2014-01-07-wheezy-raspian.zip >> http://downloads.raspberrypi.org/raspbian_latest
 
-- Setup:
+Setup:
+====
 
 2. Expandir Disco para ocupar todo o disco
 3. Escolher linguagem com formatação UTF-8 (pt-BR, en-US, etc...)
@@ -12,7 +14,8 @@
 
 -- Se você precisar quiser acessar os comandos acima em um setup finalizado digite: raspi-config
 
-- Preparando Ambiente:
+Preparando Ambiente:
+====
 
 5. sudo apt-get update
 6. sudo apt-get upgrade
