@@ -8,19 +8,19 @@ public class PacoteGrappa {
 
 	@XmlEnum
 	public enum Conexao{
-		HTTP,GPIO,USB,REGISTRADOR
+		GPIO,USB,REGISTRADOR
 		;
 	}
 	
 	@XmlEnum
-	public enum Tipo{
+	public enum TipoAcao{
 		LEITURA,ESCRITA
 		;
 	}
 	
 	@XmlEnum
 	public enum Resultado{
-		SUCESSO,FALHA,ERRO_ENDERECAMENTO,ERRO_PROCESSAMENTO
+		SUCESSO,ERRO_ENDERECAMENTO,ERRO_PROCESSAMENTO
 		;
 	}
 	
@@ -28,7 +28,7 @@ public class PacoteGrappa {
 	
 	private Conexao conexao;
 	
-	private Tipo tipo;
+	private TipoAcao tipo;
 	
 	private String corpo;
 
@@ -37,14 +37,14 @@ public class PacoteGrappa {
 	public PacoteGrappa() {
 	}
 	
-	public PacoteGrappa(Integer endereco, Conexao conexao, Tipo tipo, String corpo) {
+	public PacoteGrappa(Integer endereco, Conexao conexao, TipoAcao tipo, String corpo) {
 		this.endereco = endereco;
 		this.conexao = conexao;
 		this.tipo = tipo;
 		this.corpo = corpo;
 	}
 	
-	public PacoteGrappa(Integer endereco, Conexao conexao, Tipo tipo, String corpo, Resultado resultado) {
+	public PacoteGrappa(Integer endereco, Conexao conexao, TipoAcao tipo, String corpo, Resultado resultado) {
 		this(endereco,conexao,tipo,corpo);
 		this.resultado = resultado;
 	}
@@ -65,11 +65,11 @@ public class PacoteGrappa {
 		this.conexao = conexao;
 	}
 
-	public Tipo getTipo() {
+	public TipoAcao getTipo() {
 		return tipo;
 	}
 
-	public void setTipo(Tipo tipo) {
+	public void setTipo(TipoAcao tipo) {
 		this.tipo = tipo;
 	}
 

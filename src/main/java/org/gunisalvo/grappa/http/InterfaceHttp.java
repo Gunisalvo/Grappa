@@ -10,9 +10,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.gunisalvo.grappa.modelo.GpioGrappa;
 import org.gunisalvo.grappa.modelo.PacoteGrappa;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.Conexao;
-import org.gunisalvo.grappa.modelo.PacoteGrappa.Tipo;
+import org.gunisalvo.grappa.modelo.PacoteGrappa.TipoAcao;
+import org.gunisalvo.grappa.modelo.RegistradoresGrappa;
 
 @Path("/")
 public interface InterfaceHttp {
@@ -23,13 +25,18 @@ public interface InterfaceHttp {
 	public Response lerLog();
 	
 	@GET
-	@Produces({MediaType.TEXT_PLAIN})
+	@Produces({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
 	@Path("registradores")
-	public Response lerMapaRegistradores();
+	public RegistradoresGrappa lerMapaRegistradores();
 	
 	@DELETE
 	@Path("registradores")
 	public Response limparMapaRegistradores();
+	
+	@GET
+	@Produces({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
+	@Path("gpio")
+	public GpioGrappa lerConfiguracaoGpio();
 	
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
@@ -42,7 +49,7 @@ public interface InterfaceHttp {
 	@Path("resultado-pacote.xml")
 	public PacoteGrappa postarPacotePorFormulario(	@FormParam("endereco") Integer endereco,
 													@FormParam("conexao") Conexao conexao, 
-													@FormParam("tipo") Tipo tipo,
+													@FormParam("tipo") TipoAcao tipo,
 													@FormParam("corpo") String corpo);
 
 }

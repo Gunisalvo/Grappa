@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuracao-registradores>
+	<celulas>
+		<celula>
+			<posicao>99</posicao>
+			<valor>0</valor>
+		</celula>
+		<celula>
+			<posicao>0</posicao>
+			<valor>Regitradores Teste</valor>
+		</celula>
+	</celulas>
+</configuracao-registradores>

@@ -1,51 +1,50 @@
 package org.gunisalvo.grappa.http.bean;
 
-import java.util.Map.Entry;
-
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.gunisalvo.grappa.Barramento;
 import org.gunisalvo.grappa.Grappa;
+import org.gunisalvo.grappa.gpio.BarramentoGpio;
 import org.gunisalvo.grappa.http.InterfaceHttp;
+import org.gunisalvo.grappa.modelo.GpioGrappa;
 import org.gunisalvo.grappa.modelo.PacoteGrappa;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.Conexao;
-import org.gunisalvo.grappa.modelo.PacoteGrappa.Tipo;
-import org.gunisalvo.grappa.registradores.CelulaRegistrador;
+import org.gunisalvo.grappa.modelo.PacoteGrappa.TipoAcao;
+import org.gunisalvo.grappa.modelo.RegistradoresGrappa;
+import org.gunisalvo.grappa.registradores.BarramentoRegistradores;
 
 public class InterfaceHttpJaxRS implements InterfaceHttp{
 	
 	@Override
 	public Response lerLog() {
-		return Response.ok(Grappa.INSTANCIA.getLog(), MediaType.TEXT_PLAIN).build();
+		return Response.ok(Grappa.getAplicacao().getLog(), MediaType.TEXT_PLAIN).build();
 	}
 	
 	@Override
-	public Response lerMapaRegistradores() {
-		StringBuilder resultado = new StringBuilder("Estado Controlador:");
-		for(Entry<Integer, CelulaRegistrador> entrada : Grappa.INSTANCIA.getMapaRegistradores().entrySet()){
-			if(!entrada.getValue().isCelulaVazia()){
-				resultado.append("\n");
-				resultado.append(" - " + entrada.getKey() + " : " + entrada.getValue().getValor().toString());
-			}
-		}
-		return Response.ok(resultado.toString(), MediaType.TEXT_PLAIN).build();
+	public RegistradoresGrappa lerMapaRegistradores() {
+		return BarramentoRegistradores.getBarramento().getRegistradores();
 	}
 	
 	@Override
 	public PacoteGrappa postarPacote(PacoteGrappa requisicao) {
-		return Barramento.INSTANCIA.processarPacote(requisicao);
+		return Barramento.processarPacote(requisicao);
 	}
 
 	@Override
-	public PacoteGrappa postarPacotePorFormulario( Integer endereco, Conexao conexao, Tipo tipo, String corpo) {
+	public PacoteGrappa postarPacotePorFormulario( Integer endereco, Conexao conexao, TipoAcao tipo, String corpo) {
 		return postarPacote(new PacoteGrappa(endereco, conexao, tipo, corpo));
 	}
 
 	@Override
 	public Response limparMapaRegistradores() {
-		Grappa.INSTANCIA.limparMapaRegistradores();
+		BarramentoRegistradores.getBarramento().limparRegistradores();
 		return Response.ok().build();
+	}
+
+	@Override
+	public GpioGrappa lerConfiguracaoGpio() {
+		return BarramentoGpio.getBarramento().getMapeamento();
 	}
 
 }

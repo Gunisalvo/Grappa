@@ -5,7 +5,7 @@ import org.gunisalvo.grappa.Grappa;
 import org.gunisalvo.grappa.Grappa.NivelLog;
 import org.gunisalvo.grappa.modelo.PacoteGrappa;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.Conexao;
-import org.gunisalvo.grappa.modelo.PacoteGrappa.Tipo;
+import org.gunisalvo.grappa.modelo.PacoteGrappa.TipoAcao;
 import org.gunisalvo.grappa.registradores.RegistradorListener;
 import org.gunisalvo.grappa.registradores.ServicoRegistrador;
 
@@ -22,10 +22,10 @@ public class ServicoRegistradorTeste implements ServicoRegistrador{
 			int atual = numero / 10;
 			if(atual > posicao){
 				this.posicao = atual;
-				Barramento.INSTANCIA.processarPacote(new PacoteGrappa(4, Conexao.GPIO, Tipo.ESCRITA, "2"));
-				Grappa.INSTANCIA.log("Evento registrador, valor: " + numero + " mundando voltagem pino 4", NivelLog.INFO);
+				Barramento.processarPacote(new PacoteGrappa(4, Conexao.GPIO, TipoAcao.ESCRITA, "2"));
+				Grappa.getAplicacao().log("Evento registrador, valor: " + numero + " mundando voltagem pino 4", NivelLog.INFO);
 			}else{
-				Grappa.INSTANCIA.log("Evento registrador, valor: " + numero , NivelLog.INFO);
+				Grappa.getAplicacao().log("Evento registrador, valor: " + numero , NivelLog.INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
