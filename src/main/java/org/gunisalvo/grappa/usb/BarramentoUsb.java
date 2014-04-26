@@ -12,9 +12,15 @@ public class BarramentoUsb {
 		}
 		return INSTANCIA;
 	}
-	
-	public PacoteGrappa processarPacote(PacoteGrappa requisicao){
-		return null;
+
+	public PacoteGrappa ler(Integer endereco) {
+		// TODO Auto-generated method stub
+		return new PacoteGrappa();
+	}
+
+	public PacoteGrappa escrever(Integer endereco, Object corpoJava) {
+		// TODO Auto-generated method stub
+		return new PacoteGrappa();
 	}
 
 }

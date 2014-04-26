@@ -2,6 +2,7 @@ package org.gunisalvo.grappa.modelo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlEnum;
@@ -11,7 +12,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.gunisalvo.grappa.gpio.ServicoBarramentoGpio;
 
 @XmlRootElement(name="pino")
-public class PinoGrappa {
+public class PinoDigitalGrappa {
 
 	@XmlEnum
 	public enum TipoPino {
@@ -20,16 +21,44 @@ public class PinoGrappa {
 		;
 	}
 	
+	@XmlEnum
+	public enum ValorSinalDigital{
+		ALTO(Pattern.compile("true|high|verdadeiro|1"),1),
+		BAIXO(Pattern.compile("false|low|falso|0"),0),
+		TROCA(Pattern.compile("toggle|trocar|2"),2)
+		;
+		
+		private Pattern padrao;
+		
+		private int codigoBinario;
+		
+		ValorSinalDigital(Pattern padrao, int codigoBinario){
+			this.padrao = padrao;
+			this.codigoBinario = codigoBinario;
+		}
+		
+		public boolean checarCorpo(String corpoRequisicao){
+			corpoRequisicao = corpoRequisicao == null ? "" : corpoRequisicao;
+			return this.padrao.matcher(corpoRequisicao.trim().toLowerCase()).find();
+		}
+
+		public int emBinario() {
+			return this.codigoBinario;
+		}
+	}
+	
 	private Integer posicao;
 
 	private TipoPino tipo;
+	
+	private ValorSinalDigital valor;
 
 	private List<ServicoBarramentoGpio> servicos;
 	
-	public PinoGrappa() {
+	public PinoDigitalGrappa() {
 	}
 	
-	public PinoGrappa(Integer posicao, TipoPino tipo) {
+	public PinoDigitalGrappa(Integer posicao, TipoPino tipo) {
 		this.posicao = posicao;
 		this.tipo = tipo;
 	}
@@ -69,6 +98,14 @@ public class PinoGrappa {
 	@XmlElement
 	public boolean getPossuiServicosRegistrados() {
 		return this.servicos != null && !this.servicos.isEmpty();
+	}
+	
+	public ValorSinalDigital getValor() {
+		return valor;
+	}
+	
+	public void setValor(ValorSinalDigital valor) {
+		this.valor = valor;
 	}
 	
 }

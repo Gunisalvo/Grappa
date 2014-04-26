@@ -9,13 +9,13 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.gunisalvo.grappa.gpio.GPIOListener;
 import org.gunisalvo.grappa.gpio.ServicoBarramentoGpio;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.TipoAcao;
-import org.gunisalvo.grappa.modelo.PinoGrappa.TipoPino;
+import org.gunisalvo.grappa.modelo.PinoDigitalGrappa.TipoPino;
 import org.gunisalvo.grappa.xml.MapeadorPinos;
 
 @XmlRootElement(name="configuracao-grappa")
 public class GpioGrappa {
 	
-	private Map<Integer,PinoGrappa> pinos;
+	private Map<Integer,PinoDigitalGrappa> pinos;
 
 	private TipoPino padrao;
 	
@@ -24,14 +24,16 @@ public class GpioGrappa {
 	private Integer posicaoPinoInicial;
 	
 	private Integer posicaoPinoFinal;
+
+	private Boolean virtual;
 	
 	@XmlElement(name="pinos")
 	@XmlJavaTypeAdapter(MapeadorPinos.class)
-	public Map<Integer,PinoGrappa> getPinos() {
+	public Map<Integer,PinoDigitalGrappa> getPinos() {
 		return pinos;
 	}
 
-	public void setPinos(Map<Integer,PinoGrappa> pinos) {
+	public void setPinos(Map<Integer,PinoDigitalGrappa> pinos) {
 		this.pinos = pinos;
 	}
 
@@ -97,9 +99,23 @@ public class GpioGrappa {
 		Integer endereco = anotacao.pino();
 		if(posicaoEnderecoValido(endereco)){
 			if(!this.pinos.containsKey(endereco)){
-				this.pinos.put(endereco, new PinoGrappa(endereco,TipoPino.INPUT_DIGITAL));
+				this.pinos.put(endereco, new PinoDigitalGrappa(endereco,TipoPino.INPUT_DIGITAL));
 			}
 			this.pinos.get(endereco).registrarServico(servico);
 		}
+	}
+
+	public Boolean getVirtual(){
+		return this.virtual;
+	}
+	
+	public void setVirtual(Boolean virtual) {
+		this.virtual = virtual;
+		
+	}
+
+	public void virtualizarGpio() {
+		this.setVirtual(true);
+		//TODO mapa de barramento virtual
 	}
 }

@@ -2,6 +2,7 @@ package org.gunisalvo.grappa.modelo;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 @XmlRootElement(name="grappa")
 public class PacoteGrappa {
@@ -30,14 +31,14 @@ public class PacoteGrappa {
 	
 	private TipoAcao tipo;
 	
-	private String corpo;
+	private Object corpo;
 
 	private Resultado resultado;
 	
 	public PacoteGrappa() {
 	}
 	
-	public PacoteGrappa(Integer endereco, Conexao conexao, TipoAcao tipo, String corpo) {
+	public PacoteGrappa(Integer endereco, Conexao conexao, TipoAcao tipo, Object corpo) {
 		this.endereco = endereco;
 		this.conexao = conexao;
 		this.tipo = tipo;
@@ -74,7 +75,7 @@ public class PacoteGrappa {
 	}
 
 	public String getCorpo() {
-		return corpo;
+		return corpo == null ? "" : corpo.toString();
 	}
 
 	public void setCorpo(String corpo) {
@@ -99,5 +100,15 @@ public class PacoteGrappa {
 				+ ", tipo=" + tipo + ", corpo=" + corpo + ", resultado="
 				+ resultado + "]";
 	}
+
+	@XmlTransient
+	public Object getCorpoJava() {
+		return this.corpo;
+	}
+	
+	public void setCorpoJava(Object corpo){
+		this.corpo = corpo;
+	}
+
 
 }

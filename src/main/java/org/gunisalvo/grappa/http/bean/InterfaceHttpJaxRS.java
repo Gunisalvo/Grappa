@@ -7,7 +7,7 @@ import org.gunisalvo.grappa.Barramento;
 import org.gunisalvo.grappa.Grappa;
 import org.gunisalvo.grappa.gpio.BarramentoGpio;
 import org.gunisalvo.grappa.http.InterfaceHttp;
-import org.gunisalvo.grappa.modelo.GpioGrappa;
+import org.gunisalvo.grappa.modelo.MapaEletrico;
 import org.gunisalvo.grappa.modelo.PacoteGrappa;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.Conexao;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.TipoAcao;
@@ -43,8 +43,8 @@ public class InterfaceHttpJaxRS implements InterfaceHttp{
 	}
 
 	@Override
-	public GpioGrappa lerConfiguracaoGpio() {
-		return BarramentoGpio.getBarramento().getMapeamento();
+	public MapaEletrico lerEstadoGpio() {
+		return BarramentoGpio.getBarramento().getEstado();
 	}
 
 }

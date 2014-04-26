@@ -10,7 +10,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import org.gunisalvo.grappa.modelo.PacoteGrappa.Resultado;
 import org.gunisalvo.grappa.registradores.RegistradorListener;
 import org.gunisalvo.grappa.registradores.ServicoRegistrador;
 import org.gunisalvo.grappa.xml.MapeadorCelulas;
@@ -42,37 +41,6 @@ public class RegistradoresGrappa {
 	public Object clone() {
 		return new RegistradoresGrappa(Collections.unmodifiableMap(this.celulas));
 	}
-
-	public PacoteGrappa processarPacote(PacoteGrappa requisicao) {
-		PacoteGrappa resultado = null;
-		switch(requisicao.getTipo()){
-		case LEITURA:
-			Integer endereco = requisicao.getEndereco();
-			if(!isEnderecoUtilizado(endereco)){
-				resultado = requisicao.gerarPacoteResultado(Resultado.ERRO_ENDERECAMENTO, "endereço vazio.");
-			}else{
-				CelulaRegistrador valor = this.celulas.get(endereco);
-				resultado = requisicao.gerarPacoteResultado(Resultado.SUCESSO, valor.getValor().toString());
-			}
-			return resultado;
-		case ESCRITA:
-			if(this.celulas.containsKey(requisicao.getEndereco())){
-				if(!this.celulas.get(requisicao.getEndereco()).isCelulaVazia()){
-					resultado = requisicao.gerarPacoteResultado(Resultado.SUCESSO, "Valor Substituido de : \"" + this.celulas.get(requisicao.getEndereco()).getValor() + "\" por: \"" + requisicao.getCorpo() +"\"");
-				}else{
-					resultado = requisicao.gerarPacoteResultado(Resultado.SUCESSO, "Valor inserido em célular com Listener: \"" + requisicao.getCorpo() +"\"");
-				}
-			}else{
-				resultado = requisicao.gerarPacoteResultado(Resultado.SUCESSO, "Valor inserido : \"" + requisicao.getCorpo() +"\"");
-				CelulaRegistrador novaCelula = new CelulaRegistrador();
-				this.celulas.put(requisicao.getEndereco(), novaCelula);
-			}
-			this.celulas.get(requisicao.getEndereco()).setValor(requisicao.getCorpo());
-			return resultado;
-		default:
-			throw new RuntimeException();
-		}
-	}
 	
 	public void limpar() {
 		List<CelulaRegistrador> celulasComServico = new ArrayList<>();
@@ -103,5 +71,17 @@ public class RegistradoresGrappa {
 			this.celulas.put(endereco, new CelulaRegistrador(endereco));
 		}
 		this.celulas.get(endereco).registrarServico(servico);
+	}
+
+	public CelulaRegistrador getCelula(Integer endereco) {
+		return this.celulas.get(endereco);
+	}
+
+	public void inserir(Integer endereco, Object corpoJava) {
+		this.celulas.put(endereco, new CelulaRegistrador(endereco,corpoJava));
+	}
+
+	public void atualizar(Integer endereco, Object corpoJava) {
+		this.celulas.get(endereco).setValorJava(corpoJava);
 	}
 }

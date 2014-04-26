@@ -24,6 +24,12 @@ public class CelulaRegistrador {
 	public CelulaRegistrador(Integer posicao) {
 		this.posicao = posicao;
 	}
+	
+	public CelulaRegistrador(Integer posicao, Object corpoJava) {
+		this(posicao);
+		this.valor = corpoJava;
+	}
+	
 
 	@XmlTransient
 	public Object getValorJava(){
@@ -40,7 +46,7 @@ public class CelulaRegistrador {
 	}
 	
 	public String getValor(){
-		return this.valor.toString();
+		return this.valor == null ?  null : this.valor.toString();
 	}
 	
 	public void setValor(String valor){

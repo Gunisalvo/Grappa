@@ -11,8 +11,8 @@ import java.util.Map.Entry;
 import org.gunisalvo.grappa.modelo.CelulaRegistrador;
 import org.gunisalvo.grappa.modelo.GpioGrappa;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.TipoAcao;
-import org.gunisalvo.grappa.modelo.PinoGrappa;
-import org.gunisalvo.grappa.modelo.PinoGrappa.TipoPino;
+import org.gunisalvo.grappa.modelo.PinoDigitalGrappa;
+import org.gunisalvo.grappa.modelo.PinoDigitalGrappa.TipoPino;
 import org.gunisalvo.grappa.modelo.RegistradoresGrappa;
 import org.gunisalvo.grappa.registradores.ServicoRegistrador;
 import org.junit.Test;
@@ -25,7 +25,7 @@ public class LeitorConfiguracaoTest {
 		GpioGrappa lida = new LeitorConfiguracao().carregarGpio(url.getPath());
 		assertNotNull(lida.getPinos());
 		assertEquals(3,lida.getPinos().size());
-		for(Entry<Integer,PinoGrappa> p : lida.getPinos().entrySet()){
+		for(Entry<Integer,PinoDigitalGrappa> p : lida.getPinos().entrySet()){
 			assertNotNull(p.getKey());
 			assertEquals(TipoPino.INPUT_DIGITAL, p.getValue().getTipo());
 		}
@@ -60,8 +60,8 @@ public class LeitorConfiguracaoTest {
 		URL url = Thread.currentThread().getContextClassLoader().getResource("registradores.xml");
 		RegistradoresGrappa lida = new LeitorConfiguracao().carregarRegistradores(url.getPath());
 		assertTrue(lida.isEnderecoUtilizado(0));
-		assertEquals("Regitradores Teste",lida.getCelulas().get(0).getValorJava());
-		assertEquals("Regitradores Teste",lida.getCelulas().get(0).getValor());
+		assertEquals("Registradores Teste",lida.getCelulas().get(0).getValorJava());
+		assertEquals("Registradores Teste",lida.getCelulas().get(0).getValor());
 		assertTrue(lida.isEnderecoUtilizado(99));
 		assertEquals("0",lida.getCelulas().get(99).getValorJava());
 		assertEquals("0",lida.getCelulas().get(99).getValor());

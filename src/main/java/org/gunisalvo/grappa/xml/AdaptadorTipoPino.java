@@ -2,7 +2,7 @@ package org.gunisalvo.grappa.xml;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
-import org.gunisalvo.grappa.modelo.PinoGrappa.TipoPino;
+import org.gunisalvo.grappa.modelo.PinoDigitalGrappa.TipoPino;
 
 public class AdaptadorTipoPino extends XmlAdapter<String, TipoPino>{
 

@@ -10,7 +10,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.gunisalvo.grappa.modelo.GpioGrappa;
+import org.gunisalvo.grappa.modelo.MapaEletrico;
 import org.gunisalvo.grappa.modelo.PacoteGrappa;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.Conexao;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.TipoAcao;
@@ -36,7 +36,7 @@ public interface InterfaceHttp {
 	@GET
 	@Produces({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
 	@Path("gpio")
-	public GpioGrappa lerConfiguracaoGpio();
+	public MapaEletrico lerEstadoGpio();
 	
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
