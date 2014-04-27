@@ -82,5 +82,9 @@ public class BarramentoGpio {
 		}
 		return resultado;
 	}
+
+	public String getNomeImplementacaoRaspberry() {
+		return this.hardware.getNomeImplementacao();
+	}
 	
 }

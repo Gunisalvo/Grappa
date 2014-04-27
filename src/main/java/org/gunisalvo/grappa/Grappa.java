@@ -80,6 +80,7 @@ public class Grappa {
 			throw new RuntimeException(e);
 		}
 		BarramentoRegistradores.construir(registradores);
+		log("Barramento Registradores iniciado.",NivelLog.INFO);
 	}
 	
 	private void iniciarGpio(LeitorConfiguracao configurador) {
@@ -92,6 +93,7 @@ public class Grappa {
 			throw new RuntimeException(e);
 		}
 		BarramentoGpio.construir(gpio);
+		log("Barramento GPIO - \"" + BarramentoGpio.getBarramento().getNomeImplementacaoRaspberry() + "\" - iniciado.",NivelLog.INFO);
 	}
 
 	public static void construir(ServletContext contexto) {

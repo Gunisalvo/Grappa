@@ -13,11 +13,14 @@ public class MapaEletrico {
 
 	private List<PinoDigitalGrappa> pinos;
 	
+	private String nomeImplementacao;
+	
 	public MapaEletrico() {
 	}
 	
-	public MapaEletrico(Map<Integer, PinoDigitalGrappa> pinosVirtuais) {
+	public MapaEletrico(String nomeImplementacao, Map<Integer, PinoDigitalGrappa> pinosVirtuais) {
 		this.pinos = new ArrayList<>();
+		this.nomeImplementacao = nomeImplementacao;
 		for(PinoDigitalGrappa p : pinosVirtuais.values()){
 			this.pinos.add(p);
 		}
@@ -31,6 +34,14 @@ public class MapaEletrico {
 
 	public void setPinos(List<PinoDigitalGrappa> pinos) {
 		this.pinos = pinos;
+	}
+	
+	public String getNomeImplementacao() {
+		return nomeImplementacao;
+	}
+	
+	public void setNomeImplementacao(String nomeImplementacao) {
+		this.nomeImplementacao = nomeImplementacao;
 	}
 
 }

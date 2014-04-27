@@ -148,7 +148,7 @@ public class RaspberryPi4J implements Raspberry {
 		for(Entry<Integer,GpioPinDigital> e : this.pinos.entrySet()){
 			pinosVirtuais.put(e.getKey(), traduzirPinoPi4J(e.getKey(),e.getValue()));
 		}
-		return new MapaEletrico(pinosVirtuais);
+		return new MapaEletrico(this.getNomeImplementacao(), pinosVirtuais);
 	}
 
 	private PinoDigitalGrappa traduzirPinoPi4J(Integer endereco,GpioPinDigital original) {
@@ -209,5 +209,10 @@ public class RaspberryPi4J implements Raspberry {
 			break;
 		}
 		return resultante;
+	}
+	
+	@Override
+	public String getNomeImplementacao() {
+		return this.getClass().getName();
 	}
 }

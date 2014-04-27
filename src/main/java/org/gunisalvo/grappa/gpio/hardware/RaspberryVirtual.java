@@ -44,13 +44,12 @@ public class RaspberryVirtual implements Raspberry {
 
 	@Override
 	public MapaEletrico getEstado() {
-		return new MapaEletrico(this.pinosVirtuais);
+		return new MapaEletrico(this.getNomeImplementacao(), this.pinosVirtuais);
 	}
 
 	@Override
 	public void desativar() {
-		// TODO Auto-generated method stub
-		
+		this.pinosVirtuais.clear();
 	}
 
 	@Override
@@ -88,5 +87,10 @@ public class RaspberryVirtual implements Raspberry {
 			}
 		}
 		return resultante;
+	}
+
+	@Override
+	public String getNomeImplementacao() {
+		return this.getClass().getName();
 	}
 }

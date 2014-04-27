@@ -18,4 +18,6 @@ public interface Raspberry {
 
 	ValorSinalDigital escrever(Integer endereco, ComandoDigital comando);
 
+	String getNomeImplementacao();
+
 }
