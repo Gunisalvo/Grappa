@@ -1,6 +1,7 @@
 package org.gunisalvo.grappa.modelo;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -84,7 +85,7 @@ public class PinoDigitalGrappa {
 
 	@XmlTransient
 	public List<ServicoBarramentoGpio> getServicos() {
-		return servicos;
+		return servicos == null ? Collections.<ServicoBarramentoGpio>emptyList() : servicos;
 	}
 
 	public void setServicos(List<ServicoBarramentoGpio> servicos) {
