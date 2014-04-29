@@ -16,6 +16,7 @@ import org.gunisalvo.grappa.modelo.PacoteGrappa.TipoAcao;
 import org.gunisalvo.grappa.modelo.PinoDigitalGrappa;
 import org.gunisalvo.grappa.modelo.PinoDigitalGrappa.TipoPino;
 import org.gunisalvo.grappa.modelo.PinoDigitalGrappa.ValorSinalDigital;
+import org.gunisalvo.grappa.xml.LeitorConfiguracao;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
@@ -41,6 +42,21 @@ public class RaspberryPi4J implements Raspberry {
 	public RaspberryPi4J(GpioGrappa mapeamento) {
 		this.mapeamento = mapeamento;
 		iniciarPinos();
+	}
+	
+	public static void main(String[] args) {
+		try{
+			GpioGrappa mapeamento = new LeitorConfiguracao().carregarGpio(args[0]);
+			RaspberryPi4J integracao = new RaspberryPi4J(mapeamento);
+			
+			Thread.sleep(5000L);
+			
+			integracao.desativar();
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}catch(Error er){
+			er.printStackTrace();
+		}
 	}
 	
 	private void iniciarPinos() {
