@@ -49,6 +49,7 @@ public class PinoDigitalGrappa {
 	
 	private Integer posicao;
 
+	@XmlJavaTypeAdapter(value=AdaptadorTipoPino.class)
 	private TipoPino tipo;
 	
 	private ValorSinalDigital valor;
