@@ -13,9 +13,15 @@ public class RaspberryPi4JTest {
 
 	@Test
 	public void test() {
+		try{
 		URL url = Thread.currentThread().getContextClassLoader().getResource("grappa.xml");
 		GpioGrappa mapeamento = new LeitorConfiguracao().carregarGpio(url.getPath());
 		RaspberryPi4J cobaia = new RaspberryPi4J(mapeamento);
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}catch(Error er){
+			er.printStackTrace();
+		}
 	}
 
 }
