@@ -77,9 +77,9 @@ public class RaspberryPi4J implements Raspberry {
 				break;
 			case OUTPUT_DIGITAL:
 				pino = this.gpio.provisionDigitalOutputPin(getPinoMapeado(e.getKey()));
+				pino.setShutdownOptions(true, PinState.LOW);
 				break;
 			}
-			pino.setShutdownOptions(true, PinState.LOW, PinPullResistance.OFF);
 			this.pinos.put(e.getKey(), pino);
 		}
 	}
