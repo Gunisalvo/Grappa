@@ -17,6 +17,7 @@ public class GpioGrappa {
 	
 	private Map<Integer,PinoDigitalGrappa> pinos;
 
+	@XmlJavaTypeAdapter(value=AdaptadorTipoPino.class)
 	private TipoPino padrao;
 	
 	private Integer posicaoPinoMonitor;
