@@ -10,6 +10,7 @@ import org.gunisalvo.grappa.gpio.GPIOListener;
 import org.gunisalvo.grappa.gpio.ServicoBarramentoGpio;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.TipoAcao;
 import org.gunisalvo.grappa.modelo.PinoDigitalGrappa.TipoPino;
+import org.gunisalvo.grappa.xml.AdaptadorTipoPino;
 import org.gunisalvo.grappa.xml.MapeadorPinos;
 
 @XmlRootElement(name="configuracao-grappa")
@@ -17,7 +18,6 @@ public class GpioGrappa {
 	
 	private Map<Integer,PinoDigitalGrappa> pinos;
 
-	@XmlJavaTypeAdapter(value=AdaptadorTipoPino.class)
 	private TipoPino padrao;
 	
 	private Integer posicaoPinoMonitor;
@@ -38,6 +38,7 @@ public class GpioGrappa {
 		this.pinos = pinos;
 	}
 
+	@XmlJavaTypeAdapter(value=AdaptadorTipoPino.class)
 	public TipoPino getPadrao() {
 		return padrao;
 	}

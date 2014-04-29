@@ -8,8 +8,10 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.gunisalvo.grappa.gpio.ServicoBarramentoGpio;
+import org.gunisalvo.grappa.xml.AdaptadorTipoPino;
 
 @XmlRootElement(name="pino")
 public class PinoDigitalGrappa {
@@ -49,7 +51,6 @@ public class PinoDigitalGrappa {
 	
 	private Integer posicao;
 
-	@XmlJavaTypeAdapter(value=AdaptadorTipoPino.class)
 	private TipoPino tipo;
 	
 	private ValorSinalDigital valor;
@@ -71,7 +72,8 @@ public class PinoDigitalGrappa {
 	public void setPosicao(Integer posicao) {
 		this.posicao = posicao;
 	}
-
+	
+	@XmlJavaTypeAdapter(value=AdaptadorTipoPino.class)
 	public TipoPino getTipo() {
 		return tipo;
 	}
