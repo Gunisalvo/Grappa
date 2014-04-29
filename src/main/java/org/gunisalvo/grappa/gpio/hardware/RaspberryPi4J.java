@@ -61,6 +61,7 @@ public class RaspberryPi4J implements Raspberry {
 	
 	private void iniciarPinos() {
 		this.gpio = GpioFactory.getInstance();
+		/*
 		this.pinos = new HashMap<>();
 		
 		for(Entry<Integer,PinoDigitalGrappa> e : this.mapeamento.getPinos().entrySet()){
@@ -80,6 +81,7 @@ public class RaspberryPi4J implements Raspberry {
 			pino.setShutdownOptions(true, PinState.LOW, PinPullResistance.OFF);
 			this.pinos.put(e.getKey(), pino);
 		}
+		*/
 		
 	}
 
