@@ -66,22 +66,27 @@ public class RaspberryPi4J implements Raspberry {
 		
 		for(Entry<Integer,PinoDigitalGrappa> e : this.mapeamento.getPinos().entrySet()){
 			GpioPinDigital pino = null;
-			/*
+			
 			switch(e.getValue().getTipo()){
 			case INPUT_DIGITAL:
+				/*
 				GpioPinDigitalInput entrada = this.gpio.provisionDigitalInputPin(getPinoMapeado(e.getKey()));
 				for(ServicoBarramentoGpio s : e.getValue().getServicos()){
 					registrarServico(s,entrada);
 				}
 				pino = entrada;
+				*/
 				break;
 			case OUTPUT_DIGITAL:
+				/*
 				pino = this.gpio.provisionDigitalOutputPin(getPinoMapeado(e.getKey()));
 				break;
+				*/
 			}
+			/*
 			pino.setShutdownOptions(true, PinState.LOW, PinPullResistance.OFF);
-			this.pinos.put(e.getKey(), pino);
 			*/
+			this.pinos.put(e.getKey(), pino);
 		}
 	}
 
