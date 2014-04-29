@@ -1,4 +1,3 @@
-@XmlJavaTypeAdapter(value=AdaptadorTipoPino.class,type=TipoPino.class)
 package org.gunisalvo.grappa.modelo;
 
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
