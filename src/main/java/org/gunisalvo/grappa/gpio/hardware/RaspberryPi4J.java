@@ -69,13 +69,11 @@ public class RaspberryPi4J implements Raspberry {
 			
 			switch(e.getValue().getTipo()){
 			case INPUT_DIGITAL:
-				/*
 				GpioPinDigitalInput entrada = this.gpio.provisionDigitalInputPin(getPinoMapeado(e.getKey()));
 				for(ServicoBarramentoGpio s : e.getValue().getServicos()){
 					registrarServico(s,entrada);
 				}
 				pino = entrada;
-				*/
 				break;
 			case OUTPUT_DIGITAL:
 				/*
