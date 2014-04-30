@@ -14,6 +14,7 @@ public class ContextoWeb implements ServletContextListener{
 	public void contextDestroyed(ServletContextEvent evento) {
 		ServletContext contexto = evento.getServletContext();
 		Grappa.getAplicacao().registrarDesligamento(contexto);
+		System.gc();
 	}
 
 	@Override
