@@ -25,7 +25,7 @@ public class RaspberryVirtual implements Raspberry {
 
 	private void construirPinosViturais() {
 		this.pinosVirtuais = new HashMap<>();
-		for(PinoDigitalGrappa p : this.mapeamento.getPinos().values()){
+		for(PinoDigitalGrappa p : this.mapeamento.getPino()){
 			p.setValor(ValorSinalDigital.BAIXO);
 			this.pinosVirtuais.put(p.getPosicao(),p);
 		}

@@ -1,8 +1,9 @@
 package org.gunisalvo.grappa.modelo;
 
-import java.util.Map;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
@@ -11,12 +12,11 @@ import org.gunisalvo.grappa.gpio.ServicoBarramentoGpio;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.TipoAcao;
 import org.gunisalvo.grappa.modelo.PinoDigitalGrappa.TipoPino;
 import org.gunisalvo.grappa.xml.AdaptadorTipoPino;
-import org.gunisalvo.grappa.xml.MapeadorPinos;
 
 @XmlRootElement(name="configuracao-grappa")
 public class GpioGrappa {
 	
-	private Map<Integer,PinoDigitalGrappa> pinos;
+	private List<PinoDigitalGrappa> pino;
 
 	private TipoPino padrao;
 	
@@ -28,14 +28,13 @@ public class GpioGrappa {
 
 	private Boolean virtual;
 	
-	@XmlElement(name="pinos")
-	@XmlJavaTypeAdapter(MapeadorPinos.class)
-	public Map<Integer,PinoDigitalGrappa> getPinos() {
-		return pinos;
+	@XmlElementWrapper(name="pinos")
+	public List<PinoDigitalGrappa> getPino() {
+		return pino;
 	}
 
-	public void setPinos(Map<Integer,PinoDigitalGrappa> pinos) {
-		this.pinos = pinos;
+	public void setPino(List<PinoDigitalGrappa> pinos) {
+		this.pino = pinos;
 	}
 
 	@XmlJavaTypeAdapter(value=AdaptadorTipoPino.class)
@@ -84,10 +83,21 @@ public class GpioGrappa {
 
 	private boolean acaoValida(Integer endereco, TipoAcao acao) {
 		boolean resultado = false;
-		if(this.pinos.containsKey(endereco)){
-			resultado = acaoValida(this.pinos.get(endereco).getTipo(), acao);
+		int posicao = buscarPorEndereco(endereco);
+		if(posicao != -1){
+			resultado = acaoValida(this.pino.get(posicao).getTipo(), acao);
 		}else{
 			resultado = acaoValida(this.getPadrao(), acao);
+		}
+		return resultado;
+	}
+
+	private int buscarPorEndereco(Integer endereco) {
+		int resultado = -1;
+		for(int i = 0; i < this.pino.size(); i ++){
+			if(this.pino.get(i).getPosicao().equals(endereco)){
+				resultado = i;
+			}
 		}
 		return resultado;
 	}
@@ -99,11 +109,12 @@ public class GpioGrappa {
 	public void registrarServico(ServicoBarramentoGpio servico){
 		GPIOListener anotacao = servico.getClass().getAnnotation(GPIOListener.class);
 		Integer endereco = anotacao.pino();
+		int posicao = buscarPorEndereco(endereco);
 		if(posicaoEnderecoValido(endereco)){
-			if(!this.pinos.containsKey(endereco)){
-				this.pinos.put(endereco, new PinoDigitalGrappa(endereco,TipoPino.INPUT_DIGITAL));
+			if(posicao == -1){
+				this.pino.add(new PinoDigitalGrappa(endereco,TipoPino.INPUT_DIGITAL));
 			}
-			this.pinos.get(endereco).registrarServico(servico);
+			this.pino.get(posicao == -1 ? pino.size() -1 : posicao ).registrarServico(servico);
 		}
 	}
 
@@ -119,5 +130,9 @@ public class GpioGrappa {
 	public void virtualizarGpio() {
 		this.setVirtual(true);
 		//TODO mapa de barramento virtual
+	}
+
+	public boolean possuiMapeamento(Integer endereco) {
+		return buscarPorEndereco(endereco) != -1;
 	}
 }

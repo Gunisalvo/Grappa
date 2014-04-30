@@ -3,85 +3,88 @@ package org.gunisalvo.grappa.modelo;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
-import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.gunisalvo.grappa.registradores.RegistradorListener;
 import org.gunisalvo.grappa.registradores.ServicoRegistrador;
-import org.gunisalvo.grappa.xml.MapeadorCelulas;
 
 @XmlRootElement(name="configuracao-registradores")
 public class RegistradoresGrappa {
 	
 	
-	private Map<Integer,CelulaRegistrador> celulas;
+	private List<CelulaRegistrador> celula;
 	
 	public RegistradoresGrappa() {
 	}
 	
-	public RegistradoresGrappa(Map<Integer,CelulaRegistrador> celulas) {
-		this.celulas = celulas;
+	public RegistradoresGrappa(List<CelulaRegistrador> celulas) {
+		this.celula = celulas;
 	}
 	
-	@XmlElement(name="celulas")
-	@XmlJavaTypeAdapter(MapeadorCelulas.class)
-	public Map<Integer, CelulaRegistrador> getCelulas() {
-		return celulas;
+	@XmlElementWrapper(name="celulas")
+	public List<CelulaRegistrador> getCelula() {
+		return celula;
 	}
 	
-	public void setCelulas(Map<Integer, CelulaRegistrador> celulas) {
-		this.celulas = celulas;
+	public void setCelula(List<CelulaRegistrador> celulas) {
+		this.celula = celulas;
 	}
 	
 	@Override
 	public Object clone() {
-		return new RegistradoresGrappa(Collections.unmodifiableMap(this.celulas));
+		return new RegistradoresGrappa(Collections.unmodifiableList(this.celula));
 	}
 	
 	public void limpar() {
 		List<CelulaRegistrador> celulasComServico = new ArrayList<>();
-		for (Entry<Integer, CelulaRegistrador> e : this.celulas.entrySet()) {
-			if(e.getValue().getPossuiServicosRegistrados()){
-				e.getValue().setValor(null);
-				celulasComServico.add(e.getValue());
+		for (CelulaRegistrador e : this.celula) {
+			if(e.getPossuiServicosRegistrados()){
+				e.setValor(null);
+				celulasComServico.add(e);
 			}
 		}
-		this.celulas.clear();
+		this.celula.clear();
 		for(CelulaRegistrador c : celulasComServico){
-			this.celulas.put(c.getPosicao(), c);
+			this.celula.add(c);
 		}
 	}
 
-	public boolean isEnderecoUtilizado(Integer endereco) {
-		if (this.celulas == null) {
-			return false;
-		} else {
-			return this.celulas.containsKey(endereco);
+	private int buscarPorEndereco(Integer endereco) {
+		int resultado = -1;
+		for(int i = 0; i < this.celula.size(); i ++){
+			if(this.celula.get(i).getPosicao().equals(endereco)){
+				resultado = i;
+			}
 		}
+		return resultado;
+	}
+	
+	public boolean isEnderecoUtilizado(Integer endereco) {
+		return buscarPorEndereco(endereco) != -1;
 	}
 
 	public void registrarServico(ServicoRegistrador servico) {
 		RegistradorListener anotacao = servico.getClass().getAnnotation(RegistradorListener.class);
 		Integer endereco = anotacao.endereco();
-		if (!this.celulas.containsKey(endereco)) {
-			this.celulas.put(endereco, new CelulaRegistrador(endereco));
+		if (!isEnderecoUtilizado(endereco)) {
+			this.celula.add(new CelulaRegistrador(endereco));
 		}
-		this.celulas.get(endereco).registrarServico(servico);
+		int posicao = buscarPorEndereco(endereco);
+		this.celula.get(posicao).registrarServico(servico);
 	}
 
 	public CelulaRegistrador getCelula(Integer endereco) {
-		return this.celulas.get(endereco);
+		int posicao = buscarPorEndereco(endereco);
+		return posicao == -1 ? null :this.celula.get(posicao);
 	}
 
 	public void inserir(Integer endereco, Object corpoJava) {
-		this.celulas.put(endereco, new CelulaRegistrador(endereco,corpoJava));
+		this.celula.add(new CelulaRegistrador(endereco,corpoJava));
 	}
 
 	public void atualizar(Integer endereco, Object corpoJava) {
-		this.celulas.get(endereco).setValorJava(corpoJava);
+		getCelula(endereco).setValorJava(corpoJava);
 	}
 }

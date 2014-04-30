@@ -25,7 +25,6 @@ import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinMode;
-import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
@@ -64,23 +63,23 @@ public class RaspberryPi4J implements Raspberry {
 		
 		this.pinos = new HashMap<>();
 		
-		for(Entry<Integer,PinoDigitalGrappa> e : this.mapeamento.getPinos().entrySet()){
+		for(PinoDigitalGrappa e : this.mapeamento.getPino()){
 			GpioPinDigital pino = null;
 			
-			switch(e.getValue().getTipo()){
+			switch(e.getTipo()){
 			case INPUT_DIGITAL:
-				GpioPinDigitalInput entrada = this.gpio.provisionDigitalInputPin(getPinoMapeado(e.getKey()));
-				for(ServicoBarramentoGpio s : e.getValue().getServicos()){
+				GpioPinDigitalInput entrada = this.gpio.provisionDigitalInputPin(getPinoMapeado(e.getPosicao()));
+				for(ServicoBarramentoGpio s : e.getServicos()){
 					registrarServico(s,entrada);
 				}
 				pino = entrada;
 				break;
 			case OUTPUT_DIGITAL:
-				pino = this.gpio.provisionDigitalOutputPin(getPinoMapeado(e.getKey()));
+				pino = this.gpio.provisionDigitalOutputPin(getPinoMapeado(e.getPosicao()));
 				pino.setShutdownOptions(true, PinState.LOW);
 				break;
 			}
-			this.pinos.put(e.getKey(), pino);
+			this.pinos.put(e.getPosicao(), pino);
 		}
 	}
 
@@ -177,8 +176,8 @@ public class RaspberryPi4J implements Raspberry {
 		resultado.setTipo(
 				PinMode.DIGITAL_INPUT.equals(original.getMode()) ? TipoPino.INPUT_DIGITAL : TipoPino.OUTPUT_DIGITAL
 			);
-		if(this.mapeamento.getPinos().containsKey(endereco) && this.mapeamento.getPinos().get(endereco).getPossuiServicosRegistrados()){
-			resultado.setServicos(this.mapeamento.getPinos().get(endereco).getServicos());
+		if(this.mapeamento.possuiMapeamento(endereco) && this.mapeamento.getPino().get(endereco).getPossuiServicosRegistrados()){
+			resultado.setServicos(this.mapeamento.getPino().get(endereco).getServicos());
 		}
 		return resultado;
 	}

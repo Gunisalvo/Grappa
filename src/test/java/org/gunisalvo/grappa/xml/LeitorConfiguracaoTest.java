@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
-import java.util.Map.Entry;
 
 import org.gunisalvo.grappa.modelo.CelulaRegistrador;
 import org.gunisalvo.grappa.modelo.GpioGrappa;
@@ -23,11 +22,10 @@ public class LeitorConfiguracaoTest {
 	public void test() {
 		URL url = Thread.currentThread().getContextClassLoader().getResource("grappa.xml");
 		GpioGrappa lida = new LeitorConfiguracao().carregarGpio(url.getPath());
-		assertNotNull(lida.getPinos());
-		assertEquals(3,lida.getPinos().size());
-		for(Entry<Integer,PinoDigitalGrappa> p : lida.getPinos().entrySet()){
-			assertNotNull(p.getKey());
-			assertEquals(TipoPino.INPUT_DIGITAL, p.getValue().getTipo());
+		assertNotNull(lida.getPino());
+		assertEquals(3,lida.getPino().size());
+		for(PinoDigitalGrappa p : lida.getPino()){
+			assertEquals(TipoPino.INPUT_DIGITAL, p.getTipo());
 		}
 		assertEquals(0,lida.getPosicaoPinoMonitor().intValue());
 		assertEquals(0,lida.getPosicaoPinoInicial().intValue());
@@ -60,24 +58,24 @@ public class LeitorConfiguracaoTest {
 		URL url = Thread.currentThread().getContextClassLoader().getResource("registradores.xml");
 		RegistradoresGrappa lida = new LeitorConfiguracao().carregarRegistradores(url.getPath());
 		assertTrue(lida.isEnderecoUtilizado(0));
-		assertEquals("Registradores Teste",lida.getCelulas().get(0).getValorJava());
-		assertEquals("Registradores Teste",lida.getCelulas().get(0).getValor());
+		assertEquals("Registradores Teste",lida.getCelula(0).getValorJava());
+		assertEquals("Registradores Teste",lida.getCelula(0).getValor());
 		assertTrue(lida.isEnderecoUtilizado(99));
-		assertEquals("0",lida.getCelulas().get(99).getValorJava());
-		assertEquals("0",lida.getCelulas().get(99).getValor());
-		lida.getCelulas().get(0).registrarServico(new ServicoRegistrador() {
+		assertEquals("0",lida.getCelula(99).getValorJava());
+		assertEquals("0",lida.getCelula(99).getValor());
+		lida.getCelula().get(0).registrarServico(new ServicoRegistrador() {
 			
 			@Override
 			public void processarServico(Object valorEndereco) {
 				//vazio
 			}
 		});
-		lida.getCelulas().put(1011, new CelulaRegistrador(1011));
-		assertEquals(3,lida.getCelulas().size());
+		lida.getCelula().add(new CelulaRegistrador(1011));
+		assertEquals(3,lida.getCelula().size());
 		
 		lida.limpar();
-		assertEquals(null,lida.getCelulas().get(0).getValorJava());
-		assertEquals(1,lida.getCelulas().size());
+		assertEquals(null,lida.getCelula().get(0).getValorJava());
+		assertEquals(1,lida.getCelula().size());
 	}
 
 }
