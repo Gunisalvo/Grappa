@@ -11,7 +11,7 @@ import org.junit.Test;
 
 public class RaspberryPi4JTest {
 
-	@Test
+	//@Test
 	public void test() {
 		try{
 		URL url = Thread.currentThread().getContextClassLoader().getResource("grappa.xml");
