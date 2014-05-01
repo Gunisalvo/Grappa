@@ -127,12 +127,16 @@ public class GpioGrappa {
 		
 	}
 
-	public void virtualizarGpio() {
-		this.setVirtual(true);
-		//TODO mapa de barramento virtual
-	}
-
 	public boolean possuiMapeamento(Integer endereco) {
 		return buscarPorEndereco(endereco) != -1;
+	}
+
+	public PinoDigitalGrappa buscarPino(Integer endereco) {
+		int posicao = buscarPorEndereco(endereco);
+		PinoDigitalGrappa resultado = null;
+		if(posicao != -1){
+			resultado = this.pino.get(posicao);
+		}
+		return resultado;
 	}
 }

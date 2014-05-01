@@ -182,7 +182,7 @@ public class RaspberryPi4J implements Raspberry {
 		resultado.setTipo(
 				PinMode.DIGITAL_INPUT.equals(original.getMode()) ? TipoPino.INPUT_DIGITAL : TipoPino.OUTPUT_DIGITAL
 			);
-		if(this.mapeamento.possuiMapeamento(endereco) && this.mapeamento.getPino().get(endereco).getPossuiServicosRegistrados()){
+		if(this.mapeamento.possuiMapeamento(endereco) && this.mapeamento.buscarPino(endereco).getPossuiServicosRegistrados()){
 			resultado.setServicos(this.mapeamento.getPino().get(endereco).getServicos());
 		}
 		return resultado;
