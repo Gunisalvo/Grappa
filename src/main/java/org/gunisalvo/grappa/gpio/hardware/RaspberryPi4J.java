@@ -149,8 +149,8 @@ public class RaspberryPi4J implements Raspberry {
 				return resultado;
 			}
         });
-		
-		Grappa.getAplicacao().log(pino + " : " + servico.getClass().getName() + ", evento registrado", NivelLog.INFO);
+		System.out.println(servico);
+//		Grappa.getAplicacao().log(pino + " : " + servico.getClass().getName() + ", evento registrado", NivelLog.INFO);
 	}
 
 	@Override
