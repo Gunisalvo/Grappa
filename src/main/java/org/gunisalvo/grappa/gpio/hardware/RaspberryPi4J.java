@@ -64,23 +64,31 @@ public class RaspberryPi4J implements Raspberry {
 		this.pinos = new HashMap<>();
 		
 		for(PinoDigitalGrappa e : this.mapeamento.getPino()){
-			GpioPinDigital pino = null;
-			
-			switch(e.getTipo()){
-			case INPUT_DIGITAL:
-				GpioPinDigitalInput entrada = this.gpio.provisionDigitalInputPin(getPinoMapeado(e.getPosicao()));
-				for(ServicoBarramentoGpio s : e.getServicos()){
-					registrarServico(s,entrada);
-				}
-				pino = entrada;
-				break;
-			case OUTPUT_DIGITAL:
-				pino = this.gpio.provisionDigitalOutputPin(getPinoMapeado(e.getPosicao()));
-				pino.setShutdownOptions(true, PinState.LOW);
-				break;
-			}
-			this.pinos.put(e.getPosicao(), pino);
+			mapearPino(e);
 		}
+		for(int i = this.mapeamento.getPosicaoPinoInicial(); i <= this.mapeamento.getPosicaoPinoFinal(); i++){
+			if(!this.pinos.containsKey(i)){
+				mapearPino(new PinoDigitalGrappa(i, this.mapeamento.getPadrao()));
+			}
+		}
+	}
+
+	private void mapearPino(PinoDigitalGrappa e) {
+		GpioPinDigital pino = null;
+		switch(e.getTipo()){
+		case INPUT_DIGITAL:
+			GpioPinDigitalInput entrada = this.gpio.provisionDigitalInputPin(getPinoMapeado(e.getPosicao()));
+			for(ServicoBarramentoGpio s : e.getServicos()){
+				registrarServico(s,entrada);
+			}
+			pino = entrada;
+			break;
+		case OUTPUT_DIGITAL:
+			pino = this.gpio.provisionDigitalOutputPin(getPinoMapeado(e.getPosicao()));
+			pino.setShutdownOptions(true, PinState.LOW);
+			break;
+		}
+		this.pinos.put(e.getPosicao(), pino);
 	}
 
 	private Pin getPinoMapeado(Integer endereco) {
@@ -149,8 +157,6 @@ public class RaspberryPi4J implements Raspberry {
 				return resultado;
 			}
         });
-		System.out.println(servico);
-//		Grappa.getAplicacao().log(pino + " : " + servico.getClass().getName() + ", evento registrado", NivelLog.INFO);
 	}
 
 	@Override
