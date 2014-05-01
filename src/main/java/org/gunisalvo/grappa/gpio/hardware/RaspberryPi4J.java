@@ -71,6 +71,17 @@ public class RaspberryPi4J implements Raspberry {
 				mapearPino(new PinoDigitalGrappa(i, this.mapeamento.getPadrao()));
 			}
 		}
+		iniciarMonitor();
+	}
+
+	private void iniciarMonitor() {
+		Integer posicaoMonitor = this.mapeamento.getPosicaoPinoMonitor();
+		if(posicaoMonitor != null && this.pinos.containsKey(posicaoMonitor)){
+			GpioPinDigital pinoMonitor = this.pinos.get(posicaoMonitor);
+			if(pinoMonitor instanceof GpioPinDigitalOutput){
+				((GpioPinDigitalOutput)pinoMonitor).high();
+			}
+		}
 	}
 
 	private void mapearPino(PinoDigitalGrappa e) {
