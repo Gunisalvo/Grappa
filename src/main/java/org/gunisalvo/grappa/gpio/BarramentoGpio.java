@@ -18,11 +18,11 @@ public class BarramentoGpio {
 	private Raspberry hardware;
 
 	private BarramentoGpio(GpioGrappa mapeamento){
-		//try{
-		//	this.hardware = new RaspberryPi4J(mapeamento);
-		//}catch(UnsatisfiedLinkError ex){
+		try{
+			this.hardware = new RaspberryPi4J(mapeamento);
+		}catch(UnsatisfiedLinkError ex){
 			this.hardware = new RaspberryVirtual(mapeamento);
-		//}
+		}
 	}
 	
 	public static void construir(GpioGrappa mapeamento){
