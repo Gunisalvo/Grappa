@@ -24,7 +24,6 @@ Usei o editor de texto nano. Você pode substituir pelo de sua preferência.
 
 5. sudo apt-get update
 6. sudo apt-get upgrade
-7. sudo apt-get install openjdk-7-jdk
 8. sudo nano /etc/enviroment
 9. inserir linha: **JAVA_HOME="/usr/lib/jvm/java-7-openjdk-armhf"**
 10. salvar
@@ -33,7 +32,8 @@ Usei o editor de texto nano. Você pode substituir pelo de sua preferência.
 13. sudo nano /etc/default/tomcat7
 14. trocar variável para **TOMCAT7_USER=root**
 15. trocar variável para **TOMCAT7_GROUP=root**
-16. salvar e sair
+16. descomentar e trocar variável **JAVA_HOME=/usr/lib/jvm/java-7-openjdk-armhf**
+17. salvar e sair
 
 Código Fonte:
 -------------
