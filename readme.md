@@ -1,1 +1,6 @@
-https://github.com/Gunisalvo/Grappa/wiki/Instala%C3%A7%C3%A3o-Sistema
+Instruções:
+===
+
+https://github.com/Gunisalvo/Grappa/wiki/Instalando-Sistema
+
+https://github.com/Gunisalvo/Grappa/wiki/Importando-Projeto
