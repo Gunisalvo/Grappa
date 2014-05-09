@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Controle de acesso
+    </title>
+
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+  	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+  	<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+  	
+	<!-- Bootstrap -->
+   <!--  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js">
+    </script> -->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/json3/3.3.1/json3.min.js">
+    </script>
+    <script src="js/bootstrap.min.js">
+    </script>
+    <script src="js/automscript.js">
+    </script>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/autom.css" rel="stylesheet" />
+	
+<style type="text/css">
+    #slider { margin: 10px; }
+
+.switch{
+	width:160px;
+	height:50px;
+	margin:0 auto;
+	position:relative;
+}
+
+.switch input{
+	display:block;
+	width:100%;
+	height: 100%;
+	position:absolute;
+	top:0;
+	left:0;
+	z-index: 10;
+	opacity: 0;
+	cursor: pointer;
+}
+
+.switch label{
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: -moz-linear-gradient(#750000, #B20000);
+    background: -ms-linear-gradient(#750000, #B20000);
+    background: -o-linear-gradient(#750000, #B20000);
+    background: -webkit-linear-gradient(#750000, #B20000);
+    background: linear-gradient(#750000, #B20000);
+    border-radius: 40px;
+}
+
+.switch label:after{
+    content: "";
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    bottom: -10px;
+    left: -10px;
+    z-index: -1;
+    background: -moz-linear-gradient(#EEEEEE, #AAAAAA);
+    background: -ms-linear-gradient(#EEEEEE, #AAAAAA);
+    background: -o-linear-gradient(#EEEEEE, #AAAAAA);
+    background: -webkit-linear-gradient(#EEEEEE, #AAAAAA);
+    background: linear-gradient(#EEEEEE, #AAAAAA);
+    border-radius: inherit;
+}
+
+.switch label span{
+    display: block;
+    width: 60%;
+    height: 100%;
+    background: #C0C0C0;
+    position: absolute;
+    z-index: 2;
+    right: 41%;
+    top: 0;
+    background: -moz-linear-gradient(#E0E0E0, #A0A0A0);
+    background: -ms-linear-gradient(#E0E0E0, #A0A0A0);
+    background: -o-linear-gradient(#E0E0E0, #A0A0A0);
+    background: -webkit-linear-gradient(#E0E0E0, #A0A0A0);
+    background: linear-gradient(#E0E0E0, #A0A0A0);
+    border-radius: inherit;
+}
+
+.switch label span:after {
+    content: "";
+    position: absolute;
+    left: 15%;
+    top: 25%;
+    width: 70%;
+    height: 50%;
+    background: -moz-linear-gradient(#F7F7F7, #CCCCCC);
+    background: -ms-linear-gradient(#F7F7F7, #CCCCCC);
+    background: -o-linear-gradient(#F7F7F7, #CCCCCC);
+    background: -webkit-linear-gradient(#F7F7F7, #CCCCCC);
+    background: linear-gradient(#F7F7F7, #CCCCCC);
+    border-radius: inherit;
+
+}
+
+.switch label span:before {
+    content: "off";
+    position: absolute;
+    top: 50%;
+    margin-top: -12px;
+    right: -50%;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+    font-size: 24px;
+    color: #fff;
+}
+
+.switch input:checked ~ label {
+	 background: -moz-linear-gradient(#004010, #1A6600);
+	 background: -ms-linear-gradient(#004010, #1A6600);
+	 background: -o-linear-gradient(#004010, #1A6600);
+	 background: -webkit-linear-gradient(#004010, #1A6600);
+	 background: linear-gradient(#004010, #1A6600);
+	}
+
+.switch input:checked ~ label span{
+    right: -2px;
+}
+
+.switch input:checked ~ label span:before {
+    content: "on";
+    right: 115%;
+}
+
+
+</style>
+
+
+<script>
+
+
+
+function mudaLampada(){
+	
+	if (  $( "input:checkbox:checked" ).val() == "on"  ){
+		
+		$('#imgLampada').remove();
+		$('#lampada').append(" <img id='imgLampada' style='height: 20%; width: 20%;'  src='img/Acesa.png'> ");
+		ligaLuz();
+		
+		
+	}else{
+		
+		$('#imgLampada').remove();
+		$('#lampada').append(" <img id='imgLampada' style='height: 20%; width: 20%;'  src='img/Apagada.png'> ");
+		desligaLuz();
+		
+	}
+	
+	
+} 
+
+ 
+ function ligaLuz() {
+		
+	   $.ajax({
+			type: "POST",
+			url: "v1/resultado-pacote",
+			dataType: "json",
+			cache: false,
+			data: {
+				endereco : 11,
+				tipo : 'ESCRITA',
+				conexao : 'REGISTRADOR',
+				corpo : "true",
+				maxRows: 10
+			},
+			success: function( data ) {
+				//document.getElementById("status").value = data.status;
+								
+			}
+		});
+	
+} 
+
+
+function desligaLuz() {
+	
+	   $.ajax({
+			type: "POST",
+			url: "v1/resultado-pacote",
+			dataType: "json",
+			cache: false,
+			data: {
+				endereco : 11,
+				tipo : 'ESCRITA',
+				conexao : 'REGISTRADOR',
+				corpo : "false",
+				maxRows: 10
+			},
+			success: function( data ) {
+				//document.getElementById("status").value = data.status;
+								
+			}
+		});
+	
+} 
+
+
+
+/* METODO QUE ALTERA A POTENCIA DA LUZ - INICIO */ 
+function trocaPotencia(){
+	
+	
+	var potenciaLuz = $('#minbeds').val();
+	console.log("Alterando potência para: " + potenciaLuz );
+	
+	$.ajax({
+		type: "POST",
+		url: "v1/resultado-pacote",
+		dataType: "json",
+		cache: false,
+		data: {
+			endereco : 123,
+			tipo : 'ESCRITA',
+			conexao : 'REGISTRADOR',
+			corpo : potenciaLuz,
+			maxRows: 10
+		},
+		success: function( data ) {
+			/*document.getElementById("status").value = data.status; */
+							
+		}
+	});
+	
+	
+} 
+/* METODO QUE ALTERA A POTENCIA DA LUZ - FIM */ 
+
+
+
+/* METODO QUE CONTROLA O SLIDER DA LUZ - INICIO */
+$(function() {
+    var select = $( "#minbeds" );
+    var slider = $( "<div id='slider' onchange='trocaPotencia()'></div>" ).insertAfter( select ).slider({
+      min: 1,
+      max: 8,
+      range: "min",
+      value: select[ 0 ].selectedIndex + 1,
+      slide: function( event, ui ) {
+        select[ 0 ].selectedIndex = ui.value - 1;
+      }
+    });
+    $( "#minbeds" ).change(function() {
+      slider.slider( "value", this.selectedIndex + 1 );
+      
+    });
+  });
+ 
+ 
+ $(document).ready(function () {
+	  //Desabilita o slider
+	 //$("#slider").slider("disable");
+     
+	 $("#slider").slider(
+     {
+         min: 1,
+         max: 8,
+         step: 0,
+         change: showValue
+
+     });
+     $("#update").click(function () {
+         $("#slider").slider("option", "value", $("#seekTo").val());
+        
+     });
+     function showValue(event, ui) {
+         $("#val").html(ui.value);
+         trocaPotencia();
+     }
+ });
+
+ /* METODO QUE CONTROLA O SLIDER DA LUZ - FIM */ 
+ 
+ 
+ 
+</script>
+   
+
+</head>
+<body onload="javascript: exibirNome();">
+
+
+    <div class="nfc-container wraper">
+        <div class="topo">
+            <h1>Bem vindo ao controle de sala!</h1>
+        </div>
+       
+        <!-- TOPO PAGINA -->
+        <div class="wraper btns" align="center">
+            <div class="btn-group btn-group-lg" >
+                <button type="button" class="btn btn-primary">Luzes</button>
+                <button type="button" class="btn btn-primary" onclick="fecharSala();">Fechar Sala</button>
+            </div>
+        </div>
+        <!-- TOPO PAGINA -->
+        
+        
+        <!-- LIGA E DESLIGA LUZ -->
+        <div class="content">
+            <div id="lampada" onclick="ligarLuz()" ><img id="imgLampada" style="height: 20%; width: 20%;"  src="img/Apagada.png"></div>
+            <p></p>
+           
+            <!--BOT��O ON/OFF  -->
+            <div class="switch" onclick="mudaLampada()">
+			   <input type="checkbox" name="option" id="option" />
+			   <label for="option"><span></span></label>
+ 			</div>
+ 		</div>
+ 		 <!-- LIGA E DESLIGA LUZ -->
+ 		
+ 		
+ 		
+ 		 <!-- ALTERA A POTENCIA DA LUZ -->
+        <div class="content" >
+            <div id="reservation" ><img style="height: 100%; width: 100%; "  src="img/Lampadas.jpg" alt=""></div>
+            
+    		<!-- SLIDER LUZ -->        
+			  <label for="minbeds">Grau de luminosidade : </label>
+			  <select name="minbeds" id="minbeds" onchange="trocaPotencia()">
+			    <option>0</option>
+			    <option>1</option>
+			    <option>2</option>
+			    <option>3</option>
+			    <option>4</option>
+			    <option>5</option>
+			    <option>6</option>
+			    <option>7</option>
+			  </select>
+			
+        </div>
+		<!-- ALTERA A POTENCIA DA LUZ -->
+		
+   </div> 
+
+</body>
+
+</html>
