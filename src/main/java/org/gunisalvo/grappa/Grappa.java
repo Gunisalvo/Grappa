@@ -4,14 +4,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Iterator;
+import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
-import java.util.Set;
-
-import javax.servlet.ServletContext;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -42,10 +42,6 @@ public class Grappa {
 	private static final Logger LOGGER = Logger.getLogger("GRAPPA");
 
 	private static final String ARQUIVO_CONFIGURACAO = "grappa.properties";
-
-	private static final String RAIZ_CLASSES = "/WEB-INF/classes/";
-	
-	private static final String RAIZ_PACOTE_SERVICOS = RAIZ_CLASSES + "org/gunisalvo/grappa/servico";
 	
 	private Properties configuracoes;
 	
@@ -59,13 +55,13 @@ public class Grappa {
 	
 	private ArrayList<Class<ServicoBarramentoGpio>> servicosGpio;
 	
-	private Grappa(ServletContext contexto) {
-		this.caminhoArquivoLog = contexto.getRealPath("") + File.separator + "log" + File.separator + "grappa.log";
-		this.caminhoArquivoRegistradores = contexto.getRealPath("") + File.separator + "WEB-INF" + File.separator + "registradores.xml";
-		this.caminhoArquivoBarramentoEletrico = contexto.getRealPath("") + File.separator + "WEB-INF" + File.separator + "grappa.xml";
+	private Grappa(String caminhoContexto) {
+		this.caminhoArquivoLog = caminhoContexto + File.separator + "log" + File.separator + "grappa.log";
+		this.caminhoArquivoRegistradores = caminhoContexto + File.separator + "WEB-INF" + File.separator + "registradores.xml";
+		this.caminhoArquivoBarramentoEletrico = caminhoContexto + File.separator + "WEB-INF" + File.separator + "grappa.xml";
 		iniciarLog();
-		buscarServicos(contexto);
 		LeitorConfiguracao configurador = new LeitorConfiguracao();
+		buscarServicos(configurador,caminhoContexto);
 		iniciarRegistradores(configurador);
 		iniciarGpio(configurador);
 	}
@@ -96,8 +92,8 @@ public class Grappa {
 		log("Barramento GPIO - \"" + BarramentoGpio.getBarramento().getNomeImplementacaoRaspberry() + "\" - iniciado.",NivelLog.INFO);
 	}
 
-	public static void construir(ServletContext contexto) {
-		INSTANCIA = new Grappa(contexto);
+	public static void construir(String caminhoContexto) {
+		INSTANCIA = new Grappa(caminhoContexto);
 	}
 	
 	public static Grappa getAplicacao(){
@@ -166,7 +162,7 @@ public class Grappa {
 	    }
 	}
 
-	public void registrarDesligamento(ServletContext contexto) {
+	public void registrarDesligamento() {
 		LOGGER.warn("");
 		LOGGER.warn("=========================================================================");
 		LOGGER.warn("GRAPPA >> DEPLOY DESATIVADO: " + new SimpleDateFormat("HH:mm:ss dd/MM/yyyy").format(Calendar.getInstance().getTime()));
@@ -176,37 +172,49 @@ public class Grappa {
 		BarramentoGpio.getBarramento().desativar();
 	}
 	
-	private void buscarServicos(ServletContext contexto){
+	private void buscarServicos(LeitorConfiguracao configurador, String caminhoContexto){
 		this.servicosRegistradores = new ArrayList<>();
 		this.servicosGpio = new ArrayList<>();
-		buscaRecursivaServicos(RAIZ_PACOTE_SERVICOS, contexto);
+		buscaRecursivaServicos(configurador.carregarGpio(this.caminhoArquivoBarramentoEletrico).getPacoteServico());
 	}
 
 	@SuppressWarnings("unchecked")
-	private void buscaRecursivaServicos(String caminho, ServletContext contexto){
-		
-		Set<String> recursos = contexto.getResourcePaths(caminho);
-        
-        if (recursos != null) {
-            for (Iterator<String> iterator = recursos.iterator(); iterator.hasNext();) {
-                String caminhoAtual = (String) iterator.next();
-     
-                if (caminhoAtual.endsWith(".class")) {
-                	try {
-						Class<?> classe = (Class<?>) Class.forName(caminhoAtual.replace( RAIZ_CLASSES, "").replace("/", ".").replace( ".class", "" ));
-						if(classe.isAnnotationPresent(RegistradorListener.class)){
-							this.servicosRegistradores.add((Class<ServicoRegistrador>)classe);
-						}
-						if(classe.isAnnotationPresent(GPIOListener.class)){
-							this.servicosGpio.add((Class<ServicoBarramentoGpio>)classe);
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
+	private void buscaRecursivaServicos(String caminho){
+		List<String> arquivosPacoteServico = carregarNomesArquivos(caminho);
+		for (String caminhoAtual : arquivosPacoteServico) {
+			if (caminhoAtual.endsWith(".class")) {
+				try {
+					Class<?> classe = (Class<?>) Class.forName(caminho + "." + caminhoAtual.replace(".class", ""));
+					if (classe.isAnnotationPresent(RegistradorListener.class)) {
+						this.servicosRegistradores.add((Class<ServicoRegistrador>) classe);
 					}
-                } else {
-                	buscaRecursivaServicos(caminhoAtual, contexto);
-                }
-            }
-        }
+					if (classe.isAnnotationPresent(GPIOListener.class)) {
+						this.servicosGpio.add((Class<ServicoBarramentoGpio>) classe);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} else if (checarDiretorio(caminhoAtual, caminho)) {
+				buscaRecursivaServicos(caminho + "." + caminhoAtual);
+			}
+		}
+	}
+
+	private boolean checarDiretorio(String caminhoAtual, String caminhoCompleto) {
+		String nomeFileSystem = caminhoCompleto.replace(".", "/") + "/" + caminhoAtual;
+		URL recurso = this.getClass().getClassLoader().getResource(nomeFileSystem);
+		File arquivo = new File(recurso.getFile());
+		return arquivo.isDirectory();
+	}
+
+	private List<String> carregarNomesArquivos(String caminho) {
+		String nomeFileSystem = caminho == null ? "" : caminho.replace(".", "/") + "/";
+		URL recurso = this.getClass().getClassLoader().getResource(nomeFileSystem);
+		if(recurso == null){
+			return Collections.emptyList();
+		}else{
+			File diretorio = new File(recurso.getFile());
+			return Arrays.asList(diretorio.list());
+		}
 	}
 }

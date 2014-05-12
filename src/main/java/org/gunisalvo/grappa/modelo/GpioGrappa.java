@@ -17,6 +17,8 @@ import org.gunisalvo.grappa.xml.AdaptadorTipoPino;
 public class GpioGrappa {
 	
 	private List<PinoDigitalGrappa> pino;
+	
+	private String pacoteServico;
 
 	private TipoPino padrao;
 	
@@ -37,6 +39,15 @@ public class GpioGrappa {
 		this.pino = pinos;
 	}
 
+	@XmlElement(name="pacote-servico")
+	public String getPacoteServico() {
+		return pacoteServico;
+	}
+	
+	public void setPacoteServico(String pacoteServico) {
+		this.pacoteServico = pacoteServico;
+	}
+	
 	@XmlJavaTypeAdapter(value=AdaptadorTipoPino.class)
 	public TipoPino getPadrao() {
 		return padrao;
