@@ -1,5 +1,8 @@
 package org.gunisalvo.grappa.modelo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -34,6 +37,8 @@ public class PacoteGrappa {
 	private Object corpo;
 
 	private Resultado resultado;
+	
+	private List<ViolacaoPacote> violacoes;
 	
 	public PacoteGrappa() {
 	}
@@ -75,7 +80,7 @@ public class PacoteGrappa {
 	}
 
 	public String getCorpo() {
-		return corpo == null ? "" : corpo.toString();
+		return corpo == null ? null : corpo.toString();
 	}
 
 	public void setCorpo(String corpo) {
@@ -93,13 +98,6 @@ public class PacoteGrappa {
 	public PacoteGrappa gerarPacoteResultado(Resultado resultado, String mensagem){
 		return new PacoteGrappa(this.endereco, this.conexao, this.tipo, mensagem, resultado);
 	}
-	
-	@Override
-	public String toString() {
-		return "PacoteGrappa [endereco=" + endereco + ", conexao=" + conexao
-				+ ", tipo=" + tipo + ", corpo=" + corpo + ", resultado="
-				+ resultado + "]";
-	}
 
 	@XmlTransient
 	public Object getCorpoJava() {
@@ -110,5 +108,28 @@ public class PacoteGrappa {
 		this.corpo = corpo;
 	}
 
+	public List<ViolacaoPacote> getViolacoes() {
+		return violacoes;
+	}
 
+	public void setViolacoes(List<ViolacaoPacote> violacoes) {
+		this.violacoes = violacoes;
+	}
+
+	public void validar() {
+		this.violacoes = new ArrayList<>();
+		if(this.endereco == null){
+			this.violacoes.add(new ViolacaoPacote("endereco", "vazio"));
+		}
+		if(this.conexao == null){
+			this.violacoes.add(new ViolacaoPacote("conexao", "vazia"));	
+		}
+		if(this.tipo == null){
+			this.violacoes.add(new ViolacaoPacote("tipo", "vazio"));
+		}else{
+			if(TipoAcao.ESCRITA.equals(this.tipo) && this.corpo == null){
+				this.violacoes.add(new ViolacaoPacote("corpo", "vazio em pacote de escrita"));
+			}
+		}
+	}
 }

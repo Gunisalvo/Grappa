@@ -31,7 +31,7 @@ public class BarramentoGpio {
 	
 	public static BarramentoGpio getBarramento(){
 		if(INSTANCIA == null){
-			throw new IllegalStateException("é preciso construir antes de usar este barramento");
+			throw new IllegalStateException("É preciso construir antes de usar este barramento");
 		}
 		return INSTANCIA;
 	}

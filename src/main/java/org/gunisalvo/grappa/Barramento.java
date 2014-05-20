@@ -9,19 +9,25 @@ import org.gunisalvo.grappa.usb.BarramentoUsb;
 public class Barramento {
 
 	public static PacoteGrappa processarPacote(PacoteGrappa requisicao) {
-		switch(requisicao.getConexao()){
-		case GPIO:
-			Grappa.getAplicacao().log("Processando chamada a GPIO...", NivelLog.INFO);
-			return processarChamadaGpio(requisicao);
-		case USB:
-			Grappa.getAplicacao().log("Processando chamada a USB...", NivelLog.INFO);
-			return processarChamadaUsb(requisicao);
-		case REGISTRADOR:
-			Grappa.getAplicacao().log("Processando chamada a Registrador...", NivelLog.INFO);
-			return processarChamadaRegistradores(requisicao);
-		default:
-			throw new RuntimeException();
+		requisicao.validar();
+		if(requisicao.getViolacoes().size() == 0){
+			switch(requisicao.getConexao()){
+			case GPIO:
+				Grappa.getAplicacao().log("Processando chamada a GPIO...", NivelLog.INFO);
+				return processarChamadaGpio(requisicao);
+			case USB:
+				Grappa.getAplicacao().log("Processando chamada a USB...", NivelLog.INFO);
+				return processarChamadaUsb(requisicao);
+			case REGISTRADOR:
+				Grappa.getAplicacao().log("Processando chamada a Registrador...", NivelLog.INFO);
+				return processarChamadaRegistradores(requisicao);
+			default:
+				throw new RuntimeException();
+			}
+		}else{
+			return requisicao;
 		}
+		
 	}
 
 	private static PacoteGrappa processarChamadaRegistradores(PacoteGrappa requisicao) {
