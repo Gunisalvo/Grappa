@@ -25,7 +25,7 @@ public class BarramentoRegistradores {
 	
 	public static BarramentoRegistradores getBarramento(){
 		if(INSTANCIA == null){
-			throw new IllegalStateException("é preciso construir antes de usar este barramento");
+			throw new IllegalStateException("É preciso construir antes de usar este barramento");
 		}
 		return INSTANCIA;
 	}
@@ -50,7 +50,7 @@ public class BarramentoRegistradores {
 		}else{
 			CelulaRegistrador valor = this.registradores.getCelula(endereco);
 			resultado.setResultado(Resultado.SUCESSO);
-			resultado.setCorpo(valor.getValor());
+			resultado.setCorpoJava(valor.getValorJava());
 		}
 		return resultado;
 	}
