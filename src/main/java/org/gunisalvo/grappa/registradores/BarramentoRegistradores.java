@@ -30,7 +30,7 @@ public class BarramentoRegistradores {
 		return INSTANCIA;
 	}
 	
-	public RegistradoresGrappa getRegistradores(){
+	public RegistradoresGrappa getEstado(){
 		return (RegistradoresGrappa) this.registradores.clone();
 	}
 

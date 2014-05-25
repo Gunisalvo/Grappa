@@ -14,8 +14,8 @@ import org.gunisalvo.grappa.modelo.GpioGrappa;
 import org.gunisalvo.grappa.modelo.MapaEletrico;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.TipoAcao;
 import org.gunisalvo.grappa.modelo.PinoDigitalGrappa;
-import org.gunisalvo.grappa.modelo.PinoDigitalGrappa.TipoPino;
-import org.gunisalvo.grappa.modelo.PinoDigitalGrappa.ValorSinalDigital;
+import org.gunisalvo.grappa.modelo.TipoPino;
+import org.gunisalvo.grappa.modelo.ValorSinalDigital;
 import org.gunisalvo.grappa.xml.LeitorConfiguracao;
 
 import com.pi4j.io.gpio.GpioController;

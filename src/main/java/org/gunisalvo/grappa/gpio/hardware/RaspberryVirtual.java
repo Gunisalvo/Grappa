@@ -11,7 +11,7 @@ import org.gunisalvo.grappa.modelo.GpioGrappa;
 import org.gunisalvo.grappa.modelo.MapaEletrico;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.TipoAcao;
 import org.gunisalvo.grappa.modelo.PinoDigitalGrappa;
-import org.gunisalvo.grappa.modelo.PinoDigitalGrappa.ValorSinalDigital;
+import org.gunisalvo.grappa.modelo.ValorSinalDigital;
 
 public class RaspberryVirtual implements Raspberry {
 

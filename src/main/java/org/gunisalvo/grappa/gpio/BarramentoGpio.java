@@ -9,7 +9,7 @@ import org.gunisalvo.grappa.modelo.PacoteGrappa;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.Conexao;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.Resultado;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.TipoAcao;
-import org.gunisalvo.grappa.modelo.PinoDigitalGrappa.ValorSinalDigital;
+import org.gunisalvo.grappa.modelo.ValorSinalDigital;
 
 public class BarramentoGpio {
 		

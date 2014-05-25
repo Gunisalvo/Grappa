@@ -2,7 +2,7 @@ package org.gunisalvo.grappa.gpio;
 
 import org.gunisalvo.grappa.modelo.ComandoDigital;
 import org.gunisalvo.grappa.modelo.MapaEletrico;
-import org.gunisalvo.grappa.modelo.PinoDigitalGrappa.ValorSinalDigital;
+import org.gunisalvo.grappa.modelo.ValorSinalDigital;
 
 public interface Raspberry {
 	

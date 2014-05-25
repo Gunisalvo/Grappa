@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.gunisalvo.grappa.gpio.GPIOListener;
 import org.gunisalvo.grappa.gpio.ServicoBarramentoGpio;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.TipoAcao;
-import org.gunisalvo.grappa.modelo.PinoDigitalGrappa.TipoPino;
+import org.gunisalvo.grappa.modelo.TipoPino;
 import org.gunisalvo.grappa.xml.AdaptadorMapaPinos;
 import org.gunisalvo.grappa.xml.AdaptadorTipoPino;
 
@@ -37,7 +37,7 @@ public class GpioGrappa {
 			this.pinos = new HashMap<Integer, PinoDigitalGrappa>();
 		}
 		for(int i = posicaoPinoInicial; i<= posicaoPinoFinal; i++){
-			if(this.pinos.containsKey(i)){
+			if(!this.pinos.containsKey(i)){
 				this.pinos.put(i, new PinoDigitalGrappa(this.padrao));
 			}
 		}

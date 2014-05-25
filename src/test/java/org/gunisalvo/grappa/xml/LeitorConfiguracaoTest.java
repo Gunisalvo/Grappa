@@ -11,7 +11,7 @@ import org.gunisalvo.grappa.modelo.CelulaRegistrador;
 import org.gunisalvo.grappa.modelo.GpioGrappa;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.TipoAcao;
 import org.gunisalvo.grappa.modelo.PinoDigitalGrappa;
-import org.gunisalvo.grappa.modelo.PinoDigitalGrappa.TipoPino;
+import org.gunisalvo.grappa.modelo.TipoPino;
 import org.gunisalvo.grappa.modelo.RegistradoresGrappa;
 import org.gunisalvo.grappa.registradores.ServicoRegistrador;
 import org.junit.Test;
