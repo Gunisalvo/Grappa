@@ -63,12 +63,12 @@ public class RaspberryPi4J implements Raspberry {
 		
 		this.pinos = new HashMap<>();
 		
-		for(PinoDigitalGrappa e : this.mapeamento.getPino()){
-			mapearPino(e);
+		for(Entry<Integer,PinoDigitalGrappa> e : this.mapeamento.getPinos().entrySet()){
+			mapearPino(e.getKey(),e.getValue());
 		}
 		for(int i = this.mapeamento.getPosicaoPinoInicial(); i <= this.mapeamento.getPosicaoPinoFinal(); i++){
 			if(!this.pinos.containsKey(i)){
-				mapearPino(new PinoDigitalGrappa(i, this.mapeamento.getPadrao()));
+				mapearPino(i,new PinoDigitalGrappa(this.mapeamento.getPadrao()));
 			}
 		}
 		iniciarMonitor();
@@ -84,22 +84,22 @@ public class RaspberryPi4J implements Raspberry {
 		}
 	}
 
-	private void mapearPino(PinoDigitalGrappa e) {
+	private void mapearPino(int endereco, PinoDigitalGrappa pinoDigitalGrappa) {
 		GpioPinDigital pino = null;
-		switch(e.getTipo()){
+		switch(pinoDigitalGrappa.getTipo()){
 		case INPUT_DIGITAL:
-			GpioPinDigitalInput entrada = this.gpio.provisionDigitalInputPin(getPinoMapeado(e.getPosicao()));
-			for(ServicoBarramentoGpio s : e.getServicos()){
+			GpioPinDigitalInput entrada = this.gpio.provisionDigitalInputPin(getPinoMapeado(endereco));
+			for(ServicoBarramentoGpio s : pinoDigitalGrappa.getServicos()){
 				registrarServico(s,entrada);
 			}
 			pino = entrada;
 			break;
 		case OUTPUT_DIGITAL:
-			pino = this.gpio.provisionDigitalOutputPin(getPinoMapeado(e.getPosicao()));
+			pino = this.gpio.provisionDigitalOutputPin(getPinoMapeado(endereco));
 			pino.setShutdownOptions(true, PinState.LOW);
 			break;
 		}
-		this.pinos.put(e.getPosicao(), pino);
+		this.pinos.put(endereco, pino);
 	}
 
 	private Pin getPinoMapeado(Integer endereco) {
@@ -186,7 +186,6 @@ public class RaspberryPi4J implements Raspberry {
 
 	private PinoDigitalGrappa traduzirPinoPi4J(Integer endereco,GpioPinDigital original) {
 		PinoDigitalGrappa resultado = new PinoDigitalGrappa();
-		resultado.setPosicao(endereco);
 		resultado.setValor(
 				original.isHigh() ? ValorSinalDigital.ALTO : ValorSinalDigital.BAIXO
 			);

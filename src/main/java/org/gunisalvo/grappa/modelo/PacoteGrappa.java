@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 @XmlRootElement(name="grappa")
 public class PacoteGrappa {
@@ -79,14 +78,6 @@ public class PacoteGrappa {
 		this.tipo = tipo;
 	}
 
-	public String getCorpo() {
-		return corpo == null ? null : corpo.toString();
-	}
-
-	public void setCorpo(String corpo) {
-		this.corpo = corpo;
-	}
-
 	public Resultado getResultado() {
 		return resultado;
 	}
@@ -99,12 +90,11 @@ public class PacoteGrappa {
 		return new PacoteGrappa(this.endereco, this.conexao, this.tipo, mensagem, resultado);
 	}
 
-	@XmlTransient
-	public Object getCorpoJava() {
+	public Object getCorpo() {
 		return this.corpo;
 	}
 	
-	public void setCorpoJava(Object corpo){
+	public void setCorpo(Object corpo){
 		this.corpo = corpo;
 	}
 

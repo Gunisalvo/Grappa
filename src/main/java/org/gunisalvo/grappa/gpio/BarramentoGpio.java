@@ -55,7 +55,7 @@ public class BarramentoGpio {
 		}else{
 			ValorSinalDigital valor = this.hardware.ler(endereco);
 			resultado.setResultado(Resultado.SUCESSO);
-			resultado.setCorpoJava(valor);
+			resultado.setCorpo(valor);
 		}
 		return resultado;
 	}
@@ -70,15 +70,15 @@ public class BarramentoGpio {
 			if(comando.isValido()){
 				ValorSinalDigital valorResultante = this.hardware.escrever(endereco,comando);
 				resultado.setResultado(Resultado.SUCESSO);
-				resultado.setCorpoJava("\"" + valorResultante + "\" : registrado com sucesso.");
+				resultado.setCorpo("\"" + valorResultante + "\" : registrado com sucesso.");
 				
 			}else{
 				resultado.setResultado(Resultado.ERRO_PROCESSAMENTO);
-				resultado.setCorpoJava(corpoRequisicao);
+				resultado.setCorpo(corpoRequisicao);
 			}
 		}else{
 			resultado.setResultado(Resultado.ERRO_ENDERECAMENTO);
-			resultado.setCorpoJava(corpoRequisicao);
+			resultado.setCorpo(corpoRequisicao);
 		}
 		return resultado;
 	}

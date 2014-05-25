@@ -88,6 +88,7 @@ public class Grappa {
 		}catch(Exception e){
 			throw new RuntimeException(e);
 		}
+		gpio.completarMapeamento();
 		BarramentoGpio.construir(gpio);
 		log("Barramento GPIO - \"" + BarramentoGpio.getBarramento().getNomeImplementacaoRaspberry() + "\" - iniciado.",NivelLog.INFO);
 	}

@@ -22,14 +22,14 @@ public class LeitorConfiguracaoTest {
 	public void test() {
 		URL url = Thread.currentThread().getContextClassLoader().getResource("grappa.xml");
 		GpioGrappa lida = new LeitorConfiguracao().carregarGpio(url.getPath());
-		assertNotNull(lida.getPino());
-		assertEquals(3,lida.getPino().size());
-		for(PinoDigitalGrappa p : lida.getPino()){
+		assertNotNull(lida.getPinos());
+		assertEquals(3,lida.getPinos().size());
+		for(PinoDigitalGrappa p : lida.getPinos().values()){
 			assertEquals(TipoPino.INPUT_DIGITAL, p.getTipo());
 		}
 		assertEquals(0,lida.getPosicaoPinoMonitor().intValue());
 		assertEquals(0,lida.getPosicaoPinoInicial().intValue());
-		assertEquals(7,lida.getPosicaoPinoFinal().intValue());
+		assertEquals(8,lida.getPosicaoPinoFinal().intValue());
 		assertEquals(TipoPino.OUTPUT_DIGITAL,lida.getPadrao());
 		assertFalse(lida.enderecoValido(-1, TipoAcao.LEITURA));
 		assertFalse(lida.enderecoValido(-1, TipoAcao.ESCRITA));
@@ -49,8 +49,10 @@ public class LeitorConfiguracaoTest {
 		assertFalse(lida.enderecoValido(6, TipoAcao.ESCRITA));
 		assertTrue(lida.enderecoValido(7, TipoAcao.LEITURA));
 		assertFalse(lida.enderecoValido(7, TipoAcao.ESCRITA));
-		assertFalse(lida.enderecoValido(8, TipoAcao.LEITURA));
-		assertFalse(lida.enderecoValido(8, TipoAcao.ESCRITA));
+		assertTrue(lida.enderecoValido(8, TipoAcao.LEITURA));
+		assertTrue(lida.enderecoValido(8, TipoAcao.ESCRITA));
+		assertFalse(lida.enderecoValido(9, TipoAcao.LEITURA));
+		assertFalse(lida.enderecoValido(9, TipoAcao.ESCRITA));
 	}
 	
 	@Test
@@ -58,10 +60,10 @@ public class LeitorConfiguracaoTest {
 		URL url = Thread.currentThread().getContextClassLoader().getResource("registradores.xml");
 		RegistradoresGrappa lida = new LeitorConfiguracao().carregarRegistradores(url.getPath());
 		assertTrue(lida.isEnderecoUtilizado(0));
-		assertEquals("Registradores Teste",lida.getCelula(0).getValorJava());
+		assertEquals("Registradores Teste",lida.getCelula(0).getValor());
 		assertEquals("Registradores Teste",lida.getCelula(0).getValor());
 		assertTrue(lida.isEnderecoUtilizado(99));
-		assertEquals("0",lida.getCelula(99).getValorJava());
+		assertEquals("0",lida.getCelula(99).getValor());
 		assertEquals("0",lida.getCelula(99).getValor());
 		lida.getCelula().get(0).registrarServico(new ServicoRegistrador() {
 			
@@ -74,7 +76,7 @@ public class LeitorConfiguracaoTest {
 		assertEquals(3,lida.getCelula().size());
 		
 		lida.limpar();
-		assertEquals(null,lida.getCelula().get(0).getValorJava());
+		assertEquals(null,lida.getCelula().get(0).getValor());
 		assertEquals(1,lida.getCelula().size());
 	}
 

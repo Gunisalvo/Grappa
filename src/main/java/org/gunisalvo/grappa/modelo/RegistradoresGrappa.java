@@ -85,6 +85,6 @@ public class RegistradoresGrappa {
 	}
 
 	public void atualizar(Integer endereco, Object corpoJava) {
-		getCelula(endereco).setValorJava(corpoJava);
+		getCelula(endereco).setValor(corpoJava);
 	}
 }

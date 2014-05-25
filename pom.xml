@@ -7,6 +7,11 @@
 	<packaging>jar</packaging>
 	<name>Grappa</name>
 	<description>Sistema de Automação para hardware RaspberryPI.</description>
+	
+	<scm>
+		<url>http://svn.apache.org/viewcvs.cgi/maven</url>
+	</scm>
+	
 	<dependencies>	
 		<dependency>
 			<groupId>log4j</groupId>

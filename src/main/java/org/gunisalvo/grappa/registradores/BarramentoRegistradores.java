@@ -50,7 +50,7 @@ public class BarramentoRegistradores {
 		}else{
 			CelulaRegistrador valor = this.registradores.getCelula(endereco);
 			resultado.setResultado(Resultado.SUCESSO);
-			resultado.setCorpoJava(valor.getValorJava());
+			resultado.setCorpo(valor.getValor());
 		}
 		return resultado;
 	}

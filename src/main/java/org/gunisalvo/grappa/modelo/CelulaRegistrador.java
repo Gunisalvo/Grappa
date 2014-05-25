@@ -30,27 +30,17 @@ public class CelulaRegistrador {
 		this.valor = corpoJava;
 	}
 	
-
-	@XmlTransient
-	public Object getValorJava(){
+	public Object getValor(){
 		return valor;
 	}
 	
-	public void setValorJava(Object novoValor){
+	public void setValor(Object novoValor){
 		this.valor = novoValor;
 		if(this.servicos != null){
 			for(ServicoRegistrador s : this.servicos){
 				s.processarServico(novoValor);
 			}
 		}
-	}
-	
-	public String getValor(){
-		return this.valor == null ?  null : this.valor.toString();
-	}
-	
-	public void setValor(String valor){
-		this.valor = valor;
 	}
 	
 	public Integer getPosicao() {

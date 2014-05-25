@@ -37,7 +37,7 @@ public class Barramento {
 			Grappa.getAplicacao().log("... chamada a Registrador realizada com sucesso.", NivelLog.INFO);
 			return respostaLeitura;
 		case ESCRITA:
-			PacoteGrappa respostaEscrita = BarramentoRegistradores.getBarramento().escrever(requisicao.getEndereco(),requisicao.getCorpoJava());
+			PacoteGrappa respostaEscrita = BarramentoRegistradores.getBarramento().escrever(requisicao.getEndereco(),requisicao.getCorpo());
 			Grappa.getAplicacao().log("... chamada a Registrador realizada com sucesso.", NivelLog.INFO);
 			return respostaEscrita;
 		default:
@@ -52,7 +52,7 @@ public class Barramento {
 			Grappa.getAplicacao().log("... chamada a GPIO realizada com sucesso.", NivelLog.INFO);
 			return respostaLeitura;
 		case ESCRITA:
-			PacoteGrappa respostaEscrita = BarramentoGpio.getBarramento().escrever(requisicao.getEndereco(),requisicao.getCorpoJava());
+			PacoteGrappa respostaEscrita = BarramentoGpio.getBarramento().escrever(requisicao.getEndereco(),requisicao.getCorpo());
 			Grappa.getAplicacao().log("... chamada a GPIO realizada com sucesso.", NivelLog.INFO);
 			return respostaEscrita;
 		default:
@@ -67,7 +67,7 @@ public class Barramento {
 			Grappa.getAplicacao().log("... chamada a USB realizada com sucesso.", NivelLog.INFO);
 			return respostaLeitura;
 		case ESCRITA:
-			PacoteGrappa respostaEscrita = BarramentoUsb.getBarramento().escrever(requisicao.getEndereco(),requisicao.getCorpoJava());
+			PacoteGrappa respostaEscrita = BarramentoUsb.getBarramento().escrever(requisicao.getEndereco(),requisicao.getCorpo());
 			Grappa.getAplicacao().log("... chamada a USB realizada com sucesso.", NivelLog.INFO);
 			return respostaEscrita;
 		default:

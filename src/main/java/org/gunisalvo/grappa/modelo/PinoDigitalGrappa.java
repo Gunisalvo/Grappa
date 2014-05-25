@@ -50,8 +50,6 @@ public class PinoDigitalGrappa {
 		}
 	}
 	
-	private Integer posicao;
-
 	private TipoPino tipo;
 	
 	private ValorSinalDigital valor;
@@ -61,17 +59,8 @@ public class PinoDigitalGrappa {
 	public PinoDigitalGrappa() {
 	}
 	
-	public PinoDigitalGrappa(Integer posicao, TipoPino tipo) {
-		this.posicao = posicao;
+	public PinoDigitalGrappa(TipoPino tipo) {
 		this.tipo = tipo;
-	}
-
-	public Integer getPosicao() {
-		return posicao;
-	}
-
-	public void setPosicao(Integer posicao) {
-		this.posicao = posicao;
 	}
 	
 	@XmlJavaTypeAdapter(value=AdaptadorTipoPino.class)

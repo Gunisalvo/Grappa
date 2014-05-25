@@ -2,14 +2,15 @@ package org.gunisalvo.grappa.gpio.hardware;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.gunisalvo.grappa.gpio.Raspberry;
 import org.gunisalvo.grappa.gpio.ServicoBarramentoGpio;
 import org.gunisalvo.grappa.modelo.ComandoDigital;
 import org.gunisalvo.grappa.modelo.GpioGrappa;
 import org.gunisalvo.grappa.modelo.MapaEletrico;
-import org.gunisalvo.grappa.modelo.PinoDigitalGrappa;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.TipoAcao;
+import org.gunisalvo.grappa.modelo.PinoDigitalGrappa;
 import org.gunisalvo.grappa.modelo.PinoDigitalGrappa.ValorSinalDigital;
 
 public class RaspberryVirtual implements Raspberry {
@@ -25,14 +26,13 @@ public class RaspberryVirtual implements Raspberry {
 
 	private void construirPinosViturais() {
 		this.pinosVirtuais = new HashMap<>();
-		for(PinoDigitalGrappa p : this.mapeamento.getPino()){
-			p.setValor(ValorSinalDigital.BAIXO);
-			this.pinosVirtuais.put(p.getPosicao(),p);
+		for(Entry<Integer,PinoDigitalGrappa> p : this.mapeamento.getPinos().entrySet()){
+			p.getValue().setValor(ValorSinalDigital.BAIXO);
+			this.pinosVirtuais.put(p.getKey(),p.getValue());
 		}
 		for(int i = this.mapeamento.getPosicaoPinoInicial(); i<= this.mapeamento.getPosicaoPinoFinal(); i++){
 			if(!this.pinosVirtuais.containsKey(i)){
 				PinoDigitalGrappa gerado = new PinoDigitalGrappa();
-				gerado.setPosicao(i);
 				gerado.setTipo(this.mapeamento.getPadrao());
 				gerado.setValor(ValorSinalDigital.BAIXO);
 				this.pinosVirtuais.put(i,gerado);
