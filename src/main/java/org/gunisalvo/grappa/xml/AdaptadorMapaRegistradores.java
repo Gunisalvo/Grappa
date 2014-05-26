@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlElements;
@@ -60,7 +61,7 @@ public class AdaptadorMapaRegistradores extends XmlAdapter<AdaptadorMapaRegistra
 		
 	}
 	
-	@XmlRootElement(name="celula-texto")
+	@XmlRootElement(name="celula")
 	static class RegistradorTexto extends Registrador{
 		
 		private String valor;
@@ -86,27 +87,30 @@ public class AdaptadorMapaRegistradores extends XmlAdapter<AdaptadorMapaRegistra
 		
 	}
 	
-	@XmlRootElement(name="celula")
-	static class RegistradorGenerico extends Registrador{
+	@XmlRootElement(name="celula-tipada")
+	public static class RegistradorDefinidoPeloUsuario extends Registrador{
 		
-		private Object valor;
+		private Valor valor;
 		
-		public RegistradorGenerico() {
+		public RegistradorDefinidoPeloUsuario() {
 		}
 		
-		public RegistradorGenerico(Integer endereco, CelulaRegistrador celula) {
+		public RegistradorDefinidoPeloUsuario(Integer endereco, CelulaRegistrador celula) {
 			super(endereco);
-			this.valor = celula.getValor();
+			Valor valor = new Valor();
+			valor.setCorpo(celula.getValor());
+			valor.setNome(celula.getValor().getClass().getName());
+			this.valor = valor;
 			processarServicos(celula);
 		}
 
+		@XmlAnyElement
 		@Override
-		@XmlElement(name="valor")
-		public Object getValor() {
+		public Valor getValor() {
 			return valor;
 		}
 
-		public void setValor(Object valor) {
+		public void setValor(Valor valor) {
 			this.valor = valor;
 		}	
 		
@@ -124,13 +128,13 @@ public class AdaptadorMapaRegistradores extends XmlAdapter<AdaptadorMapaRegistra
 		}
 		
 		@XmlElements(value={
-				@XmlElement(type=AdaptadorMapaRegistradores.RegistradorGenerico.class,name="celula"),
-				@XmlElement(type=AdaptadorMapaRegistradores.RegistradorTexto.class,name="celula-texto")
+				@XmlElement(type=AdaptadorMapaRegistradores.RegistradorTexto.class,name="celula"),
+				@XmlElement(type=AdaptadorMapaRegistradores.RegistradorDefinidoPeloUsuario.class,name="celula-tipada")
 		})
 		public Registrador[] getRegistradores() {
 			return registradores;
 		}
-		
+
 		public void setRegistradores(Registrador[] registradores) {
 			this.registradores = registradores;
 		}
@@ -141,7 +145,12 @@ public class AdaptadorMapaRegistradores extends XmlAdapter<AdaptadorMapaRegistra
 		Map<Integer, CelulaRegistrador> paraJava = new HashMap<>();
         
 		for (AdaptadorMapaRegistradores.Registrador elemento : corpoXml.getRegistradores()){
-            paraJava.put(elemento.getPosicao(), new CelulaRegistrador(elemento.getValor()));
+            if(elemento instanceof RegistradorDefinidoPeloUsuario){
+            	Object valor = ((Valor)elemento.getValor()).getCorpo();
+            	paraJava.put(elemento.getPosicao(), new CelulaRegistrador(valor));
+            }else{
+            	paraJava.put(elemento.getPosicao(), new CelulaRegistrador(elemento.getValor()));
+            }
         }
         
         return paraJava;
@@ -158,7 +167,7 @@ public class AdaptadorMapaRegistradores extends XmlAdapter<AdaptadorMapaRegistra
 			if(entry.getValue().getValor() instanceof String){
 				valor = new AdaptadorMapaRegistradores.RegistradorTexto(entry.getKey(), entry.getValue());
 			}else{
-				valor = new AdaptadorMapaRegistradores.RegistradorGenerico(entry.getKey(), entry.getValue());
+				valor = new AdaptadorMapaRegistradores.RegistradorDefinidoPeloUsuario(entry.getKey(), entry.getValue());
 			}
             paraXml[i++] = valor;
         }

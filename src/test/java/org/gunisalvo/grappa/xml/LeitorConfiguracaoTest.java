@@ -61,10 +61,10 @@ public class LeitorConfiguracaoTest {
 		RegistradoresGrappa lida = new LeitorConfiguracao().carregarRegistradores(url.getPath());
 		assertTrue(lida.isEnderecoUtilizado(0));
 		assertEquals("Registradores Teste",lida.getCelula(0).getValor());
-		assertEquals("Registradores Teste",lida.getCelula(0).getValor());
 		assertTrue(lida.isEnderecoUtilizado(99));
 		assertEquals("0",lida.getCelula(99).getValor());
-		assertEquals("0",lida.getCelula(99).getValor());
+		assertTrue(lida.isEnderecoUtilizado(3));
+		assertEquals(67,lida.getCelula(3).getValor());
 		lida.getCelulas().get(0).registrarServico(new ServicoRegistrador() {
 			
 			@Override
@@ -73,7 +73,7 @@ public class LeitorConfiguracaoTest {
 			}
 		});
 		lida.getCelulas().put(1011,new CelulaRegistrador());
-		assertEquals(3,lida.getCelulas().size());
+		assertEquals(4,lida.getCelulas().size());
 		
 		lida.limpar();
 		assertEquals(null,lida.getCelulas().get(0).getValor());
