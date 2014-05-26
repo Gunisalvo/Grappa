@@ -65,19 +65,19 @@ public class LeitorConfiguracaoTest {
 		assertTrue(lida.isEnderecoUtilizado(99));
 		assertEquals("0",lida.getCelula(99).getValor());
 		assertEquals("0",lida.getCelula(99).getValor());
-		lida.getCelula().get(0).registrarServico(new ServicoRegistrador() {
+		lida.getCelulas().get(0).registrarServico(new ServicoRegistrador() {
 			
 			@Override
 			public void processarServico(Object valorEndereco) {
 				//vazio
 			}
 		});
-		lida.getCelula().add(new CelulaRegistrador(1011));
-		assertEquals(3,lida.getCelula().size());
+		lida.getCelulas().put(1011,new CelulaRegistrador());
+		assertEquals(3,lida.getCelulas().size());
 		
 		lida.limpar();
-		assertEquals(null,lida.getCelula().get(0).getValor());
-		assertEquals(1,lida.getCelula().size());
+		assertEquals(null,lida.getCelulas().get(0).getValor());
+		assertEquals(1,lida.getCelulas().size());
 	}
 
 }

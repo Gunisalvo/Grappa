@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuracao-registradores>
 	<celulas>
-		<celula>
+		<celula-texto>
 			<posicao>99</posicao>
 			<valor>0</valor>
-		</celula>
-		<celula>
+		</celula-texto>
+		<celula-texto>
 			<posicao>0</posicao>
 			<valor>Registradores Teste</valor>
-		</celula>
+		</celula-texto>
 	</celulas>
 </configuracao-registradores>

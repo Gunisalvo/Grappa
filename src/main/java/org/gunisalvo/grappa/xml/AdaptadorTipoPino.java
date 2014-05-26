@@ -15,5 +15,4 @@ public class AdaptadorTipoPino extends XmlAdapter<String, TipoPino>{
 	public String marshal(TipoPino v) throws Exception {
 		return v.toString();
 	}
-
 }

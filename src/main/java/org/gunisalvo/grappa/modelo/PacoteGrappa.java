@@ -3,8 +3,13 @@ package org.gunisalvo.grappa.modelo;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import org.gunisalvo.grappa.xml.AdaptadorValorPacoteGrappa;
 
 @XmlRootElement(name="grappa")
 public class PacoteGrappa {
@@ -90,6 +95,7 @@ public class PacoteGrappa {
 		return new PacoteGrappa(this.endereco, this.conexao, this.tipo, mensagem, resultado);
 	}
 
+	@XmlJavaTypeAdapter(value=AdaptadorValorPacoteGrappa.class)
 	public Object getCorpo() {
 		return this.corpo;
 	}
@@ -98,6 +104,8 @@ public class PacoteGrappa {
 		this.corpo = corpo;
 	}
 
+	@XmlElementWrapper(name="violacoes")
+	@XmlElement(name="violacao")
 	public List<ViolacaoPacote> getViolacoes() {
 		return violacoes;
 	}

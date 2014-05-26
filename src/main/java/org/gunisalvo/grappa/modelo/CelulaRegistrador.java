@@ -3,16 +3,14 @@ package org.gunisalvo.grappa.modelo;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 import org.gunisalvo.grappa.registradores.ServicoRegistrador;
 
 @XmlRootElement(name="celula")
 public class CelulaRegistrador {
-	
-	private Integer posicao;
 	
 	private List<ServicoRegistrador> servicos;
 	
@@ -21,15 +19,11 @@ public class CelulaRegistrador {
 	public CelulaRegistrador() {
 	}
 	
-	public CelulaRegistrador(Integer posicao) {
-		this.posicao = posicao;
-	}
-	
-	public CelulaRegistrador(Integer posicao, Object corpoJava) {
-		this(posicao);
+	public CelulaRegistrador(Object corpoJava) {
 		this.valor = corpoJava;
 	}
 	
+	@XmlAnyElement
 	public Object getValor(){
 		return valor;
 	}
@@ -42,16 +36,7 @@ public class CelulaRegistrador {
 			}
 		}
 	}
-	
-	public Integer getPosicao() {
-		return posicao;
-	}
-	
-	public void setPosicao(Integer posicao) {
-		this.posicao = posicao;
-	}
-	
-	@XmlTransient
+
 	public List<ServicoRegistrador> getServicos() {
 		return servicos;
 	}

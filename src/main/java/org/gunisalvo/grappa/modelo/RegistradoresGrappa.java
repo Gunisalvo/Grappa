@@ -1,90 +1,86 @@
 package org.gunisalvo.grappa.modelo;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
-import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.gunisalvo.grappa.registradores.RegistradorListener;
 import org.gunisalvo.grappa.registradores.ServicoRegistrador;
+import org.gunisalvo.grappa.xml.AdaptadorMapaRegistradores;
 
 @XmlRootElement(name="configuracao-registradores")
 public class RegistradoresGrappa {
 	
 	
-	private List<CelulaRegistrador> celula;
+	private Map<Integer,CelulaRegistrador> celulas;
 	
 	public RegistradoresGrappa() {
 	}
 	
-	public RegistradoresGrappa(List<CelulaRegistrador> celulas) {
-		this.celula = celulas;
+	public RegistradoresGrappa(Map<Integer,CelulaRegistrador> celulas) {
+		this.celulas = celulas;
 	}
 	
-	@XmlElementWrapper(name="celulas")
-	public List<CelulaRegistrador> getCelula() {
-		return celula;
+	@XmlElement(name="celulas")
+	@XmlJavaTypeAdapter(value=AdaptadorMapaRegistradores.class)
+	public Map<Integer,CelulaRegistrador> getCelulas() {
+		return celulas;
 	}
 	
-	public void setCelula(List<CelulaRegistrador> celulas) {
-		this.celula = celulas;
+	public void setCelulas(Map<Integer,CelulaRegistrador> celulas) {
+		this.celulas = celulas;
 	}
 	
 	@Override
 	public Object clone() {
-		return new RegistradoresGrappa(Collections.unmodifiableList(this.celula));
+		return new RegistradoresGrappa(Collections.unmodifiableMap(this.celulas));
 	}
 	
 	public void limpar() {
-		List<CelulaRegistrador> celulasComServico = new ArrayList<>();
-		for (CelulaRegistrador e : this.celula) {
-			if(e.getPossuiServicosRegistrados()){
-				e.setValor(null);
-				celulasComServico.add(e);
+		Map<Integer,CelulaRegistrador> celulasComServico = new HashMap<>();
+		for (Entry<Integer,CelulaRegistrador> e : this.celulas.entrySet()) {
+			if(e.getValue().getPossuiServicosRegistrados()){
+				e.getValue().setValor(null);
+				celulasComServico.put(e.getKey(),e.getValue());
 			}
 		}
-		this.celula.clear();
-		for(CelulaRegistrador c : celulasComServico){
-			this.celula.add(c);
+		this.celulas.clear();
+		for(Entry<Integer,CelulaRegistrador> e : celulasComServico.entrySet()){
+			this.celulas.put(e.getKey(),e.getValue());
 		}
-	}
-
-	private int buscarPorEndereco(Integer endereco) {
-		int resultado = -1;
-		for(int i = 0; i < this.celula.size(); i ++){
-			if(this.celula.get(i).getPosicao().equals(endereco)){
-				resultado = i;
-			}
-		}
-		return resultado;
 	}
 	
 	public boolean isEnderecoUtilizado(Integer endereco) {
-		return buscarPorEndereco(endereco) != -1;
+		return this.celulas.containsKey(endereco);
 	}
 
 	public void registrarServico(ServicoRegistrador servico) {
 		RegistradorListener anotacao = servico.getClass().getAnnotation(RegistradorListener.class);
 		Integer endereco = anotacao.endereco();
 		if (!isEnderecoUtilizado(endereco)) {
-			this.celula.add(new CelulaRegistrador(endereco));
+			this.celulas.put(endereco,new CelulaRegistrador());
 		}
-		int posicao = buscarPorEndereco(endereco);
-		this.celula.get(posicao).registrarServico(servico);
-	}
-
-	public CelulaRegistrador getCelula(Integer endereco) {
-		int posicao = buscarPorEndereco(endereco);
-		return posicao == -1 ? null :this.celula.get(posicao);
+		this.celulas.get(endereco).registrarServico(servico);
 	}
 
 	public void inserir(Integer endereco, Object corpoJava) {
-		this.celula.add(new CelulaRegistrador(endereco,corpoJava));
+		this.celulas.put(endereco,new CelulaRegistrador(corpoJava));
 	}
 
 	public void atualizar(Integer endereco, Object corpoJava) {
-		getCelula(endereco).setValor(corpoJava);
+		this.celulas.get(endereco).setValor(corpoJava);
+	}
+
+	public CelulaRegistrador getCelula(Integer endereco) {
+		CelulaRegistrador encontrado = null;
+		if (isEnderecoUtilizado(endereco)) {
+			encontrado = this.celulas.get(endereco);
+		}
+		return encontrado;
 	}
 }
