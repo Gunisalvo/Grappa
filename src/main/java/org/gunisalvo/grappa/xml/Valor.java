@@ -11,7 +11,15 @@ public class Valor {
     
     private Object corpo;
  
-    public String getNome() {
+    public Valor() {
+	}
+    
+    public Valor(Object corpo) {
+		this.nome = corpo.getClass().getName();
+		this.corpo = corpo;
+	}
+
+	public String getNome() {
         return nome;
     }
  
@@ -19,7 +27,7 @@ public class Valor {
         this.nome = name;
     }
  
-    @XmlJavaTypeAdapter(value=AdaptadorValorPacoteGrappa.class)
+    @XmlJavaTypeAdapter(value=AdaptadorObject.class)
     public Object getCorpo() {
         return corpo;
     }

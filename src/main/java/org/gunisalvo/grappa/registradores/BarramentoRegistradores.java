@@ -5,9 +5,10 @@ import org.gunisalvo.grappa.Grappa.NivelLog;
 import org.gunisalvo.grappa.modelo.CelulaRegistrador;
 import org.gunisalvo.grappa.modelo.PacoteGrappa;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.Conexao;
+import org.gunisalvo.grappa.modelo.PacoteGrappa.Resultado;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.TipoAcao;
 import org.gunisalvo.grappa.modelo.RegistradoresGrappa;
-import org.gunisalvo.grappa.modelo.PacoteGrappa.Resultado;
+import org.gunisalvo.grappa.xml.Valor;
 
 public class BarramentoRegistradores {
 	
@@ -25,7 +26,7 @@ public class BarramentoRegistradores {
 	
 	public static BarramentoRegistradores getBarramento(){
 		if(INSTANCIA == null){
-			throw new IllegalStateException("É preciso construir antes de usar este barramento");
+			throw new IllegalStateException("�� preciso construir antes de usar este barramento");
 		}
 		return INSTANCIA;
 	}
@@ -46,16 +47,15 @@ public class BarramentoRegistradores {
 		resultado.setTipo(TipoAcao.LEITURA);
 		if(!this.registradores.isEnderecoUtilizado(endereco)){
 			resultado.setResultado(Resultado.ERRO_ENDERECAMENTO);
-			resultado.setCorpo("endereço vazio.");
 		}else{
 			CelulaRegistrador valor = this.registradores.getCelula(endereco);
 			resultado.setResultado(Resultado.SUCESSO);
-			resultado.setCorpo(valor.getValor());
+			resultado.setCorpo(new Valor(valor.getValor()));
 		}
 		return resultado;
 	}
 
-	public PacoteGrappa escrever(Integer endereco, Object corpoJava) {
+	public PacoteGrappa escrever(Integer endereco, Valor corpoJava) {
 		PacoteGrappa resultado = new PacoteGrappa();
 		resultado.setConexao(Conexao.REGISTRADOR);
 		resultado.setEndereco(endereco);
@@ -63,17 +63,17 @@ public class BarramentoRegistradores {
 		if(this.registradores.isEnderecoUtilizado(endereco)){
 			CelulaRegistrador celula = this.registradores.getCelula(endereco);
 			if(!celula.isCelulaVazia()){
-				resultado.setResultado(Resultado.SUCESSO);
-				resultado.setCorpo("Valor Substituido de : \"" + celula.getValor() + "\" por: \"" + corpoJava +"\"");
+				resultado.setResultado(Resultado.ATUALIZADO);
+				resultado.setCorpo(new Valor(corpoJava));
 			}else{
 				resultado.setResultado(Resultado.SUCESSO);
-				resultado.setCorpo("Valor Inserido : \"" + corpoJava +"\"");
+				resultado.setCorpo(new Valor(corpoJava));
 			}
-			this.registradores.atualizar(endereco,corpoJava);
+			this.registradores.atualizar(endereco,corpoJava.getCorpo());
 		}else{
 			resultado.setResultado(Resultado.SUCESSO);
-			resultado.setCorpo("Valor Inserido : \"" + corpoJava +"\"");
-			this.registradores.inserir(endereco,corpoJava);
+			resultado.setCorpo(new Valor(corpoJava));
+			this.registradores.inserir(endereco,corpoJava.getCorpo());
 		}
 		return resultado;
 	}

@@ -11,8 +11,7 @@ public class PacoteGrappaTest {
 	@Test
 	public void test() {
 		PacoteGrappa cobaia = new PacoteGrappa(6, Conexao.REGISTRADOR, TipoAcao.ESCRITA, new Integer(666)); 
-		assertEquals("666", cobaia.getCorpo().toString());
-		assertEquals(666, cobaia.getCorpo());
+		assertEquals(666, cobaia.getCorpo().getCorpo());
 	}
 
 }

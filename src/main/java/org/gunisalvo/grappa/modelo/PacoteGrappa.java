@@ -3,13 +3,14 @@ package org.gunisalvo.grappa.modelo;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import javax.xml.bind.annotation.XmlTransient;
 
-import org.gunisalvo.grappa.xml.AdaptadorValorPacoteGrappa;
+import org.gunisalvo.grappa.xml.Valor;
 
 @XmlRootElement(name="grappa")
 public class PacoteGrappa {
@@ -28,7 +29,7 @@ public class PacoteGrappa {
 	
 	@XmlEnum
 	public enum Resultado{
-		SUCESSO,ERRO_ENDERECAMENTO,ERRO_PROCESSAMENTO
+		SUCESSO,ERRO_ENDERECAMENTO,ERRO_PROCESSAMENTO, ATUALIZADO
 		;
 	}
 	
@@ -38,7 +39,7 @@ public class PacoteGrappa {
 	
 	private TipoAcao tipo;
 	
-	private Object corpo;
+	private Valor corpo;
 
 	private Resultado resultado;
 	
@@ -51,7 +52,13 @@ public class PacoteGrappa {
 		this.endereco = endereco;
 		this.conexao = conexao;
 		this.tipo = tipo;
-		this.corpo = corpo;
+		if(corpo != null){
+			if(corpo instanceof Valor){
+				this.corpo = (Valor) corpo;
+			}else{
+				this.corpo = new Valor(corpo);
+			}
+		}
 	}
 	
 	public PacoteGrappa(Integer endereco, Conexao conexao, TipoAcao tipo, String corpo, Resultado resultado) {
@@ -95,12 +102,12 @@ public class PacoteGrappa {
 		return new PacoteGrappa(this.endereco, this.conexao, this.tipo, mensagem, resultado);
 	}
 
-	@XmlJavaTypeAdapter(value=AdaptadorValorPacoteGrappa.class)
-	public Object getCorpo() {
+	@XmlAnyElement
+	public Valor getCorpo() {
 		return this.corpo;
 	}
 	
-	public void setCorpo(Object corpo){
+	public void setCorpo(Valor corpo){
 		this.corpo = corpo;
 	}
 
@@ -129,5 +136,10 @@ public class PacoteGrappa {
 				this.violacoes.add(new ViolacaoPacote("corpo", "vazio em pacote de escrita"));
 			}
 		}
+	}
+
+	@XmlTransient
+	public Object getCorpoValor() {
+		return this.corpo == null ? null : this.corpo.getCorpo();
 	}
 }

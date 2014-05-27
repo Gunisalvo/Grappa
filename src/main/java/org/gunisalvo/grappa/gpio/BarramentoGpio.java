@@ -10,6 +10,7 @@ import org.gunisalvo.grappa.modelo.PacoteGrappa.Conexao;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.Resultado;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.TipoAcao;
 import org.gunisalvo.grappa.modelo.ValorSinalDigital;
+import org.gunisalvo.grappa.xml.Valor;
 
 public class BarramentoGpio {
 		
@@ -31,7 +32,7 @@ public class BarramentoGpio {
 	
 	public static BarramentoGpio getBarramento(){
 		if(INSTANCIA == null){
-			throw new IllegalStateException("É preciso construir antes de usar este barramento");
+			throw new IllegalStateException("�� preciso construir antes de usar este barramento");
 		}
 		return INSTANCIA;
 	}
@@ -51,26 +52,25 @@ public class BarramentoGpio {
 		resultado.setTipo(TipoAcao.LEITURA);
 		if(!this.hardware.isEnderecoLeitura(endereco)){
 			resultado.setResultado(Resultado.ERRO_ENDERECAMENTO);
-			resultado.setCorpo("endereço de leitura inválido.");
 		}else{
 			ValorSinalDigital valor = this.hardware.ler(endereco);
 			resultado.setResultado(Resultado.SUCESSO);
-			resultado.setCorpo(valor);
+			resultado.setCorpo(new Valor(valor));
 		}
 		return resultado;
 	}
 
-	public PacoteGrappa escrever(Integer endereco, Object corpoRequisicao) {
+	public PacoteGrappa escrever(Integer endereco, Valor corpoRequisicao) {
 		PacoteGrappa resultado = new PacoteGrappa();
 		resultado.setConexao(Conexao.GPIO);
 		resultado.setEndereco(endereco);
 		resultado.setTipo(TipoAcao.ESCRITA);
 		if(this.hardware.isEnderecoEscrita(endereco)){
-			ComandoDigital comando = new ComandoDigital(corpoRequisicao.toString());
+			ComandoDigital comando = new ComandoDigital(corpoRequisicao.getCorpo());
 			if(comando.isValido()){
 				ValorSinalDigital valorResultante = this.hardware.escrever(endereco,comando);
 				resultado.setResultado(Resultado.SUCESSO);
-				resultado.setCorpo("\"" + valorResultante + "\" : registrado com sucesso.");
+				resultado.setCorpo(new Valor(valorResultante));
 				
 			}else{
 				resultado.setResultado(Resultado.ERRO_PROCESSAMENTO);

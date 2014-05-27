@@ -2,7 +2,7 @@ package org.gunisalvo.grappa.xml;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
-public class AdaptadorValorPacoteGrappa extends XmlAdapter<String, Object>{
+public class AdaptadorObject extends XmlAdapter<String, Object>{
 
 	@Override
 	public Object unmarshal(String v) throws Exception {
