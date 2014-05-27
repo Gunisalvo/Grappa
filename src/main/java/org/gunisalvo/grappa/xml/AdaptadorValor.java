@@ -17,8 +17,8 @@ import org.w3c.dom.Element;
 public class AdaptadorValor extends XmlAdapter<Element, Valor> {
 	 
     private ClassLoader classLoader;
-    private DocumentBuilder documentBuilder;
-    private JAXBContext jaxbContext;
+    private DocumentBuilder builder;
+    private JAXBContext contexto;
  
     public AdaptadorValor() {
         classLoader = Thread.currentThread().getContextClassLoader();
@@ -26,67 +26,61 @@ public class AdaptadorValor extends XmlAdapter<Element, Valor> {
  
     public AdaptadorValor(JAXBContext jaxbContext) {
         this();
-        this.jaxbContext = jaxbContext;
+        this.contexto = jaxbContext;
     }
  
     private DocumentBuilder getDocumentBuilder() throws Exception {
-        // Lazy load the DocumentBuilder as it is not used for unmarshalling.
-        if (null == documentBuilder) {
+        
+        if (null == builder) {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            documentBuilder = dbf.newDocumentBuilder();
+            builder = dbf.newDocumentBuilder();
         }
-        return documentBuilder;
+        return builder;
     }
  
     private JAXBContext getJAXBContext(Class<?> type) throws Exception {
-        if (null == jaxbContext) {
-            // A JAXBContext was not set, so create a new one based  on the type.
+        if (null == contexto) {
             return JAXBContext.newInstance(type);
         }
-        return jaxbContext;
+        return contexto;
     }
  
     @SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-    public Element marshal(Valor parameter) throws Exception {
-        if (null == parameter) {
+    public Element marshal(Valor emJava) throws Exception {
+        if (null == emJava) {
             return null;
         }
  
-        // 1. Build the JAXBElement to wrap the instance of Parameter.
-        QName rootElement = new QName(parameter.getNome());
-        Object value = parameter.getCorpo();
-        Class<?> type = value.getClass();
-		JAXBElement<?> jaxbElement = new JAXBElement(rootElement, type, value);
+        QName raizXml = new QName(emJava.getNome());
+        Object corpo = emJava.getCorpo();
+        Class<?> tipo = corpo.getClass();
+		JAXBElement<?> jaxbElement = new JAXBElement(raizXml, tipo, corpo);
  
-        // 2.  Marshal the JAXBElement to a DOM element.
-        Document document = getDocumentBuilder().newDocument();
-        Marshaller marshaller = getJAXBContext(type).createMarshaller();
-        marshaller.marshal(jaxbElement, document);
-        Element element = document.getDocumentElement();
+        Document documento = getDocumentBuilder().newDocument();
+        Marshaller marshaller = getJAXBContext(tipo).createMarshaller();
+        marshaller.marshal(jaxbElement, documento);
+        Element emXml = documento.getDocumentElement();
  
-        return element;
+        return emXml;
     }
  
     @Override
-    public Valor unmarshal(Element element) throws Exception {
-        if (null == element) {
+    public Valor unmarshal(Element emXml) throws Exception {
+        if (null == emXml) {
             return null;
         }
+        
+        Class<?> tipo = classLoader.loadClass(emXml.getLocalName());
+        
+        DOMSource fonte = new DOMSource(emXml);
+        Unmarshaller unmarshaller = getJAXBContext(tipo).createUnmarshaller();
+        JAXBElement<?> jaxb = unmarshaller.unmarshal(fonte, tipo);
  
-        // 1. Determine the values type from the type attribute.
-        Class<?> type = classLoader.loadClass(element.getLocalName());
- 
-        // 2. Unmarshal the element based on the value's type.
-        DOMSource source = new DOMSource(element);
-        Unmarshaller unmarshaller = getJAXBContext(type).createUnmarshaller();
-        JAXBElement<?> jaxbElement = unmarshaller.unmarshal(source, type);
- 
-        // 3. Build the instance of Parameter
-        Valor parameter = new Valor();
-        parameter.setNome(element.getLocalName());
-        parameter.setCorpo(jaxbElement.getValue());
-        return parameter;
+        Valor emJava = new Valor();
+        emJava.setNome(emXml.getLocalName());
+        emJava.setCorpo(jaxb.getValue());
+        return emJava;
     }
  
 }
