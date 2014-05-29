@@ -71,8 +71,12 @@ public class AdaptadorValor extends XmlAdapter<Element, Valor> {
             return null;
         }
         
-        Class<?> tipo = classLoader.loadClass(emXml.getLocalName());
-        
+        Class<?> tipo = null;
+        try{
+        	tipo = classLoader.loadClass(emXml.getLocalName());
+        }catch(ClassNotFoundException ex){
+        	tipo = String.class;
+        }
         DOMSource fonte = new DOMSource(emXml);
         Unmarshaller unmarshaller = getJAXBContext(tipo).createUnmarshaller();
         JAXBElement<?> jaxb = unmarshaller.unmarshal(fonte, tipo);
