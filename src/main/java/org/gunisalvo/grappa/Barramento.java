@@ -4,7 +4,6 @@ import org.gunisalvo.grappa.Grappa.NivelLog;
 import org.gunisalvo.grappa.gpio.BarramentoGpio;
 import org.gunisalvo.grappa.modelo.PacoteGrappa;
 import org.gunisalvo.grappa.registradores.BarramentoRegistradores;
-import org.gunisalvo.grappa.usb.BarramentoUsb;
 
 public class Barramento {
 
@@ -15,9 +14,6 @@ public class Barramento {
 			case GPIO:
 				Grappa.getAplicacao().log("Processando chamada a GPIO...", NivelLog.INFO);
 				return processarChamadaGpio(requisicao);
-			case USB:
-				Grappa.getAplicacao().log("Processando chamada a USB...", NivelLog.INFO);
-				return processarChamadaUsb(requisicao);
 			case REGISTRADOR:
 				Grappa.getAplicacao().log("Processando chamada a Registrador...", NivelLog.INFO);
 				return processarChamadaRegistradores(requisicao);
@@ -37,7 +33,7 @@ public class Barramento {
 			Grappa.getAplicacao().log("... chamada a Registrador realizada com sucesso.", NivelLog.INFO);
 			return respostaLeitura;
 		case ESCRITA:
-			PacoteGrappa respostaEscrita = BarramentoRegistradores.getBarramento().escrever(requisicao.getEndereco(),requisicao.getCorpo());
+			PacoteGrappa respostaEscrita = BarramentoRegistradores.getBarramento().escrever(requisicao.getEndereco(),requisicao.getValor());
 			Grappa.getAplicacao().log("... chamada a Registrador realizada com sucesso.", NivelLog.INFO);
 			return respostaEscrita;
 		default:
@@ -52,23 +48,8 @@ public class Barramento {
 			Grappa.getAplicacao().log("... chamada a GPIO realizada com sucesso.", NivelLog.INFO);
 			return respostaLeitura;
 		case ESCRITA:
-			PacoteGrappa respostaEscrita = BarramentoGpio.getBarramento().escrever(requisicao.getEndereco(),requisicao.getCorpo());
+			PacoteGrappa respostaEscrita = BarramentoGpio.getBarramento().escrever(requisicao.getEndereco(),requisicao.getValor());
 			Grappa.getAplicacao().log("... chamada a GPIO realizada com sucesso.", NivelLog.INFO);
-			return respostaEscrita;
-		default:
-			throw new RuntimeException();
-		}
-	}
-	
-	private static PacoteGrappa processarChamadaUsb(PacoteGrappa requisicao) {
-		switch(requisicao.getTipo()){
-		case LEITURA:
-			PacoteGrappa respostaLeitura = BarramentoUsb.getBarramento().ler(requisicao.getEndereco());
-			Grappa.getAplicacao().log("... chamada a USB realizada com sucesso.", NivelLog.INFO);
-			return respostaLeitura;
-		case ESCRITA:
-			PacoteGrappa respostaEscrita = BarramentoUsb.getBarramento().escrever(requisicao.getEndereco(),requisicao.getCorpo());
-			Grappa.getAplicacao().log("... chamada a USB realizada com sucesso.", NivelLog.INFO);
 			return respostaEscrita;
 		default:
 			throw new RuntimeException();

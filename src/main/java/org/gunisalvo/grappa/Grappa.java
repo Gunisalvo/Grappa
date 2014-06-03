@@ -56,14 +56,28 @@ public class Grappa {
 	private ArrayList<Class<ServicoBarramentoGpio>> servicosGpio;
 	
 	private Grappa(String caminhoContexto) {
-		this.caminhoArquivoLog = caminhoContexto + File.separator + "log" + File.separator + "grappa.log";
-		this.caminhoArquivoRegistradores = caminhoContexto + File.separator + "WEB-INF" + File.separator + "registradores.xml";
-		this.caminhoArquivoBarramentoEletrico = caminhoContexto + File.separator + "WEB-INF" + File.separator + "grappa.xml";
+		if(caminhoContexto == null){
+			iniciarContexto();
+		}else{
+			iniciarContexto(caminhoContexto);
+		}
 		iniciarLog();
 		LeitorConfiguracao configurador = new LeitorConfiguracao();
 		buscarServicos(configurador,caminhoContexto);
 		iniciarRegistradores(configurador);
 		iniciarGpio(configurador);
+	}
+
+	protected void iniciarContexto(String caminhoContexto) {
+		this.caminhoArquivoLog = caminhoContexto + File.separator + "log" + File.separator + "grappa.log";
+		this.caminhoArquivoRegistradores = caminhoContexto + File.separator + "WEB-INF" + File.separator + "registradores.xml";
+		this.caminhoArquivoBarramentoEletrico = caminhoContexto + File.separator + "WEB-INF" + File.separator + "grappa.xml";
+	}
+	
+	protected void iniciarContexto() {
+		this.caminhoArquivoLog = "log" + File.separator + "grappa.log";
+		this.caminhoArquivoRegistradores = this.getClass().getClassLoader().getResource( "registradores.xml" ).getFile();
+		this.caminhoArquivoBarramentoEletrico = this.getClass().getClassLoader().getResource( "grappa.xml" ).getFile();
 	}
 
 	private void iniciarRegistradores(LeitorConfiguracao configurador) {
@@ -95,6 +109,11 @@ public class Grappa {
 
 	public static void construir(String caminhoContexto) {
 		INSTANCIA = new Grappa(caminhoContexto);
+	}
+	
+	public static void construir() {
+		INSTANCIA = new Grappa(null);
+		
 	}
 	
 	public static Grappa getAplicacao(){
@@ -176,7 +195,10 @@ public class Grappa {
 	private void buscarServicos(LeitorConfiguracao configurador, String caminhoContexto){
 		this.servicosRegistradores = new ArrayList<>();
 		this.servicosGpio = new ArrayList<>();
-		buscaRecursivaServicos(configurador.carregarGpio(this.caminhoArquivoBarramentoEletrico).getPacoteServico());
+		GpioGrappa configuracao = configurador.carregarGpio(this.caminhoArquivoBarramentoEletrico);
+		if(configuracao.getPacoteServico() != null){
+			buscaRecursivaServicos(configuracao.getPacoteServico());
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -218,4 +240,5 @@ public class Grappa {
 			return Arrays.asList(diretorio.list());
 		}
 	}
+
 }

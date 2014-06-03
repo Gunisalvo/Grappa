@@ -17,19 +17,19 @@ public class PacoteGrappa {
 
 	@XmlEnum
 	public enum Conexao{
-		GPIO,USB,REGISTRADOR
+		GPIO, REGISTRADOR
 		;
 	}
 	
 	@XmlEnum
 	public enum TipoAcao{
-		LEITURA,ESCRITA
+		LEITURA, ESCRITA
 		;
 	}
 	
 	@XmlEnum
 	public enum Resultado{
-		SUCESSO,ERRO_ENDERECAMENTO,ERRO_PROCESSAMENTO, ATUALIZADO
+		SUCESSO, ERRO_ENDERECAMENTO, ERRO_PROCESSAMENTO, ATUALIZADO
 		;
 	}
 	
@@ -103,7 +103,7 @@ public class PacoteGrappa {
 	}
 
 	@XmlAnyElement
-	public Valor getCorpo() {
+	public Valor getValor() {
 		return this.corpo;
 	}
 	
@@ -121,7 +121,7 @@ public class PacoteGrappa {
 		this.violacoes = violacoes;
 	}
 
-	public void validar() {
+	public boolean validar() {
 		this.violacoes = new ArrayList<>();
 		if(this.endereco == null){
 			this.violacoes.add(new ViolacaoPacote("endereco", "vazio"));
@@ -136,6 +136,7 @@ public class PacoteGrappa {
 				this.violacoes.add(new ViolacaoPacote("corpo", "vazio em pacote de escrita"));
 			}
 		}
+		return this.violacoes.size() == 0;
 	}
 
 	@XmlTransient
