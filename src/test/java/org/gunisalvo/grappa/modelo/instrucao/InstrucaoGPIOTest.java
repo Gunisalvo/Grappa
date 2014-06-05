@@ -13,25 +13,25 @@ public class InstrucaoGPIOTest {
 
 	@Test
 	public void testeLeitura() {
-		PacoteGrappa requisicao = new InstrucaoGPIO().noEndereco(2).leitura().construir();
+		PacoteGrappa requisicao = new InstrucaoGPIO().endereco(2).leitura().construir();
 		assertEquals(requisicao.getConexao(),Conexao.GPIO);
 		assertEquals(requisicao.getEndereco(),new Integer(2));
 		assertEquals(requisicao.getTipo(),TipoAcao.LEITURA);
 		assertNull(requisicao.getValor());
 		assertNull(requisicao.getViolacoes());
-		assertTrue(requisicao.validar());
+		assertTrue(requisicao.isValido());
 		assertTrue(requisicao.getViolacoes().isEmpty());
 	}
 	
 	@Test
 	public void testeLer() {
-		PacoteGrappa requisicao = new InstrucaoGPIO().noEndereco(3).ler();
+		PacoteGrappa requisicao = new InstrucaoGPIO().endereco(3).ler();
 		assertEquals(requisicao.getConexao(),Conexao.GPIO);
 		assertEquals(requisicao.getEndereco(),new Integer(3));
 		assertEquals(requisicao.getTipo(),TipoAcao.LEITURA);
 		assertNull(requisicao.getValor());
 		assertNull(requisicao.getViolacoes());
-		assertTrue(requisicao.validar());
+		assertTrue(requisicao.isValido());
 		assertTrue(requisicao.getViolacoes().isEmpty());
 	}
 	
@@ -43,7 +43,7 @@ public class InstrucaoGPIOTest {
 		assertEquals(requisicao.getTipo(),TipoAcao.LEITURA);
 		assertNull(requisicao.getValor());
 		assertNull(requisicao.getViolacoes());
-		assertFalse(requisicao.validar());
+		assertFalse(requisicao.isValido());
 		assertEquals(requisicao.getViolacoes().size(),1);
 	}
 	
@@ -55,33 +55,33 @@ public class InstrucaoGPIOTest {
 		assertEquals(requisicao.getTipo(),TipoAcao.LEITURA);
 		assertNull(requisicao.getValor());
 		assertNull(requisicao.getViolacoes());
-		assertFalse(requisicao.validar());
+		assertFalse(requisicao.isValido());
 		assertEquals(requisicao.getViolacoes().size(),1);
 	}
 	
 	@Test
 	public void testeEscrita() {
-		PacoteGrappa requisicao = new InstrucaoGPIO().noEndereco(4).escrita(ValorSinalDigital.ALTO).construir();
+		PacoteGrappa requisicao = new InstrucaoGPIO().endereco(4).escrita(ValorSinalDigital.ALTO).construir();
 		assertEquals(requisicao.getConexao(),Conexao.GPIO);
 		assertEquals(requisicao.getEndereco(),new Integer(4));
 		assertEquals(requisicao.getTipo(),TipoAcao.ESCRITA);
-		assertEquals(requisicao.getValor().getCorpo(),"ALTO");
-		assertEquals(requisicao.getValor().getNome(),"java.lang.String");
+		assertEquals(requisicao.getValor().getCorpo(),ValorSinalDigital.ALTO);
+		assertEquals(requisicao.getValor().getNome(),"org.gunisalvo.grappa.modelo.ValorSinalDigital");
 		assertNull(requisicao.getViolacoes());
-		assertTrue(requisicao.validar());
+		assertTrue(requisicao.isValido());
 		assertTrue(requisicao.getViolacoes().isEmpty());
 	}
 	
 	@Test
 	public void testeEscrever() {
-		PacoteGrappa requisicao = new InstrucaoGPIO().noEndereco(5).escrever(ValorSinalDigital.BAIXO);
+		PacoteGrappa requisicao = new InstrucaoGPIO().endereco(5).escrever(ValorSinalDigital.BAIXO);
 		assertEquals(requisicao.getConexao(),Conexao.GPIO);
 		assertEquals(requisicao.getEndereco(),new Integer(5));
 		assertEquals(requisicao.getTipo(),TipoAcao.ESCRITA);
-		assertEquals(requisicao.getValor().getCorpo(),"BAIXO");
-		assertEquals(requisicao.getValor().getNome(),"java.lang.String");
+		assertEquals(requisicao.getValor().getCorpo(),ValorSinalDigital.BAIXO);
+		assertEquals(requisicao.getValor().getNome(),"org.gunisalvo.grappa.modelo.ValorSinalDigital");
 		assertNull(requisicao.getViolacoes());
-		assertTrue(requisicao.validar());
+		assertTrue(requisicao.isValido());
 		assertTrue(requisicao.getViolacoes().isEmpty());
 	}
 	
@@ -93,19 +93,20 @@ public class InstrucaoGPIOTest {
 		assertNull(requisicao.getTipo());
 		assertNull(requisicao.getValor());
 		assertNull(requisicao.getViolacoes());
-		assertFalse(requisicao.validar());
+		assertFalse(requisicao.isValido());
 		assertEquals(requisicao.getViolacoes().size(),2);
 	}
 	
 	@Test
 	public void testeEscreverInvalido() {
-		PacoteGrappa requisicao = new InstrucaoGPIO().escrever(ValorSinalDigital.BAIXO);
+		PacoteGrappa requisicao = new InstrucaoGPIO().escrever(ValorSinalDigital.TROCA);
 		assertEquals(requisicao.getConexao(),Conexao.GPIO);
 		assertNull(requisicao.getEndereco());
 		assertEquals(requisicao.getTipo(),TipoAcao.ESCRITA);
-		assertEquals(requisicao.getValor().getCorpo(),"BAIXO");
+		assertEquals(requisicao.getValor().getCorpo(),ValorSinalDigital.TROCA);
+		assertEquals(requisicao.getValor().getNome(),"org.gunisalvo.grappa.modelo.ValorSinalDigital");
 		assertNull(requisicao.getViolacoes());
-		assertFalse(requisicao.validar());
+		assertFalse(requisicao.isValido());
 		assertEquals(requisicao.getViolacoes().size(),1);
 	}
 

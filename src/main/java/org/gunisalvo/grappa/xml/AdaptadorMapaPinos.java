@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
-import org.gunisalvo.grappa.gpio.ServicoBarramentoGpio;
+import org.gunisalvo.grappa.gpio.ServicoGpio;
 import org.gunisalvo.grappa.modelo.PinoDigitalGrappa;
 import org.gunisalvo.grappa.modelo.TipoPino;
 import org.gunisalvo.grappa.modelo.ValorSinalDigital;
@@ -35,7 +35,7 @@ public class AdaptadorMapaPinos extends XmlAdapter<AdaptadorMapaPinos.Pinos, Map
 			this.valor = pino.getValor();
 			if(pino.getPossuiServicosRegistrados()){
 				this.servicos = new ArrayList<>();
-				for(ServicoBarramentoGpio s : pino.getServicos()){
+				for(ServicoGpio s : pino.getServicos()){
 					this.servicos.add(s.getClass().getName());
 				}
 			}

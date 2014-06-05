@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import org.gunisalvo.grappa.gpio.ServicoBarramentoGpio;
+import org.gunisalvo.grappa.gpio.ServicoGpio;
 import org.gunisalvo.grappa.xml.AdaptadorTipoPino;
 
 @XmlRootElement(name="pino")
@@ -19,7 +19,7 @@ public class PinoDigitalGrappa {
 	
 	private ValorSinalDigital valor;
 
-	private List<ServicoBarramentoGpio> servicos;
+	private List<ServicoGpio> servicos;
 	
 	public PinoDigitalGrappa() {
 	}
@@ -43,15 +43,15 @@ public class PinoDigitalGrappa {
 	}
 
 	@XmlTransient
-	public List<ServicoBarramentoGpio> getServicos() {
-		return servicos == null ? Collections.<ServicoBarramentoGpio>emptyList() : servicos;
+	public List<ServicoGpio> getServicos() {
+		return servicos == null ? Collections.<ServicoGpio>emptyList() : servicos;
 	}
 
-	public void setServicos(List<ServicoBarramentoGpio> servicos) {
+	public void setServicos(List<ServicoGpio> servicos) {
 		this.servicos = servicos;
 	}
 	
-	public void registrarServico(ServicoBarramentoGpio servico){
+	public void registrarServico(ServicoGpio servico){
 		if(this.servicos == null){
 			this.servicos = new ArrayList<>();
 		}

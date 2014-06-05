@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.gunisalvo.grappa.gpio.Raspberry;
-import org.gunisalvo.grappa.gpio.ServicoBarramentoGpio;
+import org.gunisalvo.grappa.gpio.ServicoGpio;
 import org.gunisalvo.grappa.modelo.ComandoDigital;
 import org.gunisalvo.grappa.modelo.GpioGrappa;
 import org.gunisalvo.grappa.modelo.MapaEletrico;
@@ -38,8 +38,9 @@ public class RaspberryVirtual implements Raspberry {
 				this.pinosVirtuais.put(i,gerado);
 			}
 		}
-		
-		this.pinosVirtuais.get(this.mapeamento.getPosicaoPinoMonitor()).setValor(ValorSinalDigital.ALTO);
+		if(this.mapeamento.getPosicaoPinoMonitor() != null){
+			this.pinosVirtuais.get(this.mapeamento.getPosicaoPinoMonitor()).setValor(ValorSinalDigital.ALTO);
+		}
 	}
 
 	@Override
@@ -59,7 +60,7 @@ public class RaspberryVirtual implements Raspberry {
 
 	@Override
 	public boolean isEnderecoEscrita(Integer endereco) {
-		return this.mapeamento.enderecoValido(endereco, TipoAcao.ESCRITA);
+		return this.mapeamento.posicaoEnderecoValido(endereco);
 	}
 
 	@Override
@@ -82,7 +83,7 @@ public class RaspberryVirtual implements Raspberry {
 		}
 		pino.setValor(resultante);
 		if(pino.getPossuiServicosRegistrados()){
-			for(ServicoBarramentoGpio s : pino.getServicos()){
+			for(ServicoGpio s : pino.getServicos()){
 				s.processarServico(pino.getValor().emBinario());
 			}
 		}

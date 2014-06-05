@@ -17,8 +17,10 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.gunisalvo.grappa.gpio.BarramentoGpio;
 import org.gunisalvo.grappa.gpio.GPIOListener;
-import org.gunisalvo.grappa.gpio.ServicoBarramentoGpio;
+import org.gunisalvo.grappa.gpio.ServicoGpio;
 import org.gunisalvo.grappa.modelo.GpioGrappa;
+import org.gunisalvo.grappa.modelo.PacoteGrappa;
+import org.gunisalvo.grappa.modelo.PacoteGrappa.Resultado;
 import org.gunisalvo.grappa.modelo.RegistradoresGrappa;
 import org.gunisalvo.grappa.registradores.BarramentoRegistradores;
 import org.gunisalvo.grappa.registradores.RegistradorListener;
@@ -51,9 +53,9 @@ public class Grappa {
 	
 	private String caminhoArquivoBarramentoEletrico;
 
-	private ArrayList<Class<ServicoRegistrador>> servicosRegistradores;
+	private List<Class<ServicoRegistrador>> servicosRegistradores;
 	
-	private ArrayList<Class<ServicoBarramentoGpio>> servicosGpio;
+	private List<Class<ServicoGpio>> servicosGpio;
 	
 	private Grappa(String caminhoContexto) {
 		if(caminhoContexto == null){
@@ -68,13 +70,13 @@ public class Grappa {
 		iniciarGpio(configurador);
 	}
 
-	protected void iniciarContexto(String caminhoContexto) {
+	private void iniciarContexto(String caminhoContexto) {
 		this.caminhoArquivoLog = caminhoContexto + File.separator + "log" + File.separator + "grappa.log";
 		this.caminhoArquivoRegistradores = caminhoContexto + File.separator + "WEB-INF" + File.separator + "registradores.xml";
 		this.caminhoArquivoBarramentoEletrico = caminhoContexto + File.separator + "WEB-INF" + File.separator + "grappa.xml";
 	}
 	
-	protected void iniciarContexto() {
+	private void iniciarContexto() {
 		this.caminhoArquivoLog = "log" + File.separator + "grappa.log";
 		this.caminhoArquivoRegistradores = this.getClass().getClassLoader().getResource( "registradores.xml" ).getFile();
 		this.caminhoArquivoBarramentoEletrico = this.getClass().getClassLoader().getResource( "grappa.xml" ).getFile();
@@ -96,7 +98,7 @@ public class Grappa {
 	private void iniciarGpio(LeitorConfiguracao configurador) {
 		GpioGrappa gpio = configurador.carregarGpio(this.caminhoArquivoBarramentoEletrico);
 		try{
-			for(Class<ServicoBarramentoGpio> classe : this.servicosGpio){
+			for(Class<ServicoGpio> classe : this.servicosGpio){
 				gpio.registrarServico(classe.newInstance());
 			}
 		}catch(Exception e){
@@ -212,7 +214,7 @@ public class Grappa {
 						this.servicosRegistradores.add((Class<ServicoRegistrador>) classe);
 					}
 					if (classe.isAnnotationPresent(GPIOListener.class)) {
-						this.servicosGpio.add((Class<ServicoBarramentoGpio>) classe);
+						this.servicosGpio.add((Class<ServicoGpio>) classe);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -239,6 +241,30 @@ public class Grappa {
 			File diretorio = new File(recurso.getFile());
 			return Arrays.asList(diretorio.list());
 		}
+	}
+	
+	public static PacoteGrappa processarPacote(PacoteGrappa requisicao) {
+		PacoteGrappa resposta = null;
+		
+		if(!isConstruida()){
+			throw new IllegalStateException("Grappa deve ser construido antes de processar.");
+		}
+		
+		if(requisicao.isValido()){
+			Grappa.getAplicacao().log("Processando chamada a " + requisicao.getConexao() + "...", NivelLog.INFO);
+			resposta = Barramento.processarPacote(requisicao);
+			Grappa.getAplicacao().log("... chamada a " + requisicao.getConexao() + " realizada com sucesso.", NivelLog.INFO);
+		}else{
+			Grappa.getAplicacao().log("Pacote inválido.", NivelLog.AVISO);
+			resposta = requisicao;
+			resposta.setResultado(Resultado.REQUISICAO_INVALIDA);
+		}
+		
+		return resposta;
+	}
+
+	private static boolean isConstruida() {
+		return INSTANCIA != null;
 	}
 
 }

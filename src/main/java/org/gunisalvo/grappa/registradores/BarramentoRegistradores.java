@@ -50,7 +50,7 @@ public class BarramentoRegistradores {
 		}else{
 			CelulaRegistrador valor = this.registradores.getCelula(endereco);
 			resultado.setResultado(Resultado.SUCESSO);
-			resultado.setCorpo(new Valor(valor.getValor()));
+			resultado.setValor(new Valor(valor.getValor()));
 		}
 		return resultado;
 	}
@@ -64,15 +64,15 @@ public class BarramentoRegistradores {
 			CelulaRegistrador celula = this.registradores.getCelula(endereco);
 			if(!celula.isCelulaVazia()){
 				resultado.setResultado(Resultado.ATUALIZADO);
-				resultado.setCorpo(new Valor(corpoJava));
+				resultado.setValor(new Valor(corpoJava));
 			}else{
 				resultado.setResultado(Resultado.SUCESSO);
-				resultado.setCorpo(new Valor(corpoJava));
+				resultado.setValor(new Valor(corpoJava));
 			}
 			this.registradores.atualizar(endereco,corpoJava.getCorpo());
 		}else{
 			resultado.setResultado(Resultado.SUCESSO);
-			resultado.setCorpo(new Valor(corpoJava));
+			resultado.setValor(new Valor(corpoJava));
 			this.registradores.inserir(endereco,corpoJava.getCorpo());
 		}
 		return resultado;

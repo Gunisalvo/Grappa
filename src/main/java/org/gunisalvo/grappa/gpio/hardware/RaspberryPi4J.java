@@ -8,7 +8,7 @@ import org.gunisalvo.grappa.Grappa;
 import org.gunisalvo.grappa.Grappa.NivelLog;
 import org.gunisalvo.grappa.gpio.GPIOListener;
 import org.gunisalvo.grappa.gpio.Raspberry;
-import org.gunisalvo.grappa.gpio.ServicoBarramentoGpio;
+import org.gunisalvo.grappa.gpio.ServicoGpio;
 import org.gunisalvo.grappa.modelo.ComandoDigital;
 import org.gunisalvo.grappa.modelo.GpioGrappa;
 import org.gunisalvo.grappa.modelo.MapaEletrico;
@@ -87,14 +87,14 @@ public class RaspberryPi4J implements Raspberry {
 	private void mapearPino(int endereco, PinoDigitalGrappa pinoDigitalGrappa) {
 		GpioPinDigital pino = null;
 		switch(pinoDigitalGrappa.getTipo()){
-		case INPUT_DIGITAL:
+		case ENTRADA:
 			GpioPinDigitalInput entrada = this.gpio.provisionDigitalInputPin(getPinoMapeado(endereco));
-			for(ServicoBarramentoGpio s : pinoDigitalGrappa.getServicos()){
+			for(ServicoGpio s : pinoDigitalGrappa.getServicos()){
 				registrarServico(s,entrada);
 			}
 			pino = entrada;
 			break;
-		case OUTPUT_DIGITAL:
+		case SAIDA:
 			pino = this.gpio.provisionDigitalOutputPin(getPinoMapeado(endereco));
 			pino.setShutdownOptions(true, PinState.LOW);
 			break;
@@ -151,7 +151,7 @@ public class RaspberryPi4J implements Raspberry {
 		}
 	}
 	
-	private void registrarServico(final ServicoBarramentoGpio servico, GpioPinDigitalInput pino){
+	private void registrarServico(final ServicoGpio servico, GpioPinDigitalInput pino){
 		GPIOListener anotacao = servico.getClass().getAnnotation(GPIOListener.class);
 		final int endereco = anotacao.pino();
 		
@@ -190,7 +190,7 @@ public class RaspberryPi4J implements Raspberry {
 				original.isHigh() ? ValorSinalDigital.ALTO : ValorSinalDigital.BAIXO
 			);
 		resultado.setTipo(
-				PinMode.DIGITAL_INPUT.equals(original.getMode()) ? TipoPino.INPUT_DIGITAL : TipoPino.OUTPUT_DIGITAL
+				PinMode.DIGITAL_INPUT.equals(original.getMode()) ? TipoPino.ENTRADA : TipoPino.SAIDA
 			);
 		if(this.mapeamento.possuiMapeamento(endereco) && this.mapeamento.buscarPino(endereco).getPossuiServicosRegistrados()){
 			resultado.setServicos(this.mapeamento.buscarPino(endereco).getServicos());

@@ -25,12 +25,12 @@ public class LeitorConfiguracaoTest {
 		assertNotNull(lida.getPinos());
 		assertEquals(3,lida.getPinos().size());
 		for(PinoDigitalGrappa p : lida.getPinos().values()){
-			assertEquals(TipoPino.INPUT_DIGITAL, p.getTipo());
+			assertEquals(TipoPino.ENTRADA, p.getTipo());
 		}
 		assertEquals(0,lida.getPosicaoPinoMonitor().intValue());
 		assertEquals(0,lida.getPosicaoPinoInicial().intValue());
 		assertEquals(8,lida.getPosicaoPinoFinal().intValue());
-		assertEquals(TipoPino.OUTPUT_DIGITAL,lida.getPadrao());
+		assertEquals(TipoPino.SAIDA,lida.getPadrao());
 		assertFalse(lida.enderecoValido(-1, TipoAcao.LEITURA));
 		assertFalse(lida.enderecoValido(-1, TipoAcao.ESCRITA));
 		assertTrue(lida.enderecoValido(0, TipoAcao.LEITURA));

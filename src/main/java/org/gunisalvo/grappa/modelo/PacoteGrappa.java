@@ -29,7 +29,7 @@ public class PacoteGrappa {
 	
 	@XmlEnum
 	public enum Resultado{
-		SUCESSO, ERRO_ENDERECAMENTO, ERRO_PROCESSAMENTO, ATUALIZADO
+		SUCESSO, ERRO_ENDERECAMENTO, ERRO_PROCESSAMENTO, ATUALIZADO, REQUISICAO_INVALIDA
 		;
 	}
 	
@@ -107,7 +107,7 @@ public class PacoteGrappa {
 		return this.corpo;
 	}
 	
-	public void setCorpo(Valor corpo){
+	public void setValor(Valor corpo){
 		this.corpo = corpo;
 	}
 
@@ -121,7 +121,7 @@ public class PacoteGrappa {
 		this.violacoes = violacoes;
 	}
 
-	public boolean validar() {
+	public boolean isValido() {
 		this.violacoes = new ArrayList<>();
 		if(this.endereco == null){
 			this.violacoes.add(new ViolacaoPacote("endereco", "vazio"));

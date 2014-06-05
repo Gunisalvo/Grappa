@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.gunisalvo.grappa.gpio.GPIOListener;
-import org.gunisalvo.grappa.gpio.ServicoBarramentoGpio;
+import org.gunisalvo.grappa.gpio.ServicoGpio;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.TipoAcao;
 import org.gunisalvo.grappa.modelo.TipoPino;
 import org.gunisalvo.grappa.xml.AdaptadorMapaPinos;
@@ -103,7 +103,7 @@ public class GpioGrappa {
 		return posicaoEnderecoValido(endereco) && acaoValida(endereco, acao);
 	}
 
-	private boolean posicaoEnderecoValido(Integer endereco) {
+	public boolean posicaoEnderecoValido(Integer endereco) {
 		return this.posicaoPinoInicial <= endereco && this.posicaoPinoFinal >= endereco;
 	}
 
@@ -118,11 +118,11 @@ public class GpioGrappa {
 	}
 
 	private boolean acaoValida(TipoPino pino, TipoAcao acao) {
-		return pino.equals(TipoPino.OUTPUT_DIGITAL)
+		return pino.equals(TipoPino.SAIDA)
 				|| acao.equals(TipoAcao.LEITURA);
 	}
 
-	public void registrarServico(ServicoBarramentoGpio servico) {
+	public void registrarServico(ServicoGpio servico) {
 		GPIOListener anotacao = servico.getClass().getAnnotation(GPIOListener.class);
 		Integer endereco = anotacao.pino();
 		if (posicaoEnderecoValido(endereco)) {

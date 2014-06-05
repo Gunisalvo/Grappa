@@ -19,25 +19,25 @@ public class InstrucaoRegistradorTest {
 
 	@Test
 	public void testeLeitura() {
-		PacoteGrappa requisicao = new InstrucaoRegistrador().noEndereco(2).leitura().construir();
+		PacoteGrappa requisicao = new InstrucaoRegistrador().endereco(2).leitura().construir();
 		assertEquals(requisicao.getConexao(),Conexao.REGISTRADOR);
 		assertEquals(requisicao.getEndereco(),new Integer(2));
 		assertEquals(requisicao.getTipo(),TipoAcao.LEITURA);
 		assertNull(requisicao.getValor());
 		assertNull(requisicao.getViolacoes());
-		assertTrue(requisicao.validar());
+		assertTrue(requisicao.isValido());
 		assertTrue(requisicao.getViolacoes().isEmpty());
 	}
 	
 	@Test
 	public void testeLer() {
-		PacoteGrappa requisicao = new InstrucaoRegistrador().noEndereco(3).ler();
+		PacoteGrappa requisicao = new InstrucaoRegistrador().endereco(3).ler();
 		assertEquals(requisicao.getConexao(),Conexao.REGISTRADOR);
 		assertEquals(requisicao.getEndereco(),new Integer(3));
 		assertEquals(requisicao.getTipo(),TipoAcao.LEITURA);
 		assertNull(requisicao.getValor());
 		assertNull(requisicao.getViolacoes());
-		assertTrue(requisicao.validar());
+		assertTrue(requisicao.isValido());
 		assertTrue(requisicao.getViolacoes().isEmpty());
 	}
 	
@@ -49,7 +49,7 @@ public class InstrucaoRegistradorTest {
 		assertEquals(requisicao.getTipo(),TipoAcao.LEITURA);
 		assertNull(requisicao.getValor());
 		assertNull(requisicao.getViolacoes());
-		assertFalse(requisicao.validar());
+		assertFalse(requisicao.isValido());
 		assertEquals(requisicao.getViolacoes().size(),1);
 	}
 	
@@ -61,7 +61,7 @@ public class InstrucaoRegistradorTest {
 		assertEquals(requisicao.getTipo(),TipoAcao.LEITURA);
 		assertNull(requisicao.getValor());
 		assertNull(requisicao.getViolacoes());
-		assertFalse(requisicao.validar());
+		assertFalse(requisicao.isValido());
 		assertEquals(requisicao.getViolacoes().size(),1);
 	}
 	
@@ -73,33 +73,33 @@ public class InstrucaoRegistradorTest {
 		assertNull(requisicao.getTipo());
 		assertNull(requisicao.getValor());
 		assertNull(requisicao.getViolacoes());
-		assertFalse(requisicao.validar());
+		assertFalse(requisicao.isValido());
 		assertEquals(requisicao.getViolacoes().size(),2);
 	}
 	
 	@Test
 	public void testeEscrita() {
-		PacoteGrappa requisicao = new InstrucaoRegistrador().noEndereco(4).escrita(new BigDecimal(100.0337)).construir();
+		PacoteGrappa requisicao = new InstrucaoRegistrador().endereco(4).escrita(new BigDecimal(100.0337)).construir();
 		assertEquals(requisicao.getConexao(),Conexao.REGISTRADOR);
 		assertEquals(requisicao.getEndereco(),new Integer(4));
 		assertEquals(requisicao.getTipo(),TipoAcao.ESCRITA);
 		assertEquals(requisicao.getValor().getCorpo(),new BigDecimal(100.0337));
 		assertEquals(requisicao.getValor().getNome(),"java.math.BigDecimal");
 		assertNull(requisicao.getViolacoes());
-		assertTrue(requisicao.validar());
+		assertTrue(requisicao.isValido());
 		assertTrue(requisicao.getViolacoes().isEmpty());
 	}
 	
 	@Test
 	public void testeEscrever() throws MalformedURLException {
-		PacoteGrappa requisicao = new InstrucaoRegistrador().noEndereco(5).escrever(new URL("http://www.google.com/"));
+		PacoteGrappa requisicao = new InstrucaoRegistrador().endereco(5).escrever(new URL("http://www.google.com/"));
 		assertEquals(requisicao.getConexao(),Conexao.REGISTRADOR);
 		assertEquals(requisicao.getEndereco(),new Integer(5));
 		assertEquals(requisicao.getTipo(),TipoAcao.ESCRITA);
 		assertEquals(requisicao.getValor().getCorpo(),new URL("http://www.google.com/"));
 		assertEquals(requisicao.getValor().getNome(),"java.net.URL");
 		assertNull(requisicao.getViolacoes());
-		assertTrue(requisicao.validar());
+		assertTrue(requisicao.isValido());
 		assertTrue(requisicao.getViolacoes().isEmpty());
 	}
 	
@@ -112,7 +112,7 @@ public class InstrucaoRegistradorTest {
 		assertEquals(requisicao.getValor().getCorpo(),new ArrayList<Integer>());
 		assertEquals(requisicao.getValor().getNome(),"java.util.ArrayList");
 		assertNull(requisicao.getViolacoes());
-		assertFalse(requisicao.validar());
+		assertFalse(requisicao.isValido());
 		assertEquals(requisicao.getViolacoes().size(),1);
 	}
 

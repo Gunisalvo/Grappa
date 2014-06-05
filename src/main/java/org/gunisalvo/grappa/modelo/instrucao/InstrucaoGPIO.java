@@ -1,9 +1,10 @@
 package org.gunisalvo.grappa.modelo.instrucao;
 
+import org.gunisalvo.grappa.modelo.ComandoDigital;
 import org.gunisalvo.grappa.modelo.PacoteGrappa;
+import org.gunisalvo.grappa.modelo.ValorSinalDigital;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.Conexao;
 import org.gunisalvo.grappa.modelo.PacoteGrappa.TipoAcao;
-import org.gunisalvo.grappa.modelo.ValorSinalDigital;
 
 public class InstrucaoGPIO {
 	
@@ -13,10 +14,10 @@ public class InstrucaoGPIO {
 	
 	private TipoAcao acao;
 	
-	private ValorSinalDigital corpo;
+	private ComandoDigital corpo;
 	
 	public PacoteGrappa construir(){
-		return new PacoteGrappa(endereco,GPIO,acao, corpo == null ? null : corpo.toString());
+		return new PacoteGrappa(endereco,GPIO,acao, corpo == null ? null : corpo.getValor());
 	}
 	
 	public InstrucaoGPIO leitura(){
@@ -24,9 +25,27 @@ public class InstrucaoGPIO {
 		return this;
 	}
 	
-	public InstrucaoGPIO escrita(ValorSinalDigital corpo){
+	public InstrucaoGPIO escrita(ComandoDigital corpo){
 		this.acao = TipoAcao.ESCRITA;
 		this.corpo = corpo;
+		return this;
+	}
+	
+	public InstrucaoGPIO escrita(String corpo){
+		this.acao = TipoAcao.ESCRITA;
+		this.corpo = new ComandoDigital(corpo);
+		return this;
+	}
+	
+	public InstrucaoGPIO escrita(int corpo){
+		this.acao = TipoAcao.ESCRITA;
+		this.corpo = new ComandoDigital(corpo);
+		return this;
+	}
+	
+	public InstrucaoGPIO escrita(ValorSinalDigital corpo){
+		this.acao = TipoAcao.ESCRITA;
+		this.corpo = new ComandoDigital(corpo.emBinario());
 		return this;
 	}
 	
@@ -35,13 +54,32 @@ public class InstrucaoGPIO {
 		return construir();
 	}
 	
-	public PacoteGrappa escrever(ValorSinalDigital corpo){
+	public PacoteGrappa escrever(ComandoDigital corpo){
 		this.acao = TipoAcao.ESCRITA;
 		this.corpo = corpo;
 		return construir();
 	}
+
+	public PacoteGrappa escrever(String corpo){
+		this.acao = TipoAcao.ESCRITA;
+		this.corpo = new ComandoDigital(corpo);
+		return construir();
+	}
 	
-	public InstrucaoGPIO noEndereco(Integer endereco){
+	public PacoteGrappa escrever(int corpo){
+		this.acao = TipoAcao.ESCRITA;
+		this.corpo = new ComandoDigital(corpo);
+		return construir();
+	}
+	
+	public PacoteGrappa escrever(ValorSinalDigital corpo){
+		this.acao = TipoAcao.ESCRITA;
+		this.corpo = new ComandoDigital(corpo.emBinario());
+		return construir();
+	}
+	
+	
+	public InstrucaoGPIO endereco(Integer endereco){
 		this.endereco = endereco;
 		return this;
 	}

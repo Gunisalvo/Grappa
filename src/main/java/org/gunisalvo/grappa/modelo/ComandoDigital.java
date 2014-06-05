@@ -10,10 +10,14 @@ public class ComandoDigital {
 	}
 
 	public ComandoDigital(Object object) {
-		for (ValorSinalDigital v : ValorSinalDigital.values()) {
-			if (v.checarCorpo(object.toString())) {
-				this.valor = v;
-				break;
+		if(object instanceof ValorSinalDigital){
+			this.valor = (ValorSinalDigital) object;
+		}else{
+			for (ValorSinalDigital v : ValorSinalDigital.values()) {
+				if (v.checarCorpo(object.toString())) {
+					this.valor = v;
+					break;
+				}
 			}
 		}
 	}

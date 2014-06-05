@@ -1,6 +1,6 @@
 package org.gunisalvo.grappa.gpio;
 
-public interface ServicoBarramentoGpio {
+public interface ServicoGpio {
 	
 	void processarServico(Integer estadoPino);
 

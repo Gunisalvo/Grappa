@@ -82,7 +82,7 @@ public class AdaptadorValor extends XmlAdapter<Element, Valor> {
         JAXBElement<?> jaxb = unmarshaller.unmarshal(fonte, tipo);
  
         Valor emJava = new Valor();
-        emJava.setNome(emXml.getLocalName());
+        emJava.setNome(tipo.getName());
         emJava.setCorpo(jaxb.getValue());
         return emJava;
     }

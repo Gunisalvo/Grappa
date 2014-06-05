@@ -19,7 +19,7 @@ public class InstrucaoRegistrador {
 		return new PacoteGrappa(endereco,REGISTRADOR,acao,corpo);
 	}
 	
-	public InstrucaoRegistrador noEndereco(Integer endereco){
+	public InstrucaoRegistrador endereco(Integer endereco){
 		this.endereco = endereco;
 		return this;
 	}

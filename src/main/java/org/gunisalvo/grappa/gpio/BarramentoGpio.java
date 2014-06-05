@@ -32,7 +32,7 @@ public class BarramentoGpio {
 	
 	public static BarramentoGpio getBarramento(){
 		if(INSTANCIA == null){
-			throw new IllegalStateException("�� preciso construir antes de usar este barramento");
+			throw new IllegalStateException("É preciso construir antes de usar este barramento");
 		}
 		return INSTANCIA;
 	}
@@ -55,7 +55,7 @@ public class BarramentoGpio {
 		}else{
 			ValorSinalDigital valor = this.hardware.ler(endereco);
 			resultado.setResultado(Resultado.SUCESSO);
-			resultado.setCorpo(new Valor(valor));
+			resultado.setValor(new Valor(valor));
 		}
 		return resultado;
 	}
@@ -70,15 +70,15 @@ public class BarramentoGpio {
 			if(comando.isValido()){
 				ValorSinalDigital valorResultante = this.hardware.escrever(endereco,comando);
 				resultado.setResultado(Resultado.SUCESSO);
-				resultado.setCorpo(new Valor(valorResultante));
+				resultado.setValor(new Valor(valorResultante));
 				
 			}else{
 				resultado.setResultado(Resultado.ERRO_PROCESSAMENTO);
-				resultado.setCorpo(corpoRequisicao);
+				resultado.setValor(corpoRequisicao);
 			}
 		}else{
 			resultado.setResultado(Resultado.ERRO_ENDERECAMENTO);
-			resultado.setCorpo(corpoRequisicao);
+			resultado.setValor(corpoRequisicao);
 		}
 		return resultado;
 	}
