@@ -52,7 +52,7 @@ public class AdaptadorValor extends XmlAdapter<Element, Valor> {
             return null;
         }
  
-        QName raizXml = new QName(emJava.getNome());
+        QName raizXml = new QName("valor");
         Object corpo = emJava.getCorpo();
         Class<?> tipo = corpo.getClass();
 		JAXBElement<?> jaxbElement = new JAXBElement(raizXml, tipo, corpo);
@@ -61,7 +61,7 @@ public class AdaptadorValor extends XmlAdapter<Element, Valor> {
         Marshaller marshaller = getJAXBContext(tipo).createMarshaller();
         marshaller.marshal(jaxbElement, documento);
         Element emXml = documento.getDocumentElement();
- 
+        emXml.setAttribute("tipo", emJava.getTipo());
         return emXml;
     }
  
@@ -73,7 +73,7 @@ public class AdaptadorValor extends XmlAdapter<Element, Valor> {
         
         Class<?> tipo = null;
         try{
-        	tipo = classLoader.loadClass(emXml.getLocalName());
+        	tipo = classLoader.loadClass(emXml.getAttribute("tipo"));
         }catch(ClassNotFoundException ex){
         	tipo = String.class;
         }
@@ -82,7 +82,7 @@ public class AdaptadorValor extends XmlAdapter<Element, Valor> {
         JAXBElement<?> jaxb = unmarshaller.unmarshal(fonte, tipo);
  
         Valor emJava = new Valor();
-        emJava.setNome(tipo.getName());
+        emJava.setTipo(tipo.getName());
         emJava.setCorpo(jaxb.getValue());
         return emJava;
     }

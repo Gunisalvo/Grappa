@@ -84,7 +84,7 @@ public class InstrucaoRegistradorTest {
 		assertEquals(requisicao.getEndereco(),new Integer(4));
 		assertEquals(requisicao.getTipo(),TipoAcao.ESCRITA);
 		assertEquals(requisicao.getValor().getCorpo(),new BigDecimal(100.0337));
-		assertEquals(requisicao.getValor().getNome(),"java.math.BigDecimal");
+		assertEquals(requisicao.getValor().getTipo(),"java.math.BigDecimal");
 		assertNull(requisicao.getViolacoes());
 		assertTrue(requisicao.isValido());
 		assertTrue(requisicao.getViolacoes().isEmpty());
@@ -97,7 +97,7 @@ public class InstrucaoRegistradorTest {
 		assertEquals(requisicao.getEndereco(),new Integer(5));
 		assertEquals(requisicao.getTipo(),TipoAcao.ESCRITA);
 		assertEquals(requisicao.getValor().getCorpo(),new URL("http://www.google.com/"));
-		assertEquals(requisicao.getValor().getNome(),"java.net.URL");
+		assertEquals(requisicao.getValor().getTipo(),"java.net.URL");
 		assertNull(requisicao.getViolacoes());
 		assertTrue(requisicao.isValido());
 		assertTrue(requisicao.getViolacoes().isEmpty());
@@ -110,7 +110,7 @@ public class InstrucaoRegistradorTest {
 		assertNull(requisicao.getEndereco());
 		assertEquals(requisicao.getTipo(),TipoAcao.ESCRITA);
 		assertEquals(requisicao.getValor().getCorpo(),new ArrayList<Integer>());
-		assertEquals(requisicao.getValor().getNome(),"java.util.ArrayList");
+		assertEquals(requisicao.getValor().getTipo(),"java.util.ArrayList");
 		assertNull(requisicao.getViolacoes());
 		assertFalse(requisicao.isValido());
 		assertEquals(requisicao.getViolacoes().size(),1);

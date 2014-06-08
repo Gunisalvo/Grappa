@@ -19,15 +19,15 @@ public class AdaptadorMapaRegistradores extends XmlAdapter<AdaptadorMapaRegistra
 
 	static abstract class Registrador{
 		
-		private Integer posicao;
+		private Integer endereco;
 		
 		private List<String> servicos;
 		
 		Registrador() {
 		}
 		
-		Registrador(Integer posicao) {
-			this.posicao = posicao;
+		Registrador(Integer endereco) {
+			this.endereco = endereco;
 		}
 
 		protected void processarServicos(CelulaRegistrador celula) {
@@ -39,12 +39,12 @@ public class AdaptadorMapaRegistradores extends XmlAdapter<AdaptadorMapaRegistra
 			}
 		}
 
-		public Integer getPosicao() {
-			return posicao;
+		public Integer getEndereco() {
+			return endereco;
 		}
 
-		public void setPosicao(Integer posicao) {
-			this.posicao = posicao;
+		public void setEndereco(Integer endereco) {
+			this.endereco = endereco;
 		}
 
 		@XmlElementWrapper(name="servicos")
@@ -99,7 +99,7 @@ public class AdaptadorMapaRegistradores extends XmlAdapter<AdaptadorMapaRegistra
 			super(endereco);
 			Valor valor = new Valor();
 			valor.setCorpo(celula.getValor());
-			valor.setNome(celula.getValor().getClass().getName());
+			valor.setTipo(celula.getValor().getClass().getName());
 			this.valor = valor;
 			processarServicos(celula);
 		}
@@ -147,9 +147,9 @@ public class AdaptadorMapaRegistradores extends XmlAdapter<AdaptadorMapaRegistra
 		for (AdaptadorMapaRegistradores.Registrador elemento : corpoXml.getRegistradores()){
             if(elemento instanceof RegistradorDefinidoPeloUsuario){
             	Object valor = ((Valor)elemento.getValor()).getCorpo();
-            	paraJava.put(elemento.getPosicao(), new CelulaRegistrador(valor));
+            	paraJava.put(elemento.getEndereco(), new CelulaRegistrador(valor));
             }else{
-            	paraJava.put(elemento.getPosicao(), new CelulaRegistrador(elemento.getValor()));
+            	paraJava.put(elemento.getEndereco(), new CelulaRegistrador(elemento.getValor()));
             }
         }
         

@@ -18,7 +18,7 @@ public class AdaptadorMapaPinos extends XmlAdapter<AdaptadorMapaPinos.Pinos, Map
 
 	static class Pino{
 		
-		private Integer posicao;
+		private Integer endereco;
 		
 		private TipoPino tipo;
 		
@@ -29,8 +29,8 @@ public class AdaptadorMapaPinos extends XmlAdapter<AdaptadorMapaPinos.Pinos, Map
 		Pino() {
 		}
 		
-		Pino(Integer posicao, PinoDigitalGrappa pino) {
-			this.posicao = posicao;
+		Pino(Integer endereco, PinoDigitalGrappa pino) {
+			this.endereco = endereco;
 			this.tipo = pino.getTipo();
 			this.valor = pino.getValor();
 			if(pino.getPossuiServicosRegistrados()){
@@ -41,12 +41,12 @@ public class AdaptadorMapaPinos extends XmlAdapter<AdaptadorMapaPinos.Pinos, Map
 			}
 		}
 
-		public Integer getPosicao() {
-			return posicao;
+		public Integer getEndereco() {
+			return endereco;
 		}
 
-		public void setPosicao(Integer posicao) {
-			this.posicao = posicao;
+		public void setEndereco(Integer endereco) {
+			this.endereco = endereco;
 		}
 
 		public TipoPino getTipo() {
@@ -103,7 +103,7 @@ public class AdaptadorMapaPinos extends XmlAdapter<AdaptadorMapaPinos.Pinos, Map
 		Map<Integer, PinoDigitalGrappa> paraJava = new HashMap<>();
         
 		for (AdaptadorMapaPinos.Pino elemento : corpoXml.getPinos()){
-            paraJava.put(elemento.posicao, new PinoDigitalGrappa(elemento.getTipo(), elemento.getValor()));
+            paraJava.put(elemento.endereco, new PinoDigitalGrappa(elemento.getTipo(), elemento.getValor()));
         }
         
         return paraJava;

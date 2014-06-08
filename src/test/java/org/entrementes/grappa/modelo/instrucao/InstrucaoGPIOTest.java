@@ -66,7 +66,7 @@ public class InstrucaoGPIOTest {
 		assertEquals(requisicao.getEndereco(),new Integer(4));
 		assertEquals(requisicao.getTipo(),TipoAcao.ESCRITA);
 		assertEquals(requisicao.getValor().getCorpo(),ValorSinalDigital.ALTO);
-		assertEquals(requisicao.getValor().getNome(),"org.entrementes.grappa.modelo.ValorSinalDigital");
+		assertEquals(requisicao.getValor().getTipo(),"org.entrementes.grappa.modelo.ValorSinalDigital");
 		assertNull(requisicao.getViolacoes());
 		assertTrue(requisicao.isValido());
 		assertTrue(requisicao.getViolacoes().isEmpty());
@@ -79,7 +79,7 @@ public class InstrucaoGPIOTest {
 		assertEquals(requisicao.getEndereco(),new Integer(5));
 		assertEquals(requisicao.getTipo(),TipoAcao.ESCRITA);
 		assertEquals(requisicao.getValor().getCorpo(),ValorSinalDigital.BAIXO);
-		assertEquals(requisicao.getValor().getNome(),"org.entrementes.grappa.modelo.ValorSinalDigital");
+		assertEquals(requisicao.getValor().getTipo(),"org.entrementes.grappa.modelo.ValorSinalDigital");
 		assertNull(requisicao.getViolacoes());
 		assertTrue(requisicao.isValido());
 		assertTrue(requisicao.getViolacoes().isEmpty());
@@ -92,7 +92,7 @@ public class InstrucaoGPIOTest {
 		assertEquals(requisicao.getEndereco(),new Integer(5));
 		assertEquals(requisicao.getTipo(),TipoAcao.ESCRITA);
 		assertEquals(requisicao.getValor().getCorpo(),ValorSinalDigital.BAIXO);
-		assertEquals(requisicao.getValor().getNome(),"org.entrementes.grappa.modelo.ValorSinalDigital");
+		assertEquals(requisicao.getValor().getTipo(),"org.entrementes.grappa.modelo.ValorSinalDigital");
 		assertNull(requisicao.getViolacoes());
 		assertTrue(requisicao.isValido());
 		assertTrue(requisicao.getViolacoes().isEmpty());
@@ -105,7 +105,7 @@ public class InstrucaoGPIOTest {
 		assertEquals(requisicao.getEndereco(),new Integer(5));
 		assertEquals(requisicao.getTipo(),TipoAcao.ESCRITA);
 		assertEquals(requisicao.getValor().getCorpo(),ValorSinalDigital.BAIXO);
-		assertEquals(requisicao.getValor().getNome(),"org.entrementes.grappa.modelo.ValorSinalDigital");
+		assertEquals(requisicao.getValor().getTipo(),"org.entrementes.grappa.modelo.ValorSinalDigital");
 		assertNull(requisicao.getViolacoes());
 		assertTrue(requisicao.isValido());
 		assertTrue(requisicao.getViolacoes().isEmpty());
@@ -130,7 +130,7 @@ public class InstrucaoGPIOTest {
 		assertNull(requisicao.getEndereco());
 		assertEquals(requisicao.getTipo(),TipoAcao.ESCRITA);
 		assertEquals(requisicao.getValor().getCorpo(),ValorSinalDigital.TROCA);
-		assertEquals(requisicao.getValor().getNome(),"org.entrementes.grappa.modelo.ValorSinalDigital");
+		assertEquals(requisicao.getValor().getTipo(),"org.entrementes.grappa.modelo.ValorSinalDigital");
 		assertNull(requisicao.getViolacoes());
 		assertFalse(requisicao.isValido());
 		assertEquals(requisicao.getViolacoes().size(),1);

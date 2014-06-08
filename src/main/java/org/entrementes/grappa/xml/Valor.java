@@ -1,5 +1,6 @@
 package org.entrementes.grappa.xml;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
@@ -7,7 +8,8 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlJavaTypeAdapter(AdaptadorValor.class)
 public class Valor {
  
-    private String nome;
+	@XmlAttribute
+    private String tipo;
     
     private Object corpo;
  
@@ -15,16 +17,16 @@ public class Valor {
 	}
     
     public Valor(Object corpo) {
-		this.nome = corpo.getClass().getName();
+		this.tipo = corpo.getClass().getName();
 		this.corpo = corpo;
 	}
 
-	public String getNome() {
-        return nome;
+	public String getTipo() {
+        return tipo;
     }
  
-    public void setNome(String name) {
-        this.nome = name;
+    public void setTipo(String name) {
+        this.tipo = name;
     }
  
     @XmlJavaTypeAdapter(value=AdaptadorObject.class)
