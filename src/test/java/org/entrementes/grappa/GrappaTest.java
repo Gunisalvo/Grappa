@@ -11,18 +11,18 @@ public class GrappaTest {
 
 	@Test
 	public void testeStandalone() {
-		ContextoGrappa.construir();
-		assertNotNull(ContextoGrappa.getAplicacao());
+		Grappa.construir();
+		assertNotNull(Grappa.getAplicacao());
 		assertNotNull(BarramentoGpio.getBarramento());
 		assertNotNull(BarramentoGpio.getBarramento().getEstado());
 		assertNotNull(BarramentoRegistradores.getBarramento());
 		assertNotNull(BarramentoRegistradores.getBarramento().getEstado());
-		ContextoGrappa.processarInstrucao(new InstrucaoGPIO().endereco(2).ler());
+		Grappa.processarInstrucao(new InstrucaoGPIO().endereco(2).ler());
 	}
 	
 	@Test(expected=IllegalStateException.class)
 	public void testeNaoIniciado() {
-		ContextoGrappa.processarInstrucao(new InstrucaoGPIO().endereco(2).ler());
+		Grappa.processarInstrucao(new InstrucaoGPIO().endereco(2).ler());
 	}
 
 }

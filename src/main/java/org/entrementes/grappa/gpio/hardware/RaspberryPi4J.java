@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.entrementes.grappa.ContextoGrappa;
-import org.entrementes.grappa.ContextoGrappa.NivelLog;
+import org.entrementes.grappa.Grappa;
+import org.entrementes.grappa.Grappa.NivelLog;
 import org.entrementes.grappa.gpio.ObservadorGpio;
 import org.entrementes.grappa.gpio.Raspberry;
 import org.entrementes.grappa.gpio.ServicoGpio;
@@ -159,7 +159,7 @@ public class RaspberryPi4J implements Raspberry {
 			
             @Override
             public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent evento) {
-            	ContextoGrappa.getAplicacao().log("executando evento de mundaca de sinal " + endereco, NivelLog.INFO);
+            	Grappa.getAplicacao().log("executando evento de mundaca de sinal " + endereco, NivelLog.INFO);
             	servico.processarServico(traduzirEstado(evento));
             }
 

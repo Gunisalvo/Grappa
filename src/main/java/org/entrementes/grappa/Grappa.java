@@ -28,7 +28,7 @@ import org.entrementes.grappa.registradores.ServicoRegistrador;
 import org.entrementes.grappa.xml.LeitorConfiguracao;
 
 
-public class ContextoGrappa {
+public class Grappa {
 
 	public enum Propriedade{
 		
@@ -39,7 +39,7 @@ public class ContextoGrappa {
 		;
 	}
 	
-	private static ContextoGrappa INSTANCIA;
+	private static Grappa INSTANCIA;
 
 	private static final Logger LOGGER = Logger.getLogger("GRAPPA");
 
@@ -57,7 +57,7 @@ public class ContextoGrappa {
 	
 	private List<Class<ServicoGpio>> servicosGpio;
 	
-	private ContextoGrappa(String caminhoContexto) {
+	private Grappa(String caminhoContexto) {
 		if(caminhoContexto == null){
 			iniciarContexto();
 		}else{
@@ -110,15 +110,15 @@ public class ContextoGrappa {
 	}
 
 	public static void construir(String caminhoContexto) {
-		INSTANCIA = new ContextoGrappa(caminhoContexto);
+		INSTANCIA = new Grappa(caminhoContexto);
 	}
 	
 	public static void construir() {
-		INSTANCIA = new ContextoGrappa(null);
+		INSTANCIA = new Grappa(null);
 		
 	}
 	
-	public static ContextoGrappa getAplicacao(){
+	public static Grappa getAplicacao(){
 		return INSTANCIA;
 	}
 	
@@ -251,11 +251,11 @@ public class ContextoGrappa {
 		}
 		
 		if(requisicao.isValido()){
-			ContextoGrappa.getAplicacao().log("Processando chamada a " + requisicao.getConexao() + "...", NivelLog.INFO);
+			Grappa.getAplicacao().log("Processando chamada a " + requisicao.getConexao() + "...", NivelLog.INFO);
 			resposta = Barramento.instrucao(requisicao);
-			ContextoGrappa.getAplicacao().log("... chamada a " + requisicao.getConexao() + " realizada com sucesso.", NivelLog.INFO);
+			Grappa.getAplicacao().log("... chamada a " + requisicao.getConexao() + " realizada com sucesso.", NivelLog.INFO);
 		}else{
-			ContextoGrappa.getAplicacao().log("Pacote inv??lido.", NivelLog.AVISO);
+			Grappa.getAplicacao().log("Intrucao invalida.", NivelLog.AVISO);
 			resposta = requisicao;
 			resposta.setResultado(Resultado.REQUISICAO_INVALIDA);
 		}

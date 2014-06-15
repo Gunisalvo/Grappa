@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuracao-grappa>
-	<padrao>SAIDA</padrao>
+	<padrao-pino>SAIDA</padrao-pino>
 	<pino-monitor>
 		0
 	</pino-monitor>
@@ -12,16 +12,21 @@
 	</pino-final>
 	<pinos>
 		<pino>
-			<posicao>5</posicao>
+			<endereco>4</endereco>
 			<tipo>ENTRADA</tipo>
 		</pino>
 		<pino>
-			<posicao>6</posicao>
+			<endereco>5</endereco>
 			<tipo>ENTRADA</tipo>
 		</pino>
 		<pino>
-			<posicao>7</posicao>
+			<endereco>6</endereco>
+			<tipo>ENTRADA</tipo>
+		</pino>
+		<pino>
+			<endereco>7</endereco>
 			<tipo>ENTRADA</tipo>
 		</pino>
 	</pinos>
+	<pacote-servico>org.entrementes.grappa.servico</pacote-servico>
 </configuracao-grappa>

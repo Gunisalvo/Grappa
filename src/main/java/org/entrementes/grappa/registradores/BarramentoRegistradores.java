@@ -1,7 +1,7 @@
 package org.entrementes.grappa.registradores;
 
-import org.entrementes.grappa.ContextoGrappa;
-import org.entrementes.grappa.ContextoGrappa.NivelLog;
+import org.entrementes.grappa.Grappa;
+import org.entrementes.grappa.Grappa.NivelLog;
 import org.entrementes.grappa.modelo.CelulaRegistrador;
 import org.entrementes.grappa.modelo.InstrucaoGrappa;
 import org.entrementes.grappa.modelo.InstrucaoGrappa.Conexao;
@@ -37,7 +37,7 @@ public class BarramentoRegistradores {
 
 	public void limparRegistradores() {
 		this.registradores.limpar();
-		ContextoGrappa.getAplicacao().log("REGISTRADORES LIMPOS", NivelLog.AVISO);
+		Grappa.getAplicacao().log("REGISTRADORES LIMPOS", NivelLog.AVISO);
 	}
 	
 	public InstrucaoGrappa ler(Integer endereco) {

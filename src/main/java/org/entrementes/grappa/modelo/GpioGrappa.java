@@ -1,5 +1,6 @@
 package org.entrementes.grappa.modelo;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,6 +63,7 @@ public class GpioGrappa {
 		this.pacoteServico = pacoteServico;
 	}
 	
+	@XmlElement(name="padrao-pino")
 	@XmlJavaTypeAdapter(value=AdaptadorTipoPino.class)
 	public TipoPino getPadrao() {
 		return padrao;
@@ -143,6 +145,27 @@ public class GpioGrappa {
 
 	public boolean possuiMapeamento(Integer endereco) {
 		return this.pinos.containsKey(endereco);
+	}
+
+	public void registrarServico(final Method metodo, final Object dispositivo) {
+		ObservadorGpio anotacao = metodo.getAnnotation(ObservadorGpio.class);
+		Integer endereco = anotacao.endereco();
+		if (posicaoEnderecoValido(endereco)) {
+			if (!possuiMapeamento(endereco)) {
+				this.pinos.put(endereco, new PinoDigitalGrappa(this.padrao));
+			}
+			this.pinos.get(endereco).registrarServico(new ServicoGpio() {
+				
+				@Override
+				public void processarServico(Integer estadoPino) {
+					try{
+					metodo.invoke(dispositivo, estadoPino);
+					}catch(Exception ex){
+						throw new RuntimeException(ex);
+					}
+				}
+			});
+		}
 	}
 
 }

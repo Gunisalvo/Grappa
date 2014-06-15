@@ -23,7 +23,7 @@ public class LeitorConfiguracaoTest {
 		URL url = Thread.currentThread().getContextClassLoader().getResource("grappa.xml");
 		GpioGrappa lida = new LeitorConfiguracao().carregarGpio(url.getPath());
 		assertNotNull(lida.getPinos());
-		assertEquals(3,lida.getPinos().size());
+		assertEquals(4,lida.getPinos().size());
 		for(PinoDigitalGrappa p : lida.getPinos().values()){
 			assertEquals(TipoPino.ENTRADA, p.getTipo());
 		}
@@ -42,7 +42,7 @@ public class LeitorConfiguracaoTest {
 		assertTrue(lida.enderecoValido(3, TipoAcao.LEITURA));
 		assertTrue(lida.enderecoValido(3, TipoAcao.ESCRITA));
 		assertTrue(lida.enderecoValido(4, TipoAcao.LEITURA));
-		assertTrue(lida.enderecoValido(4, TipoAcao.ESCRITA));
+		assertFalse(lida.enderecoValido(4, TipoAcao.ESCRITA));
 		assertTrue(lida.enderecoValido(5, TipoAcao.LEITURA));
 		assertFalse(lida.enderecoValido(5, TipoAcao.ESCRITA));
 		assertTrue(lida.enderecoValido(6, TipoAcao.LEITURA));
