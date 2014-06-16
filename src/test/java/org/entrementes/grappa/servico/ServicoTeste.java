@@ -1,7 +1,7 @@
 package org.entrementes.grappa.servico;
 
-import org.entrementes.grappa.gpio.ObservadorGpio;
 import org.entrementes.grappa.gpio.ServicoGpio;
+import org.entrementes.grappa.marcacao.ObservadorGpio;
 
 @ObservadorGpio(endereco=4)
 public class ServicoTeste implements ServicoGpio{

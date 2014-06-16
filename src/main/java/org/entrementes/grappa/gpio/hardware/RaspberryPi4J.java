@@ -4,15 +4,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.entrementes.grappa.Grappa;
-import org.entrementes.grappa.Grappa.NivelLog;
-import org.entrementes.grappa.gpio.ObservadorGpio;
 import org.entrementes.grappa.gpio.Raspberry;
 import org.entrementes.grappa.gpio.ServicoGpio;
 import org.entrementes.grappa.modelo.ComandoDigital;
 import org.entrementes.grappa.modelo.GpioGrappa;
+import org.entrementes.grappa.modelo.InstrucaoGrappa.Acao;
+import org.entrementes.grappa.modelo.InstrucaoGrappa.Formato;
+import org.entrementes.grappa.modelo.InstrucaoGrappa.Resultado;
+import org.entrementes.grappa.modelo.InstrucaoGrappa;
 import org.entrementes.grappa.modelo.MapaEletrico;
-import org.entrementes.grappa.modelo.InstrucaoGrappa.TipoAcao;
 import org.entrementes.grappa.modelo.PinoDigitalGrappa;
 import org.entrementes.grappa.modelo.TipoPino;
 import org.entrementes.grappa.modelo.ValorSinalDigital;
@@ -152,14 +152,11 @@ public class RaspberryPi4J implements Raspberry {
 	}
 	
 	private void registrarServico(final ServicoGpio servico, GpioPinDigitalInput pino){
-		ObservadorGpio anotacao = servico.getClass().getAnnotation(ObservadorGpio.class);
-		final int endereco = anotacao.endereco();
 		
 		pino.addListener(new GpioPinListenerDigital() {
 			
             @Override
             public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent evento) {
-            	Grappa.getAplicacao().log("executando evento de mundaca de sinal " + endereco, NivelLog.INFO);
             	servico.processarServico(traduzirEstado(evento));
             }
 
@@ -181,7 +178,7 @@ public class RaspberryPi4J implements Raspberry {
 		for(Entry<Integer,GpioPinDigital> e : this.pinos.entrySet()){
 			pinosVirtuais.put(e.getKey(), traduzirPinoPi4J(e.getKey(),e.getValue()));
 		}
-		return new MapaEletrico(this.getNomeImplementacao(), pinosVirtuais);
+		return new MapaEletrico(this.getClass().getName(), pinosVirtuais);
 	}
 
 	private PinoDigitalGrappa traduzirPinoPi4J(Integer endereco,GpioPinDigital original) {
@@ -200,12 +197,12 @@ public class RaspberryPi4J implements Raspberry {
 
 	@Override
 	public boolean isEnderecoLeitura(Integer endereco) {
-		return this.mapeamento.enderecoValido(endereco, TipoAcao.LEITURA);
+		return this.mapeamento.enderecoValido(endereco, Acao.LEITURA);
 	}
 
 	@Override
 	public boolean isEnderecoEscrita(Integer endereco) {
-		return this.mapeamento.enderecoValido(endereco, TipoAcao.ESCRITA);
+		return this.mapeamento.enderecoValido(endereco, Acao.ESCRITA);
 	}
 
 	@Override
@@ -244,7 +241,56 @@ public class RaspberryPi4J implements Raspberry {
 	}
 	
 	@Override
-	public String getNomeImplementacao() {
-		return this.getClass().getName();
+	public InstrucaoGrappa processarInstrucao(InstrucaoGrappa instrucao) {
+		if(instrucao.isValido()){
+			switch(instrucao.getTipo()){
+			case LEITURA:
+				return processarLeitura(instrucao.getEndereco());
+			case ESCRITA:
+				return processarEscrita(instrucao.getEndereco(), instrucao.getValor());
+			default:
+				throw new RuntimeException();
+			}
+		}else{
+			return instrucao;
+		}
+	}
+	
+	public InstrucaoGrappa processarLeitura(Integer endereco) {
+		InstrucaoGrappa resultado = new InstrucaoGrappa();
+		resultado.setFormato(Formato.DIGITAL);
+		resultado.setEndereco(endereco);
+		resultado.setTipo(Acao.LEITURA);
+		if(!isEnderecoLeitura(endereco)){
+			resultado.setResultado(Resultado.ERRO_ENDERECAMENTO);
+		}else{
+			ValorSinalDigital valor = ler(endereco);
+			resultado.setResultado(Resultado.SUCESSO);
+			resultado.setValor(valor.emBinario());
+		}
+		return resultado;
+	}
+
+	public InstrucaoGrappa processarEscrita(Integer endereco, Integer corpoRequisicao) {
+		InstrucaoGrappa resultado = new InstrucaoGrappa();
+		resultado.setFormato(Formato.DIGITAL);
+		resultado.setEndereco(endereco);
+		resultado.setTipo(Acao.ESCRITA);
+		if(isEnderecoEscrita(endereco)){
+			ComandoDigital comando = new ComandoDigital(corpoRequisicao);
+			if(comando.isValido()){
+				ValorSinalDigital valorResultante = escrever(endereco,comando);
+				resultado.setResultado(Resultado.SUCESSO);
+				resultado.setValor(new Integer(valorResultante.emBinario()));
+				
+			}else{
+				resultado.setResultado(Resultado.ERRO_PROCESSAMENTO);
+				resultado.setValor(corpoRequisicao);
+			}
+		}else{
+			resultado.setResultado(Resultado.ERRO_ENDERECAMENTO);
+			resultado.setValor(corpoRequisicao);
+		}
+		return resultado;
 	}
 }

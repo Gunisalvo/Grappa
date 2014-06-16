@@ -7,13 +7,10 @@ import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
 
-import org.entrementes.grappa.modelo.CelulaRegistrador;
 import org.entrementes.grappa.modelo.GpioGrappa;
-import org.entrementes.grappa.modelo.InstrucaoGrappa.TipoAcao;
+import org.entrementes.grappa.modelo.InstrucaoGrappa.Acao;
 import org.entrementes.grappa.modelo.PinoDigitalGrappa;
 import org.entrementes.grappa.modelo.TipoPino;
-import org.entrementes.grappa.modelo.RegistradoresGrappa;
-import org.entrementes.grappa.registradores.ServicoRegistrador;
 import org.junit.Test;
 
 public class LeitorConfiguracaoTest {
@@ -31,53 +28,28 @@ public class LeitorConfiguracaoTest {
 		assertEquals(0,lida.getPosicaoPinoInicial().intValue());
 		assertEquals(8,lida.getPosicaoPinoFinal().intValue());
 		assertEquals(TipoPino.SAIDA,lida.getPadrao());
-		assertFalse(lida.enderecoValido(-1, TipoAcao.LEITURA));
-		assertFalse(lida.enderecoValido(-1, TipoAcao.ESCRITA));
-		assertTrue(lida.enderecoValido(0, TipoAcao.LEITURA));
-		assertTrue(lida.enderecoValido(0, TipoAcao.ESCRITA));
-		assertTrue(lida.enderecoValido(1, TipoAcao.LEITURA));
-		assertTrue(lida.enderecoValido(1, TipoAcao.ESCRITA));
-		assertTrue(lida.enderecoValido(2, TipoAcao.LEITURA));
-		assertTrue(lida.enderecoValido(2, TipoAcao.ESCRITA));
-		assertTrue(lida.enderecoValido(3, TipoAcao.LEITURA));
-		assertTrue(lida.enderecoValido(3, TipoAcao.ESCRITA));
-		assertTrue(lida.enderecoValido(4, TipoAcao.LEITURA));
-		assertFalse(lida.enderecoValido(4, TipoAcao.ESCRITA));
-		assertTrue(lida.enderecoValido(5, TipoAcao.LEITURA));
-		assertFalse(lida.enderecoValido(5, TipoAcao.ESCRITA));
-		assertTrue(lida.enderecoValido(6, TipoAcao.LEITURA));
-		assertFalse(lida.enderecoValido(6, TipoAcao.ESCRITA));
-		assertTrue(lida.enderecoValido(7, TipoAcao.LEITURA));
-		assertFalse(lida.enderecoValido(7, TipoAcao.ESCRITA));
-		assertTrue(lida.enderecoValido(8, TipoAcao.LEITURA));
-		assertTrue(lida.enderecoValido(8, TipoAcao.ESCRITA));
-		assertFalse(lida.enderecoValido(9, TipoAcao.LEITURA));
-		assertFalse(lida.enderecoValido(9, TipoAcao.ESCRITA));
-	}
-	
-	@Test
-	public void test2() {
-		URL url = Thread.currentThread().getContextClassLoader().getResource("registradores.xml");
-		RegistradoresGrappa lida = new LeitorConfiguracao().carregarRegistradores(url.getPath());
-		assertTrue(lida.isEnderecoUtilizado(0));
-		assertEquals("Registradores Teste",lida.getCelula(0).getValor());
-		assertTrue(lida.isEnderecoUtilizado(99));
-		assertEquals("0",lida.getCelula(99).getValor());
-		assertTrue(lida.isEnderecoUtilizado(3));
-		assertEquals(67,lida.getCelula(3).getValor());
-		lida.getCelulas().get(0).registrarServico(new ServicoRegistrador() {
-			
-			@Override
-			public void processarServico(Object valorEndereco) {
-				//vazio
-			}
-		});
-		lida.getCelulas().put(1011,new CelulaRegistrador());
-		assertEquals(4,lida.getCelulas().size());
-		
-		lida.limpar();
-		assertEquals(null,lida.getCelulas().get(0).getValor());
-		assertEquals(1,lida.getCelulas().size());
+		assertFalse(lida.enderecoValido(-1, Acao.LEITURA));
+		assertFalse(lida.enderecoValido(-1, Acao.ESCRITA));
+		assertTrue(lida.enderecoValido(0, Acao.LEITURA));
+		assertTrue(lida.enderecoValido(0, Acao.ESCRITA));
+		assertTrue(lida.enderecoValido(1, Acao.LEITURA));
+		assertTrue(lida.enderecoValido(1, Acao.ESCRITA));
+		assertTrue(lida.enderecoValido(2, Acao.LEITURA));
+		assertTrue(lida.enderecoValido(2, Acao.ESCRITA));
+		assertTrue(lida.enderecoValido(3, Acao.LEITURA));
+		assertTrue(lida.enderecoValido(3, Acao.ESCRITA));
+		assertTrue(lida.enderecoValido(4, Acao.LEITURA));
+		assertFalse(lida.enderecoValido(4, Acao.ESCRITA));
+		assertTrue(lida.enderecoValido(5, Acao.LEITURA));
+		assertFalse(lida.enderecoValido(5, Acao.ESCRITA));
+		assertTrue(lida.enderecoValido(6, Acao.LEITURA));
+		assertFalse(lida.enderecoValido(6, Acao.ESCRITA));
+		assertTrue(lida.enderecoValido(7, Acao.LEITURA));
+		assertFalse(lida.enderecoValido(7, Acao.ESCRITA));
+		assertTrue(lida.enderecoValido(8, Acao.LEITURA));
+		assertTrue(lida.enderecoValido(8, Acao.ESCRITA));
+		assertFalse(lida.enderecoValido(9, Acao.LEITURA));
+		assertFalse(lida.enderecoValido(9, Acao.ESCRITA));
 	}
 
 }

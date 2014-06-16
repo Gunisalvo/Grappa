@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import org.entrementes.grappa.gpio.ObservadorGpio;
 import org.entrementes.grappa.gpio.ServicoGpio;
-import org.entrementes.grappa.modelo.InstrucaoGrappa.TipoAcao;
+import org.entrementes.grappa.marcacao.ObservadorGpio;
+import org.entrementes.grappa.modelo.InstrucaoGrappa.Acao;
 import org.entrementes.grappa.modelo.TipoPino;
 import org.entrementes.grappa.xml.AdaptadorMapaPinos;
 import org.entrementes.grappa.xml.AdaptadorTipoPino;
@@ -101,7 +101,7 @@ public class GpioGrappa {
 	}
 
 
-	public boolean enderecoValido(Integer endereco, TipoAcao acao) {
+	public boolean enderecoValido(Integer endereco, Acao acao) {
 		return posicaoEnderecoValido(endereco) && acaoValida(endereco, acao);
 	}
 
@@ -109,7 +109,7 @@ public class GpioGrappa {
 		return this.posicaoPinoInicial <= endereco && this.posicaoPinoFinal >= endereco;
 	}
 
-	private boolean acaoValida(Integer endereco, TipoAcao acao) {
+	private boolean acaoValida(Integer endereco, Acao acao) {
 		boolean resultado = false;
 		if (this.pinos.containsKey(endereco)) {
 			resultado = acaoValida(this.pinos.get(endereco).getTipo(), acao);
@@ -119,9 +119,9 @@ public class GpioGrappa {
 		return resultado;
 	}
 
-	private boolean acaoValida(TipoPino pino, TipoAcao acao) {
+	private boolean acaoValida(TipoPino pino, Acao acao) {
 		return pino.equals(TipoPino.SAIDA)
-				|| acao.equals(TipoAcao.LEITURA);
+				|| acao.equals(Acao.LEITURA);
 	}
 
 	public void registrarServico(ServicoGpio servico) {

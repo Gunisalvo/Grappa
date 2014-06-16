@@ -3,26 +3,22 @@ package org.entrementes.grappa.modelo;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-
-import org.entrementes.grappa.xml.Valor;
 
 @XmlRootElement(name="grappa")
 public class InstrucaoGrappa {
 
 	@XmlEnum
-	public enum Conexao{
-		GPIO, REGISTRADOR
+	public enum Formato{
+		DIGITAL, DISCRETIZADO
 		;
 	}
 	
 	@XmlEnum
-	public enum TipoAcao{
+	public enum Acao{
 		LEITURA, ESCRITA
 		;
 	}
@@ -35,11 +31,11 @@ public class InstrucaoGrappa {
 	
 	private Integer endereco;
 	
-	private Conexao conexao;
+	private Formato formato;
 	
-	private TipoAcao tipo;
+	private Acao tipo;
 	
-	private Valor corpo;
+	private Integer corpo;
 
 	private Resultado resultado;
 	
@@ -48,21 +44,15 @@ public class InstrucaoGrappa {
 	public InstrucaoGrappa() {
 	}
 	
-	public InstrucaoGrappa(Integer endereco, Conexao conexao, TipoAcao tipo, Object corpo) {
+	public InstrucaoGrappa(Integer endereco, Formato formato, Acao tipo, Integer corpo) {
 		this.endereco = endereco;
-		this.conexao = conexao;
+		this.formato = formato;
 		this.tipo = tipo;
-		if(corpo != null){
-			if(corpo instanceof Valor){
-				this.corpo = (Valor) corpo;
-			}else{
-				this.corpo = new Valor(corpo);
-			}
-		}
+		this.corpo = corpo;
 	}
 	
-	public InstrucaoGrappa(Integer endereco, Conexao conexao, TipoAcao tipo, String corpo, Resultado resultado) {
-		this(endereco,conexao,tipo,corpo);
+	public InstrucaoGrappa(Integer endereco, Formato formato, Acao tipo, Integer corpo, Resultado resultado) {
+		this(endereco,formato,tipo,corpo);
 		this.resultado = resultado;
 	}
 
@@ -74,19 +64,19 @@ public class InstrucaoGrappa {
 		this.endereco = endereco;
 	}
 
-	public Conexao getConexao() {
-		return conexao;
+	public Formato getFormato() {
+		return formato;
 	}
 
-	public void setConexao(Conexao conexao) {
-		this.conexao = conexao;
+	public void setFormato(Formato formato) {
+		this.formato = formato;
 	}
 
-	public TipoAcao getTipo() {
+	public Acao getTipo() {
 		return tipo;
 	}
 
-	public void setTipo(TipoAcao tipo) {
+	public void setTipo(Acao tipo) {
 		this.tipo = tipo;
 	}
 
@@ -98,16 +88,15 @@ public class InstrucaoGrappa {
 		this.resultado = resultado;
 	}
 
-	public InstrucaoGrappa gerarPacoteResultado(Resultado resultado, String mensagem){
-		return new InstrucaoGrappa(this.endereco, this.conexao, this.tipo, mensagem, resultado);
+	public InstrucaoGrappa gerarPacoteResultado(Resultado resultado, Integer corpo){
+		return new InstrucaoGrappa(this.endereco, this.formato, this.tipo, corpo, resultado);
 	}
 
-	@XmlAnyElement
-	public Valor getValor() {
+	public Integer getValor() {
 		return this.corpo;
 	}
 	
-	public void setValor(Valor corpo){
+	public void setValor(Integer corpo){
 		this.corpo = corpo;
 	}
 
@@ -126,21 +115,19 @@ public class InstrucaoGrappa {
 		if(this.endereco == null){
 			this.violacoes.add(new ViolacaoPacote("endereco", "vazio"));
 		}
-		if(this.conexao == null){
-			this.violacoes.add(new ViolacaoPacote("conexao", "vazia"));	
+		if(this.formato == null){
+			this.violacoes.add(new ViolacaoPacote("formato", "vazio"));	
+		}else{
+			
 		}
 		if(this.tipo == null){
 			this.violacoes.add(new ViolacaoPacote("tipo", "vazio"));
 		}else{
-			if(TipoAcao.ESCRITA.equals(this.tipo) && this.corpo == null){
+			if(Acao.ESCRITA.equals(this.tipo) && this.corpo == null){
 				this.violacoes.add(new ViolacaoPacote("corpo", "vazio em pacote de escrita"));
 			}
 		}
 		return this.violacoes.size() == 0;
 	}
 
-	@XmlTransient
-	public Object getCorpoValor() {
-		return this.corpo == null ? null : this.corpo.getCorpo();
-	}
 }

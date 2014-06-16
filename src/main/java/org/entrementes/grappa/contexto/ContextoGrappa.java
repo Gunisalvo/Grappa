@@ -10,7 +10,5 @@ public interface ContextoGrappa {
 	Map<String,Object> getDispositivos();
 	
 	Raspberry getImplementacao();
-
-	InstrucaoGrappa processarInstrucao(InstrucaoGrappa instrucao);
 	
 }

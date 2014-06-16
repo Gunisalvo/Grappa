@@ -1,7 +1,7 @@
 package org.entrementes.grappa.servico;
 
-import org.entrementes.grappa.dispositivo.Dispositivo;
-import org.entrementes.grappa.gpio.ObservadorGpio;
+import org.entrementes.grappa.marcacao.Dispositivo;
+import org.entrementes.grappa.marcacao.ObservadorGpio;
 
 @Dispositivo(nome="nomeado")
 public class DispositivoNomeado {

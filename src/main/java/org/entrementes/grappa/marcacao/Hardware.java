@@ -1,12 +1,12 @@
-package org.entrementes.grappa.dispositivo;
+package org.entrementes.grappa.marcacao;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ ElementType.TYPE, ElementType.METHOD })
+@Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Dispositivo {
-	String nome() default "";
+public @interface Hardware {
+
 }

@@ -1,6 +1,7 @@
 package org.entrementes.grappa.contexto;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
@@ -10,21 +11,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.entrementes.grappa.dispositivo.Dispositivo;
-import org.entrementes.grappa.gpio.ObservadorGpio;
 import org.entrementes.grappa.gpio.Raspberry;
 import org.entrementes.grappa.gpio.ServicoGpio;
 import org.entrementes.grappa.gpio.hardware.RaspberryPi4J;
 import org.entrementes.grappa.gpio.hardware.RaspberryVirtual;
+import org.entrementes.grappa.marcacao.Dispositivo;
+import org.entrementes.grappa.marcacao.Hardware;
+import org.entrementes.grappa.marcacao.ObservadorGpio;
 import org.entrementes.grappa.modelo.ComandoDigital;
 import org.entrementes.grappa.modelo.GpioGrappa;
 import org.entrementes.grappa.modelo.InstrucaoGrappa;
-import org.entrementes.grappa.modelo.ValorSinalDigital;
-import org.entrementes.grappa.modelo.InstrucaoGrappa.Conexao;
+import org.entrementes.grappa.modelo.InstrucaoGrappa.Acao;
+import org.entrementes.grappa.modelo.InstrucaoGrappa.Formato;
 import org.entrementes.grappa.modelo.InstrucaoGrappa.Resultado;
-import org.entrementes.grappa.modelo.InstrucaoGrappa.TipoAcao;
+import org.entrementes.grappa.modelo.ValorSinalDigital;
 import org.entrementes.grappa.xml.LeitorConfiguracao;
-import org.entrementes.grappa.xml.Valor;
 
 public class ContextoDesktop implements ContextoGrappa{
 	
@@ -63,10 +64,26 @@ public class ContextoDesktop implements ContextoGrappa{
 				}
 				Object dispositivo = classe.newInstance();
 				registrarServicos(dispositivo,configuracao);
+				registrarHardware(dispositivo,this.implementacao);
 				this.dispositivos.put(qualificador,dispositivo);
 			}
 		}catch(Exception e){
 			throw new RuntimeException(e);
+		}
+		
+	}
+
+	private void registrarHardware(Object dispositivo, Raspberry implementacao) {
+		try{
+			for(Field campo : dispositivo.getClass().getDeclaredFields()){
+				if(campo.isAnnotationPresent(Hardware.class)){
+					campo.setAccessible(true);
+					campo.set(dispositivo, implementacao);
+					campo.setAccessible(false);
+				}
+			}
+		}catch(Exception ex){
+			throw new RuntimeException(ex);
 		}
 		
 	}
@@ -183,58 +200,8 @@ public class ContextoDesktop implements ContextoGrappa{
 		return this.implementacao;
 	}
 
-	@Override
-	public InstrucaoGrappa processarInstrucao(InstrucaoGrappa instrucao) {
-		if(instrucao.isValido()){
-			switch(instrucao.getTipo()){
-			case LEITURA:
-				return ler(instrucao.getEndereco());
-			case ESCRITA:
-				return escrever(instrucao.getEndereco(), instrucao.getValor());
-			default:
-				throw new RuntimeException();
-			}
-		}else{
-			return instrucao;
-		}
-	}
 	
-	public InstrucaoGrappa ler(Integer endereco) {
-		InstrucaoGrappa resultado = new InstrucaoGrappa();
-		resultado.setConexao(Conexao.GPIO);
-		resultado.setEndereco(endereco);
-		resultado.setTipo(TipoAcao.LEITURA);
-		if(!this.implementacao.isEnderecoLeitura(endereco)){
-			resultado.setResultado(Resultado.ERRO_ENDERECAMENTO);
-		}else{
-			ValorSinalDigital valor = this.implementacao.ler(endereco);
-			resultado.setResultado(Resultado.SUCESSO);
-			resultado.setValor(new Valor(valor));
-		}
-		return resultado;
-	}
+	
 
-	public InstrucaoGrappa escrever(Integer endereco, Valor corpoRequisicao) {
-		InstrucaoGrappa resultado = new InstrucaoGrappa();
-		resultado.setConexao(Conexao.GPIO);
-		resultado.setEndereco(endereco);
-		resultado.setTipo(TipoAcao.ESCRITA);
-		if(this.implementacao.isEnderecoEscrita(endereco)){
-			ComandoDigital comando = new ComandoDigital(corpoRequisicao.getCorpo());
-			if(comando.isValido()){
-				ValorSinalDigital valorResultante = this.implementacao.escrever(endereco,comando);
-				resultado.setResultado(Resultado.SUCESSO);
-				resultado.setValor(new Valor(valorResultante));
-				
-			}else{
-				resultado.setResultado(Resultado.ERRO_PROCESSAMENTO);
-				resultado.setValor(corpoRequisicao);
-			}
-		}else{
-			resultado.setResultado(Resultado.ERRO_ENDERECAMENTO);
-			resultado.setValor(corpoRequisicao);
-		}
-		return resultado;
-	}
 
 }

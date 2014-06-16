@@ -6,7 +6,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
 import org.entrementes.grappa.modelo.GpioGrappa;
-import org.entrementes.grappa.modelo.RegistradoresGrappa;
 
 public class LeitorConfiguracao {
 	
@@ -21,17 +20,5 @@ public class LeitorConfiguracao {
 		}
 		return null;
 	}
-	
-	public RegistradoresGrappa carregarRegistradores(String caminho){
-		File arquivoConfiguracao = new File(caminho);
-		try {
-			JAXBContext contextoXml = JAXBContext.newInstance(RegistradoresGrappa.class);
-			RegistradoresGrappa configuracao = (RegistradoresGrappa) contextoXml.createUnmarshaller().unmarshal(arquivoConfiguracao);
-			return configuracao;
-		} catch (JAXBException e) {
-			e.printStackTrace();
-		}
-		return null;
-	} 
 
 }

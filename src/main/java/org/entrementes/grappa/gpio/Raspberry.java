@@ -1,6 +1,7 @@
 package org.entrementes.grappa.gpio;
 
 import org.entrementes.grappa.modelo.ComandoDigital;
+import org.entrementes.grappa.modelo.InstrucaoGrappa;
 import org.entrementes.grappa.modelo.MapaEletrico;
 import org.entrementes.grappa.modelo.ValorSinalDigital;
 
@@ -18,6 +19,6 @@ public interface Raspberry {
 
 	ValorSinalDigital escrever(Integer endereco, ComandoDigital comando);
 
-	String getNomeImplementacao();
+	InstrucaoGrappa processarInstrucao(InstrucaoGrappa instrucao);
 
 }
