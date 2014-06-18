@@ -4,7 +4,7 @@ import org.entrementes.grappa.modelo.InstrucaoGrappa;
 import org.entrementes.grappa.modelo.InstrucaoGrappa.Acao;
 import org.entrementes.grappa.modelo.InstrucaoGrappa.Formato;
 
-public class InstrucaoDigital {
+public class InstrucaoLogica {
 	
 	private Integer endereco;
 	
@@ -13,27 +13,27 @@ public class InstrucaoDigital {
 	private Integer corpo;
 	
 	public InstrucaoGrappa construir(){
-		return new InstrucaoGrappa(this.endereco, Formato.DIGITAL, this.acao, this.corpo);
+		return new InstrucaoGrappa(this.endereco, Formato.LOGICO, this.acao, this.corpo);
 	}
 	
-	public InstrucaoDigital leitura(){
+	public InstrucaoLogica leitura(){
 		this.acao = Acao.LEITURA;
 		return this;
 	}
 	
-	public InstrucaoDigital escrita(Integer corpo){
+	public InstrucaoLogica escrita(Integer corpo){
 		this.acao = Acao.ESCRITA;
 		this.corpo = corpo;
 		return this;
 	}
 	
-	public InstrucaoDigital escrita(String corpo){
+	public InstrucaoLogica escrita(String corpo){
 		this.acao = Acao.ESCRITA;
 		this.corpo = new Integer(corpo);
 		return this;
 	}
 	
-	public InstrucaoDigital escrita(int corpo){
+	public InstrucaoLogica escrita(int corpo){
 		this.acao = Acao.ESCRITA;
 		this.corpo = corpo;
 		return this;
@@ -57,7 +57,7 @@ public class InstrucaoDigital {
 	}
 	
 	
-	public InstrucaoDigital endereco(Integer endereco){
+	public InstrucaoLogica endereco(Integer endereco){
 		this.endereco = endereco;
 		return this;
 	}

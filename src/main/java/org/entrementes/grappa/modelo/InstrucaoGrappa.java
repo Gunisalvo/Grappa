@@ -13,7 +13,7 @@ public class InstrucaoGrappa {
 
 	@XmlEnum
 	public enum Formato{
-		DIGITAL, DISCRETIZADO
+		LOGICO, DISCRETIZADO
 		;
 	}
 	

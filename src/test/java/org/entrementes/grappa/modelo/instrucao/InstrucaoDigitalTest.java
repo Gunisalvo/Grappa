@@ -14,8 +14,8 @@ public class InstrucaoDigitalTest {
 
 	@Test
 	public void testeLeitura() {
-		InstrucaoGrappa requisicao = new InstrucaoDigital().endereco(2).leitura().construir();
-		assertEquals(requisicao.getFormato(),Formato.DIGITAL);
+		InstrucaoGrappa requisicao = new InstrucaoLogica().endereco(2).leitura().construir();
+		assertEquals(requisicao.getFormato(),Formato.LOGICO);
 		assertEquals(requisicao.getEndereco(),new Integer(2));
 		assertEquals(requisicao.getTipo(),Acao.LEITURA);
 		assertNull(requisicao.getValor());
@@ -26,8 +26,8 @@ public class InstrucaoDigitalTest {
 	
 	@Test
 	public void testeLer() {
-		InstrucaoGrappa requisicao = new InstrucaoDigital().endereco(3).ler();
-		assertEquals(requisicao.getFormato(),Formato.DIGITAL);
+		InstrucaoGrappa requisicao = new InstrucaoLogica().endereco(3).ler();
+		assertEquals(requisicao.getFormato(),Formato.LOGICO);
 		assertEquals(requisicao.getEndereco(),new Integer(3));
 		assertEquals(requisicao.getTipo(),Acao.LEITURA);
 		assertNull(requisicao.getValor());
@@ -38,8 +38,8 @@ public class InstrucaoDigitalTest {
 	
 	@Test
 	public void testeLeituraInvalido() {
-		InstrucaoGrappa requisicao = new InstrucaoDigital().leitura().construir();
-		assertEquals(requisicao.getFormato(),Formato.DIGITAL);
+		InstrucaoGrappa requisicao = new InstrucaoLogica().leitura().construir();
+		assertEquals(requisicao.getFormato(),Formato.LOGICO);
 		assertNull(requisicao.getEndereco());
 		assertEquals(requisicao.getTipo(),Acao.LEITURA);
 		assertNull(requisicao.getValor());
@@ -50,8 +50,8 @@ public class InstrucaoDigitalTest {
 	
 	@Test
 	public void testeLerInvalido() {
-		InstrucaoGrappa requisicao = new InstrucaoDigital().ler();
-		assertEquals(requisicao.getFormato(),Formato.DIGITAL);
+		InstrucaoGrappa requisicao = new InstrucaoLogica().ler();
+		assertEquals(requisicao.getFormato(),Formato.LOGICO);
 		assertNull(requisicao.getEndereco());
 		assertEquals(requisicao.getTipo(),Acao.LEITURA);
 		assertNull(requisicao.getValor());
@@ -62,8 +62,8 @@ public class InstrucaoDigitalTest {
 	
 	@Test
 	public void testeEscrita() {
-		InstrucaoGrappa requisicao = new InstrucaoDigital().endereco(4).escrita(1).construir();
-		assertEquals(requisicao.getFormato(),Formato.DIGITAL);
+		InstrucaoGrappa requisicao = new InstrucaoLogica().endereco(4).escrita(1).construir();
+		assertEquals(requisicao.getFormato(),Formato.LOGICO);
 		assertEquals(requisicao.getEndereco(),new Integer(4));
 		assertEquals(requisicao.getTipo(),Acao.ESCRITA);
 		assertEquals(requisicao.getValor().intValue(),1);
@@ -74,8 +74,8 @@ public class InstrucaoDigitalTest {
 	
 	@Test
 	public void testeEscrever() {
-		InstrucaoGrappa requisicao = new InstrucaoDigital().endereco(5).escrever(0);
-		assertEquals(requisicao.getFormato(),Formato.DIGITAL);
+		InstrucaoGrappa requisicao = new InstrucaoLogica().endereco(5).escrever(0);
+		assertEquals(requisicao.getFormato(),Formato.LOGICO);
 		assertEquals(requisicao.getEndereco(),new Integer(5));
 		assertEquals(requisicao.getTipo(),Acao.ESCRITA);
 		assertEquals(requisicao.getValor().intValue(),0);
@@ -86,8 +86,8 @@ public class InstrucaoDigitalTest {
 	
 	@Test
 	public void testeEscreverB() {
-		InstrucaoGrappa requisicao = new InstrucaoDigital().endereco(5).escrever(0);
-		assertEquals(requisicao.getFormato(),Formato.DIGITAL);
+		InstrucaoGrappa requisicao = new InstrucaoLogica().endereco(5).escrever(0);
+		assertEquals(requisicao.getFormato(),Formato.LOGICO);
 		assertEquals(requisicao.getEndereco(),new Integer(5));
 		assertEquals(requisicao.getTipo(),Acao.ESCRITA);
 		assertEquals(requisicao.getValor().intValue(),0);
@@ -98,8 +98,8 @@ public class InstrucaoDigitalTest {
 	
 	@Test
 	public void testeEscreverC() {
-		InstrucaoGrappa requisicao = new InstrucaoDigital().endereco(5).escrever("0");
-		assertEquals(requisicao.getFormato(),Formato.DIGITAL);
+		InstrucaoGrappa requisicao = new InstrucaoLogica().endereco(5).escrever("0");
+		assertEquals(requisicao.getFormato(),Formato.LOGICO);
 		assertEquals(requisicao.getEndereco(),new Integer(5));
 		assertEquals(requisicao.getTipo(),Acao.ESCRITA);
 		assertEquals(requisicao.getValor().intValue(),0);
@@ -110,8 +110,8 @@ public class InstrucaoDigitalTest {
 	
 	@Test
 	public void testeInstrucaoInvalida() {
-		InstrucaoGrappa requisicao = new InstrucaoDigital().construir();
-		assertEquals(requisicao.getFormato(),Formato.DIGITAL);
+		InstrucaoGrappa requisicao = new InstrucaoLogica().construir();
+		assertEquals(requisicao.getFormato(),Formato.LOGICO);
 		assertNull(requisicao.getEndereco());
 		assertNull(requisicao.getTipo());
 		assertNull(requisicao.getValor());
@@ -122,8 +122,8 @@ public class InstrucaoDigitalTest {
 	
 	@Test
 	public void testeEscreverInvalido() {
-		InstrucaoGrappa requisicao = new InstrucaoDigital().escrever(2);
-		assertEquals(requisicao.getFormato(),Formato.DIGITAL);
+		InstrucaoGrappa requisicao = new InstrucaoLogica().escrever(2);
+		assertEquals(requisicao.getFormato(),Formato.LOGICO);
 		assertNull(requisicao.getEndereco());
 		assertEquals(requisicao.getTipo(),Acao.ESCRITA);
 		assertEquals(requisicao.getValor().intValue(),2);

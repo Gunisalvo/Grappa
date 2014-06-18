@@ -27,13 +27,13 @@ import org.entrementes.grappa.modelo.InstrucaoGrappa.Resultado;
 import org.entrementes.grappa.modelo.ValorSinalDigital;
 import org.entrementes.grappa.xml.LeitorConfiguracao;
 
-public class ContextoDesktop implements ContextoGrappa{
+public class ContextoPadrao implements ContextoGrappa{
 	
 	private Raspberry implementacao;
 	
 	private Map<String,Object> dispositivos;
 	
-	public ContextoDesktop() {
+	public ContextoPadrao() {
 		String caminhoConfiguracaoGrappa = this.getClass().getClassLoader().getResource( "grappa.xml" ).getFile();
 		LeitorConfiguracao configurador = new LeitorConfiguracao();
 		GpioGrappa configuracao = configurador.carregarGpio(caminhoConfiguracaoGrappa);

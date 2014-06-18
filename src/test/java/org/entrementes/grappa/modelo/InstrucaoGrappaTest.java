@@ -12,7 +12,7 @@ public class InstrucaoGrappaTest {
 
 	@Test
 	public void testCicloVida1() {
-		InstrucaoGrappa cobaia = new InstrucaoGrappa(6, Formato.DIGITAL, Acao.ESCRITA, new Integer(666));
+		InstrucaoGrappa cobaia = new InstrucaoGrappa(6, Formato.LOGICO, Acao.ESCRITA, new Integer(666));
 		assertNull(cobaia.getViolacoes());
 		assertTrue(cobaia.isValido());
 		assertEquals(666, cobaia.getValor().intValue());
@@ -21,7 +21,7 @@ public class InstrucaoGrappaTest {
 	
 	@Test
 	public void testCicloVida2() {
-		InstrucaoGrappa cobaia = new InstrucaoGrappa(6, Formato.DIGITAL, Acao.LEITURA, null);
+		InstrucaoGrappa cobaia = new InstrucaoGrappa(6, Formato.LOGICO, Acao.LEITURA, null);
 		assertNull(cobaia.getViolacoes());
 		assertTrue(cobaia.isValido());
 		assertNull(cobaia.getValor());

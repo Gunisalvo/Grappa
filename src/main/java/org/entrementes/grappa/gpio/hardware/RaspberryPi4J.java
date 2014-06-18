@@ -258,7 +258,7 @@ public class RaspberryPi4J implements Raspberry {
 	
 	public InstrucaoGrappa processarLeitura(Integer endereco) {
 		InstrucaoGrappa resultado = new InstrucaoGrappa();
-		resultado.setFormato(Formato.DIGITAL);
+		resultado.setFormato(Formato.LOGICO);
 		resultado.setEndereco(endereco);
 		resultado.setTipo(Acao.LEITURA);
 		if(!isEnderecoLeitura(endereco)){
@@ -273,7 +273,7 @@ public class RaspberryPi4J implements Raspberry {
 
 	public InstrucaoGrappa processarEscrita(Integer endereco, Integer corpoRequisicao) {
 		InstrucaoGrappa resultado = new InstrucaoGrappa();
-		resultado.setFormato(Formato.DIGITAL);
+		resultado.setFormato(Formato.LOGICO);
 		resultado.setEndereco(endereco);
 		resultado.setTipo(Acao.ESCRITA);
 		if(isEnderecoEscrita(endereco)){

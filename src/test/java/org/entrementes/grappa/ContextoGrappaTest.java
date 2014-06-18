@@ -6,7 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import org.entrementes.grappa.contexto.ContextoDesktop;
+import org.entrementes.grappa.contexto.ContextoPadrao;
 import org.entrementes.grappa.contexto.ContextoGrappa;
 import org.entrementes.grappa.servico.DispositivoNaoNomeado;
 import org.junit.Test;
@@ -15,7 +15,7 @@ public class ContextoGrappaTest {
 
 	@Test
 	public void test() {
-		ContextoGrappa contexto = new ContextoDesktop();
+		ContextoGrappa contexto = new ContextoPadrao();
 		assertEquals(9,contexto.getImplementacao().getEstado().getPinos().size());
 		assertFalse(contexto.getImplementacao().getEstado().getPinos().get(3).getPossuiServicosRegistrados());
 		assertTrue(contexto.getImplementacao().getEstado().getPinos().get(4).getPossuiServicosRegistrados());
