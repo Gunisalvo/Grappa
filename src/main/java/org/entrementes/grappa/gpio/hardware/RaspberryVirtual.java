@@ -146,4 +146,10 @@ public class RaspberryVirtual implements Raspberry {
 		}
 		return resultado;
 	}
+
+	@Override
+	public void finalizarMapeamento() {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -293,4 +293,15 @@ public class RaspberryPi4J implements Raspberry {
 		}
 		return resultado;
 	}
+
+	@Override
+	public void finalizarMapeamento() {
+		for(Entry<Integer,PinoDigitalGrappa> e : this.mapeamento.getPinos().entrySet()){
+			if(e.getValue().getPossuiServicosRegistrados()){
+				for(ServicoGpio s : e.getValue().getServicos()){
+					registrarServico(s, (GpioPinDigitalInput)this.pinos.get(e.getKey()));
+				}
+			}
+		}	
+	}
 }

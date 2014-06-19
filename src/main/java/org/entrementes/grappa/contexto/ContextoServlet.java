@@ -38,6 +38,7 @@ public class ContextoServlet implements ContextoGrappa{
 		iniciarImplementacao(configuracao);
 		iniciarDispositivos(configuracao);
 		iniciarGpio(configuracao);
+		this.implementacao.finalizarMapeamento();
 		this.servlet.setAttribute("grappa", this);
 	}
 

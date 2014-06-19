@@ -21,4 +21,6 @@ public interface Raspberry {
 
 	InstrucaoGrappa processarInstrucao(InstrucaoGrappa instrucao);
 
+	void finalizarMapeamento();
+
 }
