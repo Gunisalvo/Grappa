@@ -1,18 +1,24 @@
 package org.entrementes.grappa.gpio.hardware;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.entrementes.grappa.gpio.Raspberry;
 import org.entrementes.grappa.gpio.ServicoGpio;
+import org.entrementes.grappa.marcacao.Hardware;
+import org.entrementes.grappa.marcacao.ObservadorGpio;
 import org.entrementes.grappa.modelo.ComandoDigital;
 import org.entrementes.grappa.modelo.GpioGrappa;
 import org.entrementes.grappa.modelo.InstrucaoGrappa;
-import org.entrementes.grappa.modelo.MapaEletrico;
 import org.entrementes.grappa.modelo.InstrucaoGrappa.Acao;
 import org.entrementes.grappa.modelo.InstrucaoGrappa.Formato;
 import org.entrementes.grappa.modelo.InstrucaoGrappa.Resultado;
+import org.entrementes.grappa.modelo.MapaEletrico;
 import org.entrementes.grappa.modelo.PinoDigitalGrappa;
 import org.entrementes.grappa.modelo.ValorSinalDigital;
 
@@ -148,8 +154,74 @@ public class RaspberryVirtual implements Raspberry {
 	}
 
 	@Override
-	public void finalizarMapeamento() {
-		// TODO Auto-generated method stub
-		
+	public Map<String, Object> registrarDispositivos(Map<String, Class<?>> templates) {
+		Map<String, Object> dispositivos = new HashMap<>();
+		try{
+			for(Entry<String, Class<?>> e : templates.entrySet()){
+				Object dispositivo = e.getValue().newInstance();
+				registrarHardware(dispositivo);
+				registrarServicos(dispositivo);
+				dispositivos.put(e.getKey(), dispositivo);
+			}
+		}catch(Exception ex){
+			throw new RuntimeException(ex);
+		}
+		return dispositivos;
 	}
+	
+	private void registrarServicos(final Object dispositivo) {
+		try{
+			for(Method m : dispositivo.getClass().getMethods()){
+				if(m.isAnnotationPresent(ObservadorGpio.class)){
+					ObservadorGpio anotacao = m.getAnnotation(ObservadorGpio.class);
+					final Method metodo = m;
+					this.mapeamento.getPinos().get(anotacao.endereco()).registrarServico(new ServicoGpio() {
+						
+						@Override
+						public void processarServico(Integer estadoPino) {
+							try {
+								metodo.invoke(dispositivo, estadoPino);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					});
+				}
+			}
+		}catch(Exception ex){
+			throw new RuntimeException(ex);
+		}	
+	}
+
+	private void registrarHardware(Object dispositivo) {
+		try{
+			for(Field campo : dispositivo.getClass().getDeclaredFields()){
+				if(campo.isAnnotationPresent(Hardware.class)){
+					campo.setAccessible(true);
+					campo.set(dispositivo, this);
+					campo.setAccessible(false);
+				}
+			}
+		}catch(Exception ex){
+			throw new RuntimeException(ex);
+		}
+	}
+
+	@Override
+	public List<ServicoGpio> registrarServicosAvulsos(List<Class<ServicoGpio>> templates) {
+		List<ServicoGpio> servicos = new ArrayList<>();
+		try{
+			for(Class<ServicoGpio> t : templates){
+				ObservadorGpio anotacao = t.getAnnotation(ObservadorGpio.class);
+				ServicoGpio servico = t.newInstance();
+				registrarHardware(servico);
+				this.mapeamento.getPinos().get(anotacao.endereco()).registrarServico(servico);
+				servicos.add(servico);
+			}
+		}catch(Exception ex){
+			throw new RuntimeException(ex);
+		}
+		return servicos;
+	}
+
 }

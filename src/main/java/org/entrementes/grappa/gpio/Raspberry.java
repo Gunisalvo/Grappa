@@ -1,5 +1,8 @@
 package org.entrementes.grappa.gpio;
 
+import java.util.List;
+import java.util.Map;
+
 import org.entrementes.grappa.modelo.ComandoDigital;
 import org.entrementes.grappa.modelo.InstrucaoGrappa;
 import org.entrementes.grappa.modelo.MapaEletrico;
@@ -21,6 +24,8 @@ public interface Raspberry {
 
 	InstrucaoGrappa processarInstrucao(InstrucaoGrappa instrucao);
 
-	void finalizarMapeamento();
+	Map<String, Object> registrarDispositivos(Map<String, Class<?>> templates);
+
+	List<ServicoGpio> registrarServicosAvulsos(List<Class<ServicoGpio>> templates);
 
 }

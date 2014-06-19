@@ -1,21 +1,28 @@
 package org.entrementes.grappa.gpio.hardware;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.entrementes.grappa.gpio.Raspberry;
 import org.entrementes.grappa.gpio.ServicoGpio;
+import org.entrementes.grappa.marcacao.Hardware;
+import org.entrementes.grappa.marcacao.ObservadorGpio;
 import org.entrementes.grappa.modelo.ComandoDigital;
 import org.entrementes.grappa.modelo.GpioGrappa;
-import org.entrementes.grappa.modelo.InstrucaoGrappa;
 import org.entrementes.grappa.modelo.InstrucaoGrappa.Acao;
 import org.entrementes.grappa.modelo.InstrucaoGrappa.Formato;
 import org.entrementes.grappa.modelo.InstrucaoGrappa.Resultado;
+import org.entrementes.grappa.modelo.InstrucaoGrappa;
 import org.entrementes.grappa.modelo.MapaEletrico;
 import org.entrementes.grappa.modelo.PinoDigitalGrappa;
 import org.entrementes.grappa.modelo.TipoPino;
 import org.entrementes.grappa.modelo.ValorSinalDigital;
+import org.entrementes.grappa.xml.LeitorConfiguracao;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
@@ -40,6 +47,21 @@ public class RaspberryPi4J implements Raspberry {
 	public RaspberryPi4J(GpioGrappa mapeamento) {
 		this.mapeamento = mapeamento;
 		iniciarPinos();
+	}
+	
+	public static void main(String[] args) {
+		try{
+			GpioGrappa mapeamento = new LeitorConfiguracao().carregarGpio(args[0]);
+			RaspberryPi4J integracao = new RaspberryPi4J(mapeamento);
+			
+			Thread.sleep(5000L);
+			
+			integracao.desativar();
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}catch(Error er){
+			er.printStackTrace();
+		}
 	}
 	
 	private void iniciarPinos() {
@@ -73,6 +95,9 @@ public class RaspberryPi4J implements Raspberry {
 		switch(pinoDigitalGrappa.getTipo()){
 		case ENTRADA:
 			GpioPinDigitalInput entrada = this.gpio.provisionDigitalInputPin(getPinoMapeado(endereco));
+			for(ServicoGpio s : pinoDigitalGrappa.getServicos()){
+				registrarServico(s,entrada);
+			}
 			pino = entrada;
 			break;
 		case SAIDA:
@@ -276,13 +301,79 @@ public class RaspberryPi4J implements Raspberry {
 	}
 
 	@Override
-	public void finalizarMapeamento() {
-		for(Entry<Integer,PinoDigitalGrappa> e : this.mapeamento.getPinos().entrySet()){
-			if(e.getValue().getPossuiServicosRegistrados()){
-				for(ServicoGpio s : e.getValue().getServicos()){
-					registrarServico(s, (GpioPinDigitalInput)this.pinos.get(e.getKey()));
+	public Map<String, Object> registrarDispositivos(Map<String, Class<?>> templates) {
+		Map<String, Object> dispositivos = new HashMap<>();
+		try{
+			for(Entry<String, Class<?>> e : templates.entrySet()){
+				Object dispositivo = e.getValue().newInstance();
+				registrarHardware(dispositivo);
+				registrarServicos(dispositivo);
+				dispositivos.put(e.getKey(), dispositivo);
+			}
+		}catch(Exception ex){
+			throw new RuntimeException(ex);
+		}
+		return dispositivos;
+	}
+	
+	private void registrarServicos(final Object dispositivo) {
+		try{
+			for(Method m : dispositivo.getClass().getMethods()){
+				if(m.isAnnotationPresent(ObservadorGpio.class)){
+					ObservadorGpio anotacao = m.getAnnotation(ObservadorGpio.class);
+					Integer endereco = anotacao.endereco();
+					final Method metodo = m;
+					ServicoGpio servicoMetodo = new ServicoGpio() {
+						
+						@Override
+						public void processarServico(Integer estadoPino) {
+							try {
+								metodo.invoke(dispositivo, estadoPino);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					};
+					this.mapeamento.getPinos().get(endereco).registrarServico(servicoMetodo);
+					registrarServico(servicoMetodo, (GpioPinDigitalInput) this.pinos.get(endereco));
 				}
 			}
+		}catch(Exception ex){
+			throw new RuntimeException(ex);
 		}	
 	}
+
+	private void registrarHardware(Object dispositivo) {
+		try{
+			for(Field campo : dispositivo.getClass().getDeclaredFields()){
+				if(campo.isAnnotationPresent(Hardware.class)){
+					campo.setAccessible(true);
+					campo.set(dispositivo, this);
+					campo.setAccessible(false);
+				}
+			}
+		}catch(Exception ex){
+			throw new RuntimeException(ex);
+		}
+	}
+
+	@Override
+	public List<ServicoGpio> registrarServicosAvulsos(List<Class<ServicoGpio>> templates) {
+		List<ServicoGpio> servicos = new ArrayList<>();
+		try{
+			for(Class<ServicoGpio> t : templates){
+				ObservadorGpio anotacao = t.getAnnotation(ObservadorGpio.class);
+				Integer endereco = anotacao.endereco();
+				ServicoGpio servico = t.newInstance();
+				registrarHardware(servico);
+				this.mapeamento.getPinos().get(endereco).registrarServico(servico);
+				registrarServico(servico, (GpioPinDigitalInput) this.pinos.get(endereco));
+				servicos.add(servico);
+			}
+		}catch(Exception ex){
+			throw new RuntimeException(ex);
+		}
+		return servicos;
+	}
+
 }
