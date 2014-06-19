@@ -14,10 +14,10 @@ import org.entrementes.grappa.marcacao.Hardware;
 import org.entrementes.grappa.marcacao.ObservadorGpio;
 import org.entrementes.grappa.modelo.ComandoDigital;
 import org.entrementes.grappa.modelo.GpioGrappa;
+import org.entrementes.grappa.modelo.InstrucaoGrappa;
 import org.entrementes.grappa.modelo.InstrucaoGrappa.Acao;
 import org.entrementes.grappa.modelo.InstrucaoGrappa.Formato;
 import org.entrementes.grappa.modelo.InstrucaoGrappa.Resultado;
-import org.entrementes.grappa.modelo.InstrucaoGrappa;
 import org.entrementes.grappa.modelo.MapaEletrico;
 import org.entrementes.grappa.modelo.PinoDigitalGrappa;
 import org.entrementes.grappa.modelo.TipoPino;
@@ -164,6 +164,26 @@ public class RaspberryPi4J implements Raspberry {
             @Override
             public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent evento) {
             	servico.processarServico(traduzirEstado(evento));
+            }
+
+			private Integer traduzirEstado(GpioPinDigitalStateChangeEvent evento) {
+				Integer resultado = evento.getState().getValue();
+				return resultado;
+			}
+        });
+	}
+	
+	private void registrarServico(final Method metodo, final Object dispositivo, GpioPinDigitalInput pino){
+		
+		pino.addListener(new GpioPinListenerDigital() {
+			
+            @Override
+            public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent evento) {
+            	try {
+					metodo.invoke(dispositivo, traduzirEstado(evento));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
             }
 
 			private Integer traduzirEstado(GpioPinDigitalStateChangeEvent evento) {
@@ -335,7 +355,7 @@ public class RaspberryPi4J implements Raspberry {
 						}
 					};
 					this.mapeamento.getPinos().get(endereco).registrarServico(servicoMetodo);
-					registrarServico(servicoMetodo, (GpioPinDigitalInput) this.pinos.get(endereco));
+					registrarServico(m, dispositivo, (GpioPinDigitalInput) this.pinos.get(endereco));
 				}
 			}
 		}catch(Exception ex){
