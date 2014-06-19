@@ -8,15 +8,14 @@ import org.entrementes.grappa.gpio.Raspberry;
 import org.entrementes.grappa.gpio.ServicoGpio;
 import org.entrementes.grappa.modelo.ComandoDigital;
 import org.entrementes.grappa.modelo.GpioGrappa;
+import org.entrementes.grappa.modelo.InstrucaoGrappa;
 import org.entrementes.grappa.modelo.InstrucaoGrappa.Acao;
 import org.entrementes.grappa.modelo.InstrucaoGrappa.Formato;
 import org.entrementes.grappa.modelo.InstrucaoGrappa.Resultado;
-import org.entrementes.grappa.modelo.InstrucaoGrappa;
 import org.entrementes.grappa.modelo.MapaEletrico;
 import org.entrementes.grappa.modelo.PinoDigitalGrappa;
 import org.entrementes.grappa.modelo.TipoPino;
 import org.entrementes.grappa.modelo.ValorSinalDigital;
-import org.entrementes.grappa.xml.LeitorConfiguracao;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
@@ -41,21 +40,6 @@ public class RaspberryPi4J implements Raspberry {
 	public RaspberryPi4J(GpioGrappa mapeamento) {
 		this.mapeamento = mapeamento;
 		iniciarPinos();
-	}
-	
-	public static void main(String[] args) {
-		try{
-			GpioGrappa mapeamento = new LeitorConfiguracao().carregarGpio(args[0]);
-			RaspberryPi4J integracao = new RaspberryPi4J(mapeamento);
-			
-			Thread.sleep(5000L);
-			
-			integracao.desativar();
-		}catch(Exception ex){
-			ex.printStackTrace();
-		}catch(Error er){
-			er.printStackTrace();
-		}
 	}
 	
 	private void iniciarPinos() {
@@ -89,9 +73,6 @@ public class RaspberryPi4J implements Raspberry {
 		switch(pinoDigitalGrappa.getTipo()){
 		case ENTRADA:
 			GpioPinDigitalInput entrada = this.gpio.provisionDigitalInputPin(getPinoMapeado(endereco));
-			for(ServicoGpio s : pinoDigitalGrappa.getServicos()){
-				registrarServico(s,entrada);
-			}
 			pino = entrada;
 			break;
 		case SAIDA:
