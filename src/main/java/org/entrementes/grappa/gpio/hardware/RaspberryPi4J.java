@@ -266,7 +266,7 @@ public class RaspberryPi4J implements Raspberry {
 		}else{
 			ValorSinalDigital valor = ler(endereco);
 			resultado.setResultado(Resultado.SUCESSO);
-			resultado.setValor(valor.emBinario());
+			resultado.setCorpo(valor.emBinario());
 		}
 		return resultado;
 	}
@@ -281,15 +281,15 @@ public class RaspberryPi4J implements Raspberry {
 			if(comando.isValido()){
 				ValorSinalDigital valorResultante = escrever(endereco,comando);
 				resultado.setResultado(Resultado.SUCESSO);
-				resultado.setValor(new Integer(valorResultante.emBinario()));
+				resultado.setCorpo(new Integer(valorResultante.emBinario()));
 				
 			}else{
 				resultado.setResultado(Resultado.ERRO_PROCESSAMENTO);
-				resultado.setValor(corpoRequisicao);
+				resultado.setCorpo(corpoRequisicao);
 			}
 		}else{
 			resultado.setResultado(Resultado.ERRO_ENDERECAMENTO);
-			resultado.setValor(corpoRequisicao);
+			resultado.setCorpo(corpoRequisicao);
 		}
 		return resultado;
 	}

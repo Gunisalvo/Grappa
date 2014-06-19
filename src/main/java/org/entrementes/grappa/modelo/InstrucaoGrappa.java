@@ -96,7 +96,7 @@ public class InstrucaoGrappa {
 		return this.corpo;
 	}
 	
-	public void setValor(Integer corpo){
+	public void setCorpo(Integer corpo){
 		this.corpo = corpo;
 	}
 
