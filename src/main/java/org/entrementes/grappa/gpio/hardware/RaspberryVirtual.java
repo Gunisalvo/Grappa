@@ -100,7 +100,7 @@ public class RaspberryVirtual implements Raspberry {
 			case LEITURA:
 				return processarLeitura(instrucao.getEndereco());
 			case ESCRITA:
-				return processarEscrita(instrucao.getEndereco(), instrucao.getValor());
+				return processarEscrita(instrucao.getEndereco(), instrucao.getCorpo());
 			default:
 				throw new RuntimeException();
 			}

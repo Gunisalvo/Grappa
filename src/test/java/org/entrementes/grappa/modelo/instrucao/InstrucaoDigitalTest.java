@@ -18,7 +18,7 @@ public class InstrucaoDigitalTest {
 		assertEquals(requisicao.getFormato(),Formato.LOGICO);
 		assertEquals(requisicao.getEndereco(),new Integer(2));
 		assertEquals(requisicao.getAcao(),Acao.LEITURA);
-		assertNull(requisicao.getValor());
+		assertNull(requisicao.getCorpo());
 		assertNull(requisicao.getViolacoes());
 		assertTrue(requisicao.isValido());
 		assertTrue(requisicao.getViolacoes().isEmpty());
@@ -30,7 +30,7 @@ public class InstrucaoDigitalTest {
 		assertEquals(requisicao.getFormato(),Formato.LOGICO);
 		assertEquals(requisicao.getEndereco(),new Integer(3));
 		assertEquals(requisicao.getAcao(),Acao.LEITURA);
-		assertNull(requisicao.getValor());
+		assertNull(requisicao.getCorpo());
 		assertNull(requisicao.getViolacoes());
 		assertTrue(requisicao.isValido());
 		assertTrue(requisicao.getViolacoes().isEmpty());
@@ -42,7 +42,7 @@ public class InstrucaoDigitalTest {
 		assertEquals(requisicao.getFormato(),Formato.LOGICO);
 		assertNull(requisicao.getEndereco());
 		assertEquals(requisicao.getAcao(),Acao.LEITURA);
-		assertNull(requisicao.getValor());
+		assertNull(requisicao.getCorpo());
 		assertNull(requisicao.getViolacoes());
 		assertFalse(requisicao.isValido());
 		assertEquals(requisicao.getViolacoes().size(),1);
@@ -54,7 +54,7 @@ public class InstrucaoDigitalTest {
 		assertEquals(requisicao.getFormato(),Formato.LOGICO);
 		assertNull(requisicao.getEndereco());
 		assertEquals(requisicao.getAcao(),Acao.LEITURA);
-		assertNull(requisicao.getValor());
+		assertNull(requisicao.getCorpo());
 		assertNull(requisicao.getViolacoes());
 		assertFalse(requisicao.isValido());
 		assertEquals(requisicao.getViolacoes().size(),1);
@@ -66,7 +66,7 @@ public class InstrucaoDigitalTest {
 		assertEquals(requisicao.getFormato(),Formato.LOGICO);
 		assertEquals(requisicao.getEndereco(),new Integer(4));
 		assertEquals(requisicao.getAcao(),Acao.ESCRITA);
-		assertEquals(requisicao.getValor().intValue(),1);
+		assertEquals(requisicao.getCorpo().intValue(),1);
 		assertNull(requisicao.getViolacoes());
 		assertTrue(requisicao.isValido());
 		assertTrue(requisicao.getViolacoes().isEmpty());
@@ -78,7 +78,7 @@ public class InstrucaoDigitalTest {
 		assertEquals(requisicao.getFormato(),Formato.LOGICO);
 		assertEquals(requisicao.getEndereco(),new Integer(5));
 		assertEquals(requisicao.getAcao(),Acao.ESCRITA);
-		assertEquals(requisicao.getValor().intValue(),0);
+		assertEquals(requisicao.getCorpo().intValue(),0);
 		assertNull(requisicao.getViolacoes());
 		assertTrue(requisicao.isValido());
 		assertTrue(requisicao.getViolacoes().isEmpty());
@@ -90,7 +90,7 @@ public class InstrucaoDigitalTest {
 		assertEquals(requisicao.getFormato(),Formato.LOGICO);
 		assertEquals(requisicao.getEndereco(),new Integer(5));
 		assertEquals(requisicao.getAcao(),Acao.ESCRITA);
-		assertEquals(requisicao.getValor().intValue(),0);
+		assertEquals(requisicao.getCorpo().intValue(),0);
 		assertNull(requisicao.getViolacoes());
 		assertTrue(requisicao.isValido());
 		assertTrue(requisicao.getViolacoes().isEmpty());
@@ -102,7 +102,7 @@ public class InstrucaoDigitalTest {
 		assertEquals(requisicao.getFormato(),Formato.LOGICO);
 		assertEquals(requisicao.getEndereco(),new Integer(5));
 		assertEquals(requisicao.getAcao(),Acao.ESCRITA);
-		assertEquals(requisicao.getValor().intValue(),0);
+		assertEquals(requisicao.getCorpo().intValue(),0);
 		assertNull(requisicao.getViolacoes());
 		assertTrue(requisicao.isValido());
 		assertTrue(requisicao.getViolacoes().isEmpty());
@@ -114,7 +114,7 @@ public class InstrucaoDigitalTest {
 		assertEquals(requisicao.getFormato(),Formato.LOGICO);
 		assertNull(requisicao.getEndereco());
 		assertNull(requisicao.getAcao());
-		assertNull(requisicao.getValor());
+		assertNull(requisicao.getCorpo());
 		assertNull(requisicao.getViolacoes());
 		assertFalse(requisicao.isValido());
 		assertEquals(requisicao.getViolacoes().size(),2);
@@ -126,7 +126,7 @@ public class InstrucaoDigitalTest {
 		assertEquals(requisicao.getFormato(),Formato.LOGICO);
 		assertNull(requisicao.getEndereco());
 		assertEquals(requisicao.getAcao(),Acao.ESCRITA);
-		assertEquals(requisicao.getValor().intValue(),2);
+		assertEquals(requisicao.getCorpo().intValue(),2);
 		assertNull(requisicao.getViolacoes());
 		assertFalse(requisicao.isValido());
 		assertEquals(requisicao.getViolacoes().size(),1);

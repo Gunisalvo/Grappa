@@ -92,7 +92,7 @@ public class InstrucaoGrappa {
 		return new InstrucaoGrappa(this.endereco, this.formato, this.acao, corpo, resultado);
 	}
 
-	public Integer getValor() {
+	public Integer getCorpo() {
 		return this.corpo;
 	}
 	

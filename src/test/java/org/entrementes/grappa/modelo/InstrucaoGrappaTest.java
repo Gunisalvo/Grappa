@@ -15,7 +15,7 @@ public class InstrucaoGrappaTest {
 		InstrucaoGrappa cobaia = new InstrucaoGrappa(6, Formato.LOGICO, Acao.ESCRITA, new Integer(666));
 		assertNull(cobaia.getViolacoes());
 		assertTrue(cobaia.isValido());
-		assertEquals(666, cobaia.getValor().intValue());
+		assertEquals(666, cobaia.getCorpo().intValue());
 		assertEquals(cobaia.getViolacoes().size(),0);
 	}
 	
@@ -24,7 +24,7 @@ public class InstrucaoGrappaTest {
 		InstrucaoGrappa cobaia = new InstrucaoGrappa(6, Formato.LOGICO, Acao.LEITURA, null);
 		assertNull(cobaia.getViolacoes());
 		assertTrue(cobaia.isValido());
-		assertNull(cobaia.getValor());
+		assertNull(cobaia.getCorpo());
 		assertEquals(cobaia.getViolacoes().size(),0);
 	}
 
