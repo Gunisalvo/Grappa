@@ -22,7 +22,6 @@ import org.entrementes.grappa.modelo.MapaEletrico;
 import org.entrementes.grappa.modelo.PinoDigitalGrappa;
 import org.entrementes.grappa.modelo.TipoPino;
 import org.entrementes.grappa.modelo.ValorSinalDigital;
-import org.entrementes.grappa.xml.LeitorConfiguracao;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
@@ -31,6 +30,7 @@ import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinMode;
+import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
@@ -96,21 +96,6 @@ public class RaspberryPi4J implements Raspberry {
 		iniciarPinos();
 	}
 	
-	public static void main(String[] args) {
-		try{
-			GpioGrappa mapeamento = new LeitorConfiguracao().carregarGpio(args[0]);
-			RaspberryPi4J integracao = new RaspberryPi4J(mapeamento);
-			
-			Thread.sleep(5000L);
-			
-			integracao.desativar();
-		}catch(Exception ex){
-			ex.printStackTrace();
-		}catch(Error er){
-			er.printStackTrace();
-		}
-	}
-	
 	private void iniciarPinos() {
 		this.gpio = GpioFactory.getInstance();
 		
@@ -141,11 +126,11 @@ public class RaspberryPi4J implements Raspberry {
 		GpioPinDigital pino = null;
 		switch(pinoDigitalGrappa.getTipo()){
 		case ENTRADA:
-			GpioPinDigitalInput entrada = this.gpio.provisionDigitalInputPin(getPinoMapeado(endereco));
+			GpioPinDigitalInput entrada = this.gpio.provisionDigitalInputPin(getPinoMapeado(endereco), "GRAPPA_" + endereco,PinPullResistance.PULL_DOWN);
 			pino = entrada;
 			break;
 		case SAIDA:
-			pino = this.gpio.provisionDigitalOutputPin(getPinoMapeado(endereco));
+			pino = this.gpio.provisionDigitalOutputPin(getPinoMapeado(endereco), "GRAPPA_" + endereco);
 			pino.setShutdownOptions(true, PinState.LOW);
 			break;
 		}
@@ -202,12 +187,10 @@ public class RaspberryPi4J implements Raspberry {
 	}
 	
 	private void registrarServico(final ServicoGpio servico, GpioPinDigitalInput pino){
-		
 		pino.addListener(new EventoServicoPi4J(servico));
 	}
 	
 	private void registrarServico(final Method metodo, final Object dispositivo, GpioPinDigitalInput pino){
-		
 		pino.addListener(new EventoMetodoPi4J(metodo, dispositivo));
 	}
 
