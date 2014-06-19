@@ -243,7 +243,7 @@ public class RaspberryPi4J implements Raspberry {
 	@Override
 	public InstrucaoGrappa processarInstrucao(InstrucaoGrappa instrucao) {
 		if(instrucao.isValido()){
-			switch(instrucao.getTipo()){
+			switch(instrucao.getAcao()){
 			case LEITURA:
 				return processarLeitura(instrucao.getEndereco());
 			case ESCRITA:
@@ -260,7 +260,7 @@ public class RaspberryPi4J implements Raspberry {
 		InstrucaoGrappa resultado = new InstrucaoGrappa();
 		resultado.setFormato(Formato.LOGICO);
 		resultado.setEndereco(endereco);
-		resultado.setTipo(Acao.LEITURA);
+		resultado.setAcao(Acao.LEITURA);
 		if(!isEnderecoLeitura(endereco)){
 			resultado.setResultado(Resultado.ERRO_ENDERECAMENTO);
 		}else{
@@ -275,7 +275,7 @@ public class RaspberryPi4J implements Raspberry {
 		InstrucaoGrappa resultado = new InstrucaoGrappa();
 		resultado.setFormato(Formato.LOGICO);
 		resultado.setEndereco(endereco);
-		resultado.setTipo(Acao.ESCRITA);
+		resultado.setAcao(Acao.ESCRITA);
 		if(isEnderecoEscrita(endereco)){
 			ComandoDigital comando = new ComandoDigital(corpoRequisicao);
 			if(comando.isValido()){

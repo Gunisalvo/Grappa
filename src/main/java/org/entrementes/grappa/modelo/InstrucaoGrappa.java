@@ -33,7 +33,7 @@ public class InstrucaoGrappa {
 	
 	private Formato formato;
 	
-	private Acao tipo;
+	private Acao acao;
 	
 	private Integer corpo;
 
@@ -44,10 +44,10 @@ public class InstrucaoGrappa {
 	public InstrucaoGrappa() {
 	}
 	
-	public InstrucaoGrappa(Integer endereco, Formato formato, Acao tipo, Integer corpo) {
+	public InstrucaoGrappa(Integer endereco, Formato formato, Acao acao, Integer corpo) {
 		this.endereco = endereco;
 		this.formato = formato;
-		this.tipo = tipo;
+		this.acao = acao;
 		this.corpo = corpo;
 	}
 	
@@ -72,12 +72,12 @@ public class InstrucaoGrappa {
 		this.formato = formato;
 	}
 
-	public Acao getTipo() {
-		return tipo;
+	public Acao getAcao() {
+		return acao;
 	}
 
-	public void setTipo(Acao tipo) {
-		this.tipo = tipo;
+	public void setAcao(Acao acao) {
+		this.acao = acao;
 	}
 
 	public Resultado getResultado() {
@@ -89,7 +89,7 @@ public class InstrucaoGrappa {
 	}
 
 	public InstrucaoGrappa gerarPacoteResultado(Resultado resultado, Integer corpo){
-		return new InstrucaoGrappa(this.endereco, this.formato, this.tipo, corpo, resultado);
+		return new InstrucaoGrappa(this.endereco, this.formato, this.acao, corpo, resultado);
 	}
 
 	public Integer getValor() {
@@ -120,10 +120,10 @@ public class InstrucaoGrappa {
 		}else{
 			
 		}
-		if(this.tipo == null){
-			this.violacoes.add(new ViolacaoPacote("tipo", "vazio"));
+		if(this.acao == null){
+			this.violacoes.add(new ViolacaoPacote("acao", "vazio"));
 		}else{
-			if(Acao.ESCRITA.equals(this.tipo) && this.corpo == null){
+			if(Acao.ESCRITA.equals(this.acao) && this.corpo == null){
 				this.violacoes.add(new ViolacaoPacote("corpo", "vazio em pacote de escrita"));
 			}
 		}

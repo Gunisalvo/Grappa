@@ -18,13 +18,7 @@ import org.entrementes.grappa.gpio.hardware.RaspberryVirtual;
 import org.entrementes.grappa.marcacao.Dispositivo;
 import org.entrementes.grappa.marcacao.Hardware;
 import org.entrementes.grappa.marcacao.ObservadorGpio;
-import org.entrementes.grappa.modelo.ComandoDigital;
 import org.entrementes.grappa.modelo.GpioGrappa;
-import org.entrementes.grappa.modelo.InstrucaoGrappa;
-import org.entrementes.grappa.modelo.InstrucaoGrappa.Acao;
-import org.entrementes.grappa.modelo.InstrucaoGrappa.Formato;
-import org.entrementes.grappa.modelo.InstrucaoGrappa.Resultado;
-import org.entrementes.grappa.modelo.ValorSinalDigital;
 import org.entrementes.grappa.xml.LeitorConfiguracao;
 
 public class ContextoPadrao implements ContextoGrappa{
@@ -159,7 +153,7 @@ public class ContextoPadrao implements ContextoGrappa{
 			if (caminhoAtual.endsWith(".class")) {
 				try {
 					Class<?> classe = (Class<?>) Class.forName(caminho + "." + caminhoAtual.replace(".class", ""));
-					if (classe.isAnnotationPresent(ObservadorGpio.class)) {
+					if (classe.isAnnotationPresent(ObservadorGpio.class) && !classe.isAnnotationPresent(Dispositivo.class)) {
 						servicosAvulsos.add((Class<ServicoGpio>) classe);
 					}
 				} catch (Exception e) {
@@ -199,9 +193,5 @@ public class ContextoPadrao implements ContextoGrappa{
 	public Raspberry getImplementacao() {
 		return this.implementacao;
 	}
-
-	
-	
-
 
 }

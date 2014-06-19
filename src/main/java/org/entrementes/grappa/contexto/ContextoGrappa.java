@@ -3,7 +3,6 @@ package org.entrementes.grappa.contexto;
 import java.util.Map;
 
 import org.entrementes.grappa.gpio.Raspberry;
-import org.entrementes.grappa.modelo.InstrucaoGrappa;
 
 public interface ContextoGrappa {
 	
