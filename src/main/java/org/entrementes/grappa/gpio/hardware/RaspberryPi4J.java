@@ -38,6 +38,53 @@ import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 
 public class RaspberryPi4J implements Raspberry {
 
+	private class EventoServicoPi4J implements GpioPinListenerDigital{
+		
+		private ServicoGpio servico;
+
+		public EventoServicoPi4J(ServicoGpio servico) {
+			this.servico = servico;
+		}
+
+		@Override
+		public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent evento) {
+			servico.processarServico(traduzirEstado(evento));
+		}
+		
+		private Integer traduzirEstado(GpioPinDigitalStateChangeEvent evento) {
+			Integer resultado = evento.getState().getValue();
+			return resultado;
+		}
+		
+	}
+	
+	private class EventoMetodoPi4J implements GpioPinListenerDigital{
+		
+		private Method metodo;
+		private Object dispositivo;
+
+		public EventoMetodoPi4J(Method metodo, Object dispositivo) {
+			this.metodo = metodo;
+			this.dispositivo = dispositivo;
+		}
+
+		@Override
+		public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent evento) {
+			try{
+				metodo.invoke(dispositivo, traduzirEstado(evento));
+			}catch(Exception ex){
+				ex.printStackTrace();
+			}
+			
+		}
+		
+		private Integer traduzirEstado(GpioPinDigitalStateChangeEvent evento) {
+			Integer resultado = evento.getState().getValue();
+			return resultado;
+		}
+		
+	}
+	
 	private GpioGrappa mapeamento;
 
 	private GpioController gpio;
@@ -95,9 +142,6 @@ public class RaspberryPi4J implements Raspberry {
 		switch(pinoDigitalGrappa.getTipo()){
 		case ENTRADA:
 			GpioPinDigitalInput entrada = this.gpio.provisionDigitalInputPin(getPinoMapeado(endereco));
-			for(ServicoGpio s : pinoDigitalGrappa.getServicos()){
-				registrarServico(s,entrada);
-			}
 			pino = entrada;
 			break;
 		case SAIDA:
@@ -159,38 +203,12 @@ public class RaspberryPi4J implements Raspberry {
 	
 	private void registrarServico(final ServicoGpio servico, GpioPinDigitalInput pino){
 		
-		pino.addListener(new GpioPinListenerDigital() {
-			
-            @Override
-            public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent evento) {
-            	servico.processarServico(traduzirEstado(evento));
-            }
-
-			private Integer traduzirEstado(GpioPinDigitalStateChangeEvent evento) {
-				Integer resultado = evento.getState().getValue();
-				return resultado;
-			}
-        });
+		pino.addListener(new EventoServicoPi4J(servico));
 	}
 	
 	private void registrarServico(final Method metodo, final Object dispositivo, GpioPinDigitalInput pino){
 		
-		pino.addListener(new GpioPinListenerDigital() {
-			
-            @Override
-            public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent evento) {
-            	try {
-					metodo.invoke(dispositivo, traduzirEstado(evento));
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-            }
-
-			private Integer traduzirEstado(GpioPinDigitalStateChangeEvent evento) {
-				Integer resultado = evento.getState().getValue();
-				return resultado;
-			}
-        });
+		pino.addListener(new EventoMetodoPi4J(metodo, dispositivo));
 	}
 
 	@Override
