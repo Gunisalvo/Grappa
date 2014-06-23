@@ -4,8 +4,9 @@ import static org.junit.Assert.assertNotNull;
 
 import java.net.URL;
 
-import org.entrementes.grappa.modelo.GpioGrappa;
-import org.entrementes.grappa.xml.LeitorConfiguracao;
+import br.com.caelum.grappa.model.PinConfiguration;
+import br.com.caelum.grappa.pin.hardware.RaspberryPi4J;
+import br.com.caelum.grappa.xml.ConfigurationParser;
 
 public class RaspberryPi4JTest {
 
@@ -13,7 +14,7 @@ public class RaspberryPi4JTest {
 	public void test() {
 		try{
 		URL url = Thread.currentThread().getContextClassLoader().getResource("grappa.xml");
-		GpioGrappa mapeamento = new LeitorConfiguracao().carregarGpio(url.getPath());
+		PinConfiguration mapeamento = new ConfigurationParser().carregarGpio(url.getPath());
 		RaspberryPi4J cobaia = new RaspberryPi4J(mapeamento);
 		assertNotNull(cobaia);
 		}catch(Exception ex){

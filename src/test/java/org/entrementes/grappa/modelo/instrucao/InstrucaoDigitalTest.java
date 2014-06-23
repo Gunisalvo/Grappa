@@ -5,131 +5,133 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import org.entrementes.grappa.modelo.InstrucaoGrappa;
-import org.entrementes.grappa.modelo.InstrucaoGrappa.Acao;
-import org.entrementes.grappa.modelo.InstrucaoGrappa.Formato;
 import org.junit.Test;
+
+import br.com.caelum.grappa.model.GrappaInstruction;
+import br.com.caelum.grappa.model.GrappaInstruction.Action;
+import br.com.caelum.grappa.model.GrappaPin.PinFormat;
+import br.com.caelum.grappa.model.builder.LogicInstruction;
 
 public class InstrucaoDigitalTest {
 
 	@Test
 	public void testeLeitura() {
-		InstrucaoGrappa requisicao = new InstrucaoLogica().endereco(2).leitura().construir();
-		assertEquals(requisicao.getFormato(),Formato.LOGICO);
-		assertEquals(requisicao.getEndereco(),new Integer(2));
-		assertEquals(requisicao.getAcao(),Acao.LEITURA);
-		assertNull(requisicao.getCorpo());
-		assertNull(requisicao.getViolacoes());
-		assertTrue(requisicao.isValido());
-		assertTrue(requisicao.getViolacoes().isEmpty());
+		GrappaInstruction requisicao = new LogicInstruction().address(2).reading().build();
+		assertEquals(requisicao.getFormat(),PinFormat.LOGIC);
+		assertEquals(requisicao.getAddress(),new Integer(2));
+		assertEquals(requisicao.getAction(),Action.READ);
+		assertNull(requisicao.getBody());
+		assertNull(requisicao.getViolations());
+		assertTrue(requisicao.isValid());
+		assertTrue(requisicao.getViolations().isEmpty());
 	}
 	
 	@Test
 	public void testeLer() {
-		InstrucaoGrappa requisicao = new InstrucaoLogica().endereco(3).ler();
-		assertEquals(requisicao.getFormato(),Formato.LOGICO);
-		assertEquals(requisicao.getEndereco(),new Integer(3));
-		assertEquals(requisicao.getAcao(),Acao.LEITURA);
-		assertNull(requisicao.getCorpo());
-		assertNull(requisicao.getViolacoes());
-		assertTrue(requisicao.isValido());
-		assertTrue(requisicao.getViolacoes().isEmpty());
+		GrappaInstruction requisicao = new LogicInstruction().address(3).read();
+		assertEquals(requisicao.getFormat(),PinFormat.LOGIC);
+		assertEquals(requisicao.getAddress(),new Integer(3));
+		assertEquals(requisicao.getAction(),Action.READ);
+		assertNull(requisicao.getBody());
+		assertNull(requisicao.getViolations());
+		assertTrue(requisicao.isValid());
+		assertTrue(requisicao.getViolations().isEmpty());
 	}
 	
 	@Test
 	public void testeLeituraInvalido() {
-		InstrucaoGrappa requisicao = new InstrucaoLogica().leitura().construir();
-		assertEquals(requisicao.getFormato(),Formato.LOGICO);
-		assertNull(requisicao.getEndereco());
-		assertEquals(requisicao.getAcao(),Acao.LEITURA);
-		assertNull(requisicao.getCorpo());
-		assertNull(requisicao.getViolacoes());
-		assertFalse(requisicao.isValido());
-		assertEquals(requisicao.getViolacoes().size(),1);
+		GrappaInstruction requisicao = new LogicInstruction().reading().build();
+		assertEquals(requisicao.getFormat(),PinFormat.LOGIC);
+		assertNull(requisicao.getAddress());
+		assertEquals(requisicao.getAction(),Action.READ);
+		assertNull(requisicao.getBody());
+		assertNull(requisicao.getViolations());
+		assertFalse(requisicao.isValid());
+		assertEquals(requisicao.getViolations().size(),1);
 	}
 	
 	@Test
 	public void testeLerInvalido() {
-		InstrucaoGrappa requisicao = new InstrucaoLogica().ler();
-		assertEquals(requisicao.getFormato(),Formato.LOGICO);
-		assertNull(requisicao.getEndereco());
-		assertEquals(requisicao.getAcao(),Acao.LEITURA);
-		assertNull(requisicao.getCorpo());
-		assertNull(requisicao.getViolacoes());
-		assertFalse(requisicao.isValido());
-		assertEquals(requisicao.getViolacoes().size(),1);
+		GrappaInstruction requisicao = new LogicInstruction().read();
+		assertEquals(requisicao.getFormat(),PinFormat.LOGIC);
+		assertNull(requisicao.getAddress());
+		assertEquals(requisicao.getAction(),Action.READ);
+		assertNull(requisicao.getBody());
+		assertNull(requisicao.getViolations());
+		assertFalse(requisicao.isValid());
+		assertEquals(requisicao.getViolations().size(),1);
 	}
 	
 	@Test
 	public void testeEscrita() {
-		InstrucaoGrappa requisicao = new InstrucaoLogica().endereco(4).escrita(1).construir();
-		assertEquals(requisicao.getFormato(),Formato.LOGICO);
-		assertEquals(requisicao.getEndereco(),new Integer(4));
-		assertEquals(requisicao.getAcao(),Acao.ESCRITA);
-		assertEquals(requisicao.getCorpo().intValue(),1);
-		assertNull(requisicao.getViolacoes());
-		assertTrue(requisicao.isValido());
-		assertTrue(requisicao.getViolacoes().isEmpty());
+		GrappaInstruction requisicao = new LogicInstruction().address(4).writing(1).build();
+		assertEquals(requisicao.getFormat(),PinFormat.LOGIC);
+		assertEquals(requisicao.getAddress(),new Integer(4));
+		assertEquals(requisicao.getAction(),Action.WRITE);
+		assertEquals(requisicao.getBody().intValue(),1);
+		assertNull(requisicao.getViolations());
+		assertTrue(requisicao.isValid());
+		assertTrue(requisicao.getViolations().isEmpty());
 	}
 	
 	@Test
 	public void testeEscrever() {
-		InstrucaoGrappa requisicao = new InstrucaoLogica().endereco(5).escrever(0);
-		assertEquals(requisicao.getFormato(),Formato.LOGICO);
-		assertEquals(requisicao.getEndereco(),new Integer(5));
-		assertEquals(requisicao.getAcao(),Acao.ESCRITA);
-		assertEquals(requisicao.getCorpo().intValue(),0);
-		assertNull(requisicao.getViolacoes());
-		assertTrue(requisicao.isValido());
-		assertTrue(requisicao.getViolacoes().isEmpty());
+		GrappaInstruction requisicao = new LogicInstruction().address(5).write(0);
+		assertEquals(requisicao.getFormat(),PinFormat.LOGIC);
+		assertEquals(requisicao.getAddress(),new Integer(5));
+		assertEquals(requisicao.getAction(),Action.WRITE);
+		assertEquals(requisicao.getBody().intValue(),0);
+		assertNull(requisicao.getViolations());
+		assertTrue(requisicao.isValid());
+		assertTrue(requisicao.getViolations().isEmpty());
 	}
 	
 	@Test
 	public void testeEscreverB() {
-		InstrucaoGrappa requisicao = new InstrucaoLogica().endereco(5).escrever(0);
-		assertEquals(requisicao.getFormato(),Formato.LOGICO);
-		assertEquals(requisicao.getEndereco(),new Integer(5));
-		assertEquals(requisicao.getAcao(),Acao.ESCRITA);
-		assertEquals(requisicao.getCorpo().intValue(),0);
-		assertNull(requisicao.getViolacoes());
-		assertTrue(requisicao.isValido());
-		assertTrue(requisicao.getViolacoes().isEmpty());
+		GrappaInstruction requisicao = new LogicInstruction().address(5).write(0);
+		assertEquals(requisicao.getFormat(),PinFormat.LOGIC);
+		assertEquals(requisicao.getAddress(),new Integer(5));
+		assertEquals(requisicao.getAction(),Action.WRITE);
+		assertEquals(requisicao.getBody().intValue(),0);
+		assertNull(requisicao.getViolations());
+		assertTrue(requisicao.isValid());
+		assertTrue(requisicao.getViolations().isEmpty());
 	}
 	
 	@Test
 	public void testeEscreverC() {
-		InstrucaoGrappa requisicao = new InstrucaoLogica().endereco(5).escrever("0");
-		assertEquals(requisicao.getFormato(),Formato.LOGICO);
-		assertEquals(requisicao.getEndereco(),new Integer(5));
-		assertEquals(requisicao.getAcao(),Acao.ESCRITA);
-		assertEquals(requisicao.getCorpo().intValue(),0);
-		assertNull(requisicao.getViolacoes());
-		assertTrue(requisicao.isValido());
-		assertTrue(requisicao.getViolacoes().isEmpty());
+		GrappaInstruction requisicao = new LogicInstruction().address(5).write(0);
+		assertEquals(requisicao.getFormat(),PinFormat.LOGIC);
+		assertEquals(requisicao.getAddress(),new Integer(5));
+		assertEquals(requisicao.getAction(),Action.WRITE);
+		assertEquals(requisicao.getBody().intValue(),0);
+		assertNull(requisicao.getViolations());
+		assertTrue(requisicao.isValid());
+		assertTrue(requisicao.getViolations().isEmpty());
 	}
 	
 	@Test
 	public void testeInstrucaoInvalida() {
-		InstrucaoGrappa requisicao = new InstrucaoLogica().construir();
-		assertEquals(requisicao.getFormato(),Formato.LOGICO);
-		assertNull(requisicao.getEndereco());
-		assertNull(requisicao.getAcao());
-		assertNull(requisicao.getCorpo());
-		assertNull(requisicao.getViolacoes());
-		assertFalse(requisicao.isValido());
-		assertEquals(requisicao.getViolacoes().size(),2);
+		GrappaInstruction requisicao = new LogicInstruction().build();
+		assertEquals(requisicao.getFormat(),PinFormat.LOGIC);
+		assertNull(requisicao.getAddress());
+		assertNull(requisicao.getAction());
+		assertNull(requisicao.getBody());
+		assertNull(requisicao.getViolations());
+		assertFalse(requisicao.isValid());
+		assertEquals(requisicao.getViolations().size(),2);
 	}
 	
 	@Test
 	public void testeEscreverInvalido() {
-		InstrucaoGrappa requisicao = new InstrucaoLogica().escrever(2);
-		assertEquals(requisicao.getFormato(),Formato.LOGICO);
-		assertNull(requisicao.getEndereco());
-		assertEquals(requisicao.getAcao(),Acao.ESCRITA);
-		assertEquals(requisicao.getCorpo().intValue(),2);
-		assertNull(requisicao.getViolacoes());
-		assertFalse(requisicao.isValido());
-		assertEquals(requisicao.getViolacoes().size(),1);
+		GrappaInstruction requisicao = new LogicInstruction().write(2);
+		assertEquals(requisicao.getFormat(),PinFormat.LOGIC);
+		assertNull(requisicao.getAddress());
+		assertEquals(requisicao.getAction(),Action.WRITE);
+		assertEquals(requisicao.getBody().intValue(),2);
+		assertNull(requisicao.getViolations());
+		assertFalse(requisicao.isValid());
+		assertEquals(requisicao.getViolations().size(),1);
 	}
 
 }

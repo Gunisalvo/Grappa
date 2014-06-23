@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuracao-grappa>
-	<padrao-pino>SAIDA</padrao-pino>
-	<pino-monitor>
+<pin-configuration>
+	<default-pin-type>OUTPUT</default-pin-type>
+	<monitor-address>
 		0
-	</pino-monitor>
-	<pino-inicial>
+	</monitor-address>
+	<initial-address>
 		0
-	</pino-inicial>
-	<pino-final>
+	</initial-address>
+	<final-address>
 		8
-	</pino-final>
-	<pinos>
-		<pino>
-			<endereco>4</endereco>
-			<tipo>ENTRADA</tipo>
-		</pino>
-		<pino>
-			<endereco>5</endereco>
-			<tipo>ENTRADA</tipo>
-		</pino>
-		<pino>
-			<endereco>6</endereco>
-			<tipo>ENTRADA</tipo>
-		</pino>
-		<pino>
-			<endereco>7</endereco>
-			<tipo>ENTRADA</tipo>
-		</pino>
-	</pinos>
-	<pacote-servico>org.entrementes.grappa.servico</pacote-servico>
-</configuracao-grappa>
+	</final-address>
+	<pins>
+		<pin>
+			<address>4</address>
+			<type>INPUT</type>
+		</pin>
+		<pin>
+			<address>5</address>
+			<type>INPUT</type>
+		</pin>
+		<pin>
+			<address>6</address>
+			<type>INPUT</type>
+		</pin>
+		<pin>
+			<address>7</address>
+			<type>INPUT</type>
+		</pin>
+	</pins>
+	<configuration-package>org.entrementes.grappa.servico</configuration-package>
+</pin-configuration>

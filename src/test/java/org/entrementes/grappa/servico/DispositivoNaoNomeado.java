@@ -1,22 +1,22 @@
 package org.entrementes.grappa.servico;
 
-import org.entrementes.grappa.gpio.Raspberry;
-import org.entrementes.grappa.marcacao.Dispositivo;
-import org.entrementes.grappa.marcacao.Hardware;
-import org.entrementes.grappa.marcacao.ObservadorGpio;
+import br.com.caelum.grappa.annotation.Device;
+import br.com.caelum.grappa.annotation.Hardware;
+import br.com.caelum.grappa.annotation.PinListener;
+import br.com.caelum.grappa.pin.PhysicalDevice;
 
-@Dispositivo
+@Device
 public class DispositivoNaoNomeado {
 
 	@Hardware
-	private Raspberry hardware;
+	private PhysicalDevice hardware;
 	
-	@ObservadorGpio(endereco=5)
+	@PinListener(addresses={5})
 	public void processarSinal(Integer sinal){
 		System.out.println("nao nomeado");
 	}
 
-	public Raspberry getHardware() {
+	public PhysicalDevice getHardware() {
 		return hardware;
 	}
 }
