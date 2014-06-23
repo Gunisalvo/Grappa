@@ -405,7 +405,6 @@ public class RaspberryPi4J implements PhysicalDevice {
 		}
 		if(posicaoMonitor != null && this.pinos.containsKey(posicaoMonitor)){
 			GpioPinDigital pinoMonitor = this.pinos.get(posicaoMonitor);
-			this.mapeamento.getPins().get(posicaoMonitor).setType(PinType.MONITOR);;
 			if(pinoMonitor instanceof GpioPinDigitalOutput){
 				((GpioPinDigitalOutput)pinoMonitor).high();
 			}
