@@ -7,10 +7,6 @@
 	<packaging>jar</packaging>
 	<name>Grappa</name>
 	
-	<scm>
-		<url>http://svn.apache.org/viewcvs.cgi/maven</url>
-	</scm>
-	
 	<dependencies>	
 		<dependency>
 			<groupId>javax.servlet</groupId>
