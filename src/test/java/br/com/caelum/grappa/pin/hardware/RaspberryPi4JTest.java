@@ -1,4 +1,4 @@
-package org.entrementes.grappa.gpio.hardware;
+package br.com.caelum.grappa.pin.hardware;
 
 import static org.junit.Assert.assertNotNull;
 

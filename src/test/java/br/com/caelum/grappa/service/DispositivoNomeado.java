@@ -1,4 +1,4 @@
-package org.entrementes.grappa.servico;
+package br.com.caelum.grappa.service;
 
 import br.com.caelum.grappa.annotation.Device;
 import br.com.caelum.grappa.annotation.PinListener;

@@ -28,5 +28,5 @@
 			<type>INPUT</type>
 		</pin>
 	</pins>
-	<configuration-package>org.entrementes.grappa.servico</configuration-package>
+	<configuration-package>br.com.caelum.grappa.service</configuration-package>
 </pin-configuration>

@@ -1,4 +1,4 @@
-package org.entrementes.grappa.modelo;
+package br.com.caelum.grappa.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;

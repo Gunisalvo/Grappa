@@ -1,4 +1,4 @@
-package org.entrementes.grappa.xml;
+package br.com.caelum.grappa.xml;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
