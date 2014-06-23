@@ -120,7 +120,7 @@ public class RaspberryVirtual implements PhysicalDevice {
 			resultado.setResult(Result.ADDRESS_ERROR);
 		}else{
 			Integer valor = read(endereco);
-			resultado.setResult(Result.SUCESS);
+			resultado.setResult(Result.SUCCESS);
 			resultado.setBody(valor);
 		}
 		return resultado;
@@ -133,7 +133,7 @@ public class RaspberryVirtual implements PhysicalDevice {
 		resultado.setAction(Action.WRITE);
 		if(isWriteAddress(endereco)){
 			Integer valorResultante = write(endereco,corpoRequisicao);
-			resultado.setResult(Result.SUCESS);
+			resultado.setResult(Result.SUCCESS);
 			resultado.setBody(valorResultante);
 		}else{
 			resultado.setResult(Result.ADDRESS_ERROR);

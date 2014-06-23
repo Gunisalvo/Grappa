@@ -286,7 +286,7 @@ public class RaspberryPi4J implements PhysicalDevice {
 			resultado.setResult(Result.ADDRESS_ERROR);
 		}else{
 			Integer valor = read(endereco);
-			resultado.setResult(Result.SUCESS);
+			resultado.setResult(Result.SUCCESS);
 			resultado.setBody(valor);
 		}
 		return resultado;
@@ -299,7 +299,7 @@ public class RaspberryPi4J implements PhysicalDevice {
 		resultado.setAction(Action.WRITE);
 		if(isWriteAddress(endereco)){
 			Integer valorResultante = write(endereco,corpoRequisicao);
-			resultado.setResult(Result.SUCESS);
+			resultado.setResult(Result.SUCCESS);
 			resultado.setBody(new Integer(valorResultante));
 		}else{
 			resultado.setResult(Result.ADDRESS_ERROR);
